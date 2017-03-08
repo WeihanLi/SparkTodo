@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "debugType": "portable"
+  },
+  "dependencies": {},
+  "frameworks": {
+    "netstandard1.6": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.1",
+        "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.1.0",
+        "SparkTodo.Models":"1.0.0"
+      }
+    }
+  }
+}
