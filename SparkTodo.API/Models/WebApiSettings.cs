@@ -1,4 +1,4 @@
-namespace WebApplication.Models
+namespace SparkTodo.API.Models
 {
     public class WebApiSettings
     {

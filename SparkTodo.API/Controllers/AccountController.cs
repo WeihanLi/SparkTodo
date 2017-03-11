@@ -1,7 +1,9 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using SparkTodo.DataAccess;
+using Microsoft.AspNetCore.Http;
 
-namespace WebApplication.Controllers
+namespace SparkTodo.API.Controllers
 {
     [Route("api/v1/[controller]/[action]")]
     public class AccountController : Controller
@@ -12,9 +14,14 @@ namespace WebApplication.Controllers
             _userRepository = userRepository;
         }
 
-        public IActionResult Login()
+        [HttpPost]
+        public IActionResult Login(SparkTodo.Models.UserAccount userInfo)
         {
-            return View();
+            if(String.IsNullOrWhiteSpace(userInfo.UserEmailAddress) || String.IsNullOrEmpty(userInfo.UserPassword))
+            {
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+            return Ok();
         }
     }
 }

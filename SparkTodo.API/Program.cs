@@ -1,7 +1,7 @@
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 
-namespace WebApplication
+namespace SparkTodo.API
 {
     public class Program
     {

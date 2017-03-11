@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using SparkTodo.DataAccess;
 using SparkTodo.Models;
 
-namespace WebApplication.Controllers
+namespace SparkTodo.API.Controllers
 {
     [Route("api/v1/[controller]")]
     public class CategoryController : Controller

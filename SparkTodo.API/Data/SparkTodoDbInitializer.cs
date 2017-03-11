@@ -1,6 +1,6 @@
 using SparkTodo.Models;
 
-namespace WebApplication.Data
+namespace SparkTodo.API.Data
 {
     public class SparkTodoDbInitializer
     {

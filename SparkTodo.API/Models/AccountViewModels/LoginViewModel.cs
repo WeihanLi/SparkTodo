@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication.Models.AccountViewModels
+namespace SparkTodo.API.Models.AccountViewModels
 {
     public class LoginViewModel
     {

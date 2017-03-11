@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApplication.Controllers
+namespace SparkTodo.API.Controllers
 {
     [Route("[controller]/[action]")]
     public class HomeController : Controller

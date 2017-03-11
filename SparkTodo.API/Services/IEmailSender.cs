@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace WebApplication.Services
+namespace SparkTodo.API.Services
 {
     public interface IEmailSender
     {
