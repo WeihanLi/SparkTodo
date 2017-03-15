@@ -1,16 +1,19 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
 
 namespace SparkTodo.Models
 {
-    public class UserAccount
+    public class UserAccount : IdentityUser
     {
-        public int UserId {get;set;}
 
-        public string UserName {get;set;}
+        public UserAccount()
+        {
+        }
 
-        public string UserEmailAddress {get;set;}
-
-        public string UserPassword {get;set;}
+        public UserAccount(string userName)
+        {
+            base.UserName = userName;
+        }
 
         public DateTime CreatedTime { get;set; }
 

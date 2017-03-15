@@ -14,7 +14,7 @@ namespace SparkTodo.API.Filters
         {
             if (filterContext.HttpContext.Session.Keys.Contains("User"))
             {
-                filterContext.Result = new RedirectResult("~/Admin/Account/Login");
+                filterContext.Result = new JsonResult(new Models.JsonResponseModel<string>() { Status = Models.JsonResponseStatus.AuthFail , Msg = "需要登录" });
             }
             base.OnActionExecuting(filterContext);
         }

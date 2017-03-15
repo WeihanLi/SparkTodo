@@ -7,21 +7,33 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace SparkTodo.API.Controllers
 {
     [Route("api/v1/[controller]")]
     public class AccountController : Controller
     {
-        readonly IUserAccountRepository _userRepository;
-        readonly IOptions<Models.WebApiSettings> _apiSetting;
-        public AccountController(IUserAccountRepository userRepository, IOptions<Models.WebApiSettings> apiSetting)
+        private readonly IUserAccountRepository _userRepository;
+        private readonly IOptions<Models.WebApiSettings> _apiSetting;
+        private readonly UserManager<SparkTodo.Models.UserAccount> _userManager;
+        private readonly SignInManager<SparkTodo.Models.UserAccount> _signInManager;
+        private readonly ILogger _logger;
+
+        public AccountController(UserManager<SparkTodo.Models.UserAccount> userManager,
+            SignInManager<SparkTodo.Models.UserAccount> signInManager, IUserAccountRepository userRepository, IOptions<Models.WebApiSettings> apiSetting, ILoggerFactory loggerFactory)
         {
             _userRepository = userRepository;
             _apiSetting = apiSetting;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
         [Route("SignIn")]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> SignInAsync([FromForm]Models.AccountViewModels.LoginViewModel loginModel)
         {
@@ -31,34 +43,33 @@ namespace SparkTodo.API.Controllers
             }
             var userInfo = new SparkTodo.Models.UserAccount()
             {
-                UserEmailAddress = loginModel.Email,
-                UserPassword = loginModel.Password
+                Email = loginModel.Email
             };
-            var result = new Models.JsonResponseModel<TokenEntity>();
-            //—È÷§’Àªß£¨µ«¬º≥…π¶‘Ú…Ë÷√Token
-            //√‹¬Îº”√‹
-            userInfo.UserPassword = Common.SecurityHelper.SHA256_Encrypt(userInfo.UserPassword);
-            var loginResult = await _userRepository.LoginAsync(userInfo);
-            if(loginResult)
+            var result = new Models.JsonResponseModel<JWT.TokenEntity>();
+            Microsoft.AspNetCore.Identity.SignInResult signinResult = await _signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, true, lockoutOnFailure: false);
+            if(signinResult.Succeeded)
             {
+                _logger.LogInformation(1, "User logged in.");
                 var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_apiSetting.Value.SecretKey));
-                var options = new TokenOptions
+                var options = new JWT.TokenOptions
                 {
                     Audience = "SparkTodoAudience",
                     Issuer = "SparkTodo",
                     SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
                 };
-                var token = new TokenProvider(options).GenerateToken(HttpContext, userInfo.UserEmailAddress);
-                result = new Models.JsonResponseModel<TokenEntity> { Data = token, Msg = "µ«¬º≥…π¶", Status = Models.JsonResponseStatus.Success };
+                var token = new TokenProvider(options).GenerateToken(HttpContext, userInfo.Email);
+                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = token, Msg = "µ«¬º≥…π¶", Status = Models.JsonResponseStatus.Success };
             }
             else
             {
-                result = new Models.JsonResponseModel<TokenEntity> { Data = null, Msg = "µ«¬º ß∞‹", Status = Models.JsonResponseStatus.Success };
+                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "µ«¬º ß∞‹", Status = Models.JsonResponseStatus.Success };
             }
             return Json(result);
         }
 
+        
         [Route("SignUp")]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> SignUpAsync([FromForm]Models.AccountViewModels.RegisterViewModel regModel)
         {
@@ -68,34 +79,37 @@ namespace SparkTodo.API.Controllers
             }
             var userInfo = new SparkTodo.Models.UserAccount()
             {
-                UserEmailAddress = regModel.Email,
-                UserPassword = regModel.Password
+                Email = regModel.Email
             };
-            var result = new Models.JsonResponseModel<TokenEntity>();
-            //”√ªß√‹¬Îº”√‹
-            userInfo.UserPassword = Common.SecurityHelper.SHA256_Encrypt(userInfo.UserPassword);
-            userInfo.UserName = userInfo.UserEmailAddress;
-            userInfo.IsDisabled = false;
-            userInfo.CreatedTime = DateTime.Now;
-            //◊¢≤·’Àªß£¨…Ë÷√Token
-            var regUser = await _userRepository.AddAsync(userInfo);
-            if(regUser != null)
+            var result = new Models.JsonResponseModel<JWT.TokenEntity>();
+            var signupResult = await _userManager.CreateAsync(userInfo, regModel.Password);
+            if(signupResult.Succeeded)
             {
+                _logger.LogInformation(3, "User created a new account");
                 var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_apiSetting.Value.SecretKey));
-                var options = new TokenOptions
+                var options = new JWT.TokenOptions
                 {
                     Audience = "SparkTodoAudience",
                     Issuer = "SparkTodo",
                     SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
                 };
-                var token = new TokenProvider(options).GenerateToken(HttpContext, userInfo.UserEmailAddress);
-                result = new Models.JsonResponseModel<TokenEntity> { Data = token, Msg = "◊¢≤·≥…π¶", Status = Models.JsonResponseStatus.Success };
+                var token = new TokenProvider(options).GenerateToken(HttpContext, userInfo.Email);
+                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = token, Msg = "◊¢≤·≥…π¶", Status = Models.JsonResponseStatus.Success };
             }
             else
             {
-                result = new Models.JsonResponseModel<TokenEntity> { Data = null, Msg = "◊¢≤· ß∞‹", Status = Models.JsonResponseStatus.ProcessFail };
+                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "◊¢≤· ß∞‹", Status = Models.JsonResponseStatus.ProcessFail };
             }
             return Json(result);
+        }
+
+        [Route("SignOut")]
+        [Authorize]
+        public async Task<IActionResult> SignOut()
+        {
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation(4, "User logged out.");
+            return Ok();
         }
     }
 }

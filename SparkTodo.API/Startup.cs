@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,62 +33,66 @@ namespace SparkTodo.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Repository
-            services.AddScoped<SparkTodo.DataAccess.ICategoryRepository,SparkTodo.DataAccess.Repository.CategoryRepository>();
-                    services.AddScoped<SparkTodo.DataAccess.ITodoItemRepository,SparkTodo.DataAccess.Repository.TodoItemRepository>();
-                    services.AddScoped<SparkTodo.DataAccess.IUserAccountRepository,SparkTodo.DataAccess.Repository.UserAccountRepository>();
-            services.AddScoped<SparkTodo.Models.SparkTodoEntity>();
             // Add framework services.
             services.AddDbContext<SparkTodo.Models.SparkTodoEntity>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //
+            services.AddIdentity<SparkTodo.Models.UserAccount, Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole>()
+                .AddEntityFrameworkStores<SparkTodo.Models.SparkTodoEntity>()
+                .AddDefaultTokenProviders();
             // Add session
             services.AddSession(options => options.IdleTimeout = System.TimeSpan.FromMinutes(20));
             //Add MvcFramewok
             services.AddMvc();
-            // WebApiSettings
-            // services.Configure<WebApiSettings>(settings => settings.HostName = Configuration["HostName"]);
+            // WebApiSettings services.Configure<WebApiSettings>(settings => settings.HostName =
+            // Configuration["HostName"]);
             services.Configure<Models.WebApiSettings>(settings => settings.SecretKey = Configuration["SecretKey"]);
             // Add application services.
+            //Repository
+            services.AddScoped<SparkTodo.DataAccess.ICategoryRepository, SparkTodo.DataAccess.Repository.CategoryRepository>();
+            services.AddScoped<SparkTodo.DataAccess.ITodoItemRepository, SparkTodo.DataAccess.Repository.TodoItemRepository>();
+            services.AddScoped<SparkTodo.DataAccess.IUserAccountRepository, SparkTodo.DataAccess.Repository.UserAccountRepository>();
+            services.AddScoped<SparkTodo.Models.SparkTodoEntity>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // This method gets called by the runtime. Use this method to configure the HTTP request
+        // pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            // if (env.IsDevelopment())
-            // {
-            //     app.UseDeveloperExceptionPage();
-            //     app.UseDatabaseErrorPage();
-            //     app.UseBrowserLink();
-            // }
-            // else
-            // {
-            //     app.UseExceptionHandler("/Home/Error");
-            // }
-            
+            // if (env.IsDevelopment()) { app.UseDeveloperExceptionPage();
+            // app.UseDatabaseErrorPage(); app.UseBrowserLink(); } else {
+            // app.UseExceptionHandler("/Home/Error"); }
+
             app.UseDeveloperExceptionPage();
             app.UseDatabaseErrorPage();
             app.UseBrowserLink();
-
+            // Add ASP.NET Core Identity
+            app.UseIdentity().UseCookieAuthentication(
+                new CookieAuthenticationOptions()
+                {
+                    AccessDeniedPath = new PathString("/api/v1/Account/SignIn"),
+                    LoginPath = new PathString("/api/v1/Account/SignIn")
+                });
             // Add JWT¡¡Protection
             var secretKey = Configuration["SecretKey"];
             var signingKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(secretKey));
             var tokenValidationParameters = new TokenValidationParameters
             {
-                // The signing key must match! 
+                // The signing key must match!
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = signingKey,
-                // Validate the JWT Issuer (iss) claim 
+                // Validate the JWT Issuer (iss) claim
                 ValidateIssuer = true,
                 ValidIssuer = "SparkTodo",
-                // Validate the JWT Audience (aud) claim 
+                // Validate the JWT Audience (aud) claim
                 ValidateAudience = true,
                 ValidAudience = "SparkTodoAudience",
-                // Validate the token expiry 
+                // Validate the token expiry
                 ValidateLifetime = true,
-                // If you want to allow a certain amount of clock drift, set that here: 
-                ClockSkew = System.TimeSpan.FromMinutes(20)
+                // If you want to allow a certain amount of clock drift, set that here:
+                ClockSkew = System.TimeSpan.Zero
             };
             app.UseJwtBearerAuthentication(new JwtBearerOptions
             {

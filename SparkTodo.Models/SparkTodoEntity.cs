@@ -12,7 +12,6 @@ namespace SparkTodo.Models
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<UserAccount>().HasKey(u=>u.UserId);
             builder.Entity<Category>().HasKey(c=>c.CategoryId);
             builder.Entity<TodoItem>().HasKey(t=>t.TodoId);
 

@@ -4,10 +4,11 @@ using SparkTodo.DataAccess;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SparkTodo.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SparkTodo.API.Controllers
 {
-    [Filters.PermissionRequired]
+    [Authorize]
     [Route("api/v1/[controller]")]
     public class TodoController:Controller
     {
