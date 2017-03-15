@@ -19,12 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SparkTodo.Common\SparkTodo.Common.csproj" />
     <ProjectReference Include="..\SparkTodo.Models\SparkTodo.Models.csproj" />
     <ProjectReference Include="..\SparkTodo.DataAccess\SparkTodo.DataAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="1.1.1" />
@@ -66,7 +68,6 @@
 
   <ItemGroup>
     <Folder Include="Filters\" />
-    <Folder Include="JWT\" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using SparkTodo.Models;
+using System.Linq;
 
 namespace SparkTodo.DataAccess.Repository
 {
@@ -10,9 +11,15 @@ namespace SparkTodo.DataAccess.Repository
         {
         }
 
-        public Task<bool> LoginAsync(UserAccount userInfo)
+        /// <summary>
+        /// µÇÂ¼
+        /// </summary>
+        /// <param name="userInfo">µÇÂ¼ÐÅÏ¢</param>
+        /// <returns></returns>
+        public async Task<bool> LoginAsync(UserAccount userInfo)
         {
-            throw new NotImplementedException();
+            var user = await FetchAsync(u => u.UserEmailAddress == userInfo.UserEmailAddress && u.UserPassword == userInfo.UserPassword);
+            return user != null;
         }
     }
 }

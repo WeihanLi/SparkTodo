@@ -7,6 +7,7 @@ using SparkTodo.Models;
 
 namespace SparkTodo.API.Controllers
 {
+    [Filters.PermissionRequired]
     [Route("api/v1/[controller]")]
     public class TodoController:Controller
     {
@@ -15,12 +16,6 @@ namespace SparkTodo.API.Controllers
         public TodoController(ITodoItemRepository todoItemRepository)
         {
             _todoItemRepository = todoItemRepository;
-        }
-
-        [HttpGet]
-        public IActionResult Test()
-        {
-            return Json("response from WebAPI");
         }
 
         [HttpGet("{todoId}")]

@@ -19,6 +19,7 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SparkTodo.Common\SparkTodo.Common.csproj" />
     <ProjectReference Include="..\SparkTodo.DataAccess\SparkTodo.DataAccess.csproj" />
     <ProjectReference Include="..\SparkTodo.Models\SparkTodo.Models.csproj" />
   </ItemGroup>

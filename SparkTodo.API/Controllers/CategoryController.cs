@@ -7,6 +7,7 @@ using SparkTodo.Models;
 
 namespace SparkTodo.API.Controllers
 {
+    [Filters.PermissionRequired]
     [Route("api/v1/[controller]")]
     public class CategoryController : Controller
     {

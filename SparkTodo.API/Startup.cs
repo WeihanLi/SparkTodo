@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace SparkTodo.API
 {
@@ -16,11 +17,11 @@ namespace SparkTodo.API
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
-            if (env.IsDevelopment())
-            {
-                // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709
+            //    builder.AddUserSecrets();
+            //}
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -33,18 +34,18 @@ namespace SparkTodo.API
         {
             //Repository
             services.AddScoped<SparkTodo.DataAccess.ICategoryRepository,SparkTodo.DataAccess.Repository.CategoryRepository>();
-            services.AddScoped<SparkTodo.DataAccess.ITodoItemRepository,SparkTodo.DataAccess.Repository.TodoItemRepository>();
-            services.AddScoped<SparkTodo.DataAccess.IUserAccountRepository,SparkTodo.DataAccess.Repository.UserAccountRepository>();
+                    services.AddScoped<SparkTodo.DataAccess.ITodoItemRepository,SparkTodo.DataAccess.Repository.TodoItemRepository>();
+                    services.AddScoped<SparkTodo.DataAccess.IUserAccountRepository,SparkTodo.DataAccess.Repository.UserAccountRepository>();
             services.AddScoped<SparkTodo.Models.SparkTodoEntity>();
             // Add framework services.
-            services.AddDbContext<SparkTodo.Models.SparkTodoEntity>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));    
-            //
-            services.AddMvc();
+            services.AddDbContext<SparkTodo.Models.SparkTodoEntity>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             // Add session
             services.AddSession(options => options.IdleTimeout = System.TimeSpan.FromMinutes(20));
+            //Add MvcFramewok
+            services.AddMvc();
             // WebApiSettings
             // services.Configure<WebApiSettings>(settings => settings.HostName = Configuration["HostName"]);
-            // services.Configure<WebApiSettings>(settings => settings.SecretKey = Configuration["SecretKey"]);
+            services.Configure<Models.WebApiSettings>(settings => settings.SecretKey = Configuration["SecretKey"]);
             // Add application services.
         }
 
@@ -69,7 +70,34 @@ namespace SparkTodo.API
             app.UseDatabaseErrorPage();
             app.UseBrowserLink();
 
+            // Add JWT¡¡Protection
+            var secretKey = Configuration["SecretKey"];
+            var signingKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(secretKey));
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                // The signing key must match! 
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = signingKey,
+                // Validate the JWT Issuer (iss) claim 
+                ValidateIssuer = true,
+                ValidIssuer = "SparkTodo",
+                // Validate the JWT Audience (aud) claim 
+                ValidateAudience = true,
+                ValidAudience = "SparkTodoAudience",
+                // Validate the token expiry 
+                ValidateLifetime = true,
+                // If you want to allow a certain amount of clock drift, set that here: 
+                ClockSkew = System.TimeSpan.FromMinutes(20)
+            };
+            app.UseJwtBearerAuthentication(new JwtBearerOptions
+            {
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                TokenValidationParameters = tokenValidationParameters
+            });
+
             app.UseStaticFiles();
+            app.UseSession();
             app.UseMvc();
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
 
