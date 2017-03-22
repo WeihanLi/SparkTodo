@@ -16,8 +16,6 @@ namespace SparkTodo.Models
 
         public DateTime UpdatedTime {get;set;}
 
-        public int UserId {get;set;}
-
-        public UserAccount User {get;set;}
+        public int UserId {get;set;}       
     }
 }
