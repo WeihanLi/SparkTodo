@@ -103,9 +103,8 @@ namespace SparkTodo.API
 
             app.UseStaticFiles();
             app.UseSession();
-            app.UseMvc();
+            app.UseMvcWithDefaultRoute();
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetService<SparkTodo.Models.SparkTodoEntity>();

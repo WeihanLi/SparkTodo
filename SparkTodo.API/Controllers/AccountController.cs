@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace SparkTodo.API.Controllers
 {
@@ -62,7 +63,14 @@ namespace SparkTodo.API.Controllers
             }
             else
             {
-                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "µÇÂ¼Ê§°Ü", Status = Models.JsonResponseStatus.Success };
+                if(signinResult.IsLockedOut)
+                {
+                    result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "µÇÂ¼Ê§°Ü£¬ÕË»§ÒÑ±»Ëø¶¨", Status = Models.JsonResponseStatus.RequestError };
+                }
+                else
+                {
+                    result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "µÇÂ¼Ê§°Ü", Status = Models.JsonResponseStatus.AuthFail };
+                }
             }
             return Json(result);
         }
@@ -79,7 +87,10 @@ namespace SparkTodo.API.Controllers
             }
             var userInfo = new SparkTodo.Models.UserAccount()
             {
-                Email = regModel.Email
+                UserName = regModel.Email,
+                Email = regModel.Email,
+                EmailConfirmed = true,//Ä¬ÈÏ²»ÐèÒªÑéÖ¤ÓÊÏä£¬×¢ÊÍÒÔÆôÓÃ
+                CreatedTime =DateTime.Now
             };
             var result = new Models.JsonResponseModel<JWT.TokenEntity>();
             var signupResult = await _userManager.CreateAsync(userInfo, regModel.Password);
@@ -98,7 +109,7 @@ namespace SparkTodo.API.Controllers
             }
             else
             {
-                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "×¢²áÊ§°Ü", Status = Models.JsonResponseStatus.ProcessFail };
+                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "sign up failed,"+String.Join(",",signupResult.Errors.Select(e => e.Description).ToArray()), Status = Models.JsonResponseStatus.ProcessFail };
             }
             return Json(result);
         }
