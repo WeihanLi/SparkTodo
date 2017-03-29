@@ -31,11 +31,15 @@ namespace SparkTodo.API.Controllers
             var list = await _todoItemRepository.SelectAsync(t => t.CategoryId == categoryId && t.IsDeleted == false,t=>t.CreatedTime);
             return Json(list);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        
+        [Route("GetAll")]
+        public async Task<IActionResult> GetAll(int userId)
         {
-            var list = await _categoryRepository.SelectAsync(ca => !ca.IsDeleted,ca=>ca.CreatedTime,true);
+            if (userId <= 0)
+            {
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+            var list = await _categoryRepository.SelectAsync(ca => ca.UserId ==userId && !ca.IsDeleted,ca=>ca.CreatedTime,true);
             return Json(list);
         }
 

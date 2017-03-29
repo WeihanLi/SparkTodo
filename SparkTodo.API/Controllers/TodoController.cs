@@ -37,6 +37,17 @@ namespace SparkTodo.API.Controllers
             }
         }
 
+        [Route("GetAll")]
+        public async Task<IActionResult> GetAll([FromQuery] int userId)
+        {
+            if (userId <= 0)
+            {
+                return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
+            }
+            var todoItem = await _todoItemRepository.SelectAsync(t => t.UserId == userId,t=>t.CreatedTime);
+            return Json(todoItem);
+        }
+
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] TodoItem todo)
         {

@@ -5,6 +5,7 @@ namespace SparkTodo.Models
 {
     public class UserAccount : IdentityUser
     {
+        public int UserId { get; set; }
 
         public UserAccount()
         {
@@ -15,8 +16,8 @@ namespace SparkTodo.Models
             base.UserName = userName;
         }
 
-        public DateTime CreatedTime { get;set; }
+        public DateTime CreatedTime { get; set; }
 
-        public bool IsDisabled {get;set;}
+        public bool IsDisabled { get; set; }
     }
 }

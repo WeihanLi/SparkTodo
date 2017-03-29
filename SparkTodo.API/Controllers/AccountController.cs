@@ -59,7 +59,16 @@ namespace SparkTodo.API.Controllers
                     SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
                 };
                 var token = new TokenProvider(options).GenerateToken(HttpContext, userInfo.Email);
-                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = token, Msg = "登录成功", Status = Models.JsonResponseStatus.Success };
+                userInfo = await _userRepository.FetchAsync(u => u.Email == loginModel.Email);
+                var userToken = new UserTokenEntity
+                {
+                    AccessToken = token.AccessToken,
+                    ExpiresIn = token.ExpiresIn,
+                    UserEmail = userInfo.Email,
+                    UserId = userInfo.UserId,
+                    UserName = userInfo.UserName
+                };
+                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = userToken, Msg = "登录成功", Status = Models.JsonResponseStatus.Success };
             }
             else
             {
@@ -105,7 +114,16 @@ namespace SparkTodo.API.Controllers
                     SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
                 };
                 var token = new TokenProvider(options).GenerateToken(HttpContext, userInfo.Email);
-                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = token, Msg = "注册成功", Status = Models.JsonResponseStatus.Success };
+                userInfo = await _userRepository.FetchAsync(u => u.Email == regModel.Email);
+                var userToken = new UserTokenEntity
+                {
+                    AccessToken = token.AccessToken,
+                    ExpiresIn = token.ExpiresIn,
+                    UserEmail = userInfo.Email,
+                    UserId = userInfo.UserId,
+                    UserName = userInfo.UserName
+                };
+                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = userToken, Msg = "注册成功", Status = Models.JsonResponseStatus.Success };
             }
             else
             {
