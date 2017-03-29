@@ -4,12 +4,22 @@ using System.Linq;
 
 namespace SparkTodo.API.Filters
 {
+    /// <summary>
+    /// Custom NoPermissionRequiredAttribute
+    /// </summary>
     public class NoPermissionRequiredAttribute : ActionFilterAttribute
     {
     }
 
+    /// <summary>
+    /// Custom PermissionRequiredAttribute
+    /// </summary>
     public class PermissionRequiredAttribute : ActionFilterAttribute
     {
+        /// <summary>
+        /// OnActionExecuting
+        /// </summary>
+        /// <param name="filterContext">filterContext</param>
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (filterContext.HttpContext.Session.Keys.Contains("User"))

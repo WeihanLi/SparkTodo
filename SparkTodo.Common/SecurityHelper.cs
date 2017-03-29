@@ -4,6 +4,9 @@ using System.Text;
 
 namespace SparkTodo.Common
 {
+    /// <summary>
+    /// SecurityHelper
+    /// </summary>
     public static class SecurityHelper
     {
         /// <summary>
@@ -61,6 +64,9 @@ namespace SparkTodo.Common
         }
     }
 
+    /// <summary>
+    /// HashHelper
+    /// </summary>
     public static class HashHelper
     {
         /// <summary>

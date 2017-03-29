@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace SparkTodo.API.JWT
 {
+    /// <summary>
+    /// TokenOptions
+    /// </summary>
     public class TokenOptions
     {
         /// <summary>

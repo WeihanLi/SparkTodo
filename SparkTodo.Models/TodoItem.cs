@@ -2,6 +2,9 @@ using System;
 
 namespace SparkTodo.Models
 {
+    /// <summary>
+    /// TodoItem
+    /// </summary>
     public class TodoItem
     {
         public int TodoId { get;set; }

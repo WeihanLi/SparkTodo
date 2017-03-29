@@ -2,6 +2,9 @@ using System;
 
 namespace SparkTodo.Models
 {
+    /// <summary>
+    /// Category
+    /// </summary>
     public class Category
     {
         public int CategoryId { get;set; }

@@ -14,6 +14,9 @@ using System.Linq;
 
 namespace SparkTodo.API.Controllers
 {
+    /// <summary>
+    /// 用户账户
+    /// </summary>
     [Route("api/v1/[controller]")]
     public class AccountController : Controller
     {
@@ -23,6 +26,14 @@ namespace SparkTodo.API.Controllers
         private readonly SignInManager<SparkTodo.Models.UserAccount> _signInManager;
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// AccountController .ctor
+        /// </summary>
+        /// <param name="userManager">userManager</param>
+        /// <param name="signInManager">signInManager</param>
+        /// <param name="userRepository">userRepository</param>
+        /// <param name="apiSetting">apiSetting</param>
+        /// <param name="loggerFactory">loggerFactory</param>
         public AccountController(UserManager<SparkTodo.Models.UserAccount> userManager,
             SignInManager<SparkTodo.Models.UserAccount> signInManager, IUserAccountRepository userRepository, IOptions<Models.WebApiSettings> apiSetting, ILoggerFactory loggerFactory)
         {
@@ -33,6 +44,18 @@ namespace SparkTodo.API.Controllers
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
+        /// <summary>
+        /// 用户登录
+        /// </summary>
+        /// <remarks>
+        /// POST /api/v1/Account/SignIn
+        /// {
+        ///     "Email":"test0001@test.com",
+        ///     "Password":"test001.com"
+        /// }
+        /// </remarks>
+        /// <param name="loginModel">登录信息</param>
+        /// <returns></returns>
         [Route("SignIn")]
         [AllowAnonymous]
         [HttpPost]
@@ -84,7 +107,18 @@ namespace SparkTodo.API.Controllers
             return Json(result);
         }
 
-        
+        /// <summary>
+        /// 用户注册
+        /// </summary>
+        /// <remarks>
+        /// POST /api/v1/Account/SignUp
+        /// {
+        ///     "Email":"test0001@test.com",
+        ///     "Password":"test001.com"
+        /// }
+        /// </remarks>
+        /// <param name="regModel">注册信息</param>
+        /// <returns></returns>
         [Route("SignUp")]
         [AllowAnonymous]
         [HttpPost]
@@ -132,8 +166,13 @@ namespace SparkTodo.API.Controllers
             return Json(result);
         }
 
+        /// <summary>
+        /// 退出登录
+        /// </summary>
+        /// <returns></returns>
         [Route("SignOut")]
         [Authorize]
+        [HttpPost]
         public async Task<IActionResult> SignOut()
         {
             await _signInManager.SignOutAsync();

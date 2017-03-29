@@ -8,14 +8,28 @@ using System.Threading.Tasks;
 
 namespace SparkTodo.API.JWT
 {
+    /// <summary>
+    /// TokenProvider
+    /// </summary>
     public class TokenProvider
     {
         private readonly TokenOptions _options;
+
+        /// <summary>
+        /// TokenProvider .ctor
+        /// </summary>
+        /// <param name="options">TokenOptions</param>
         public TokenProvider(TokenOptions options)
         {
             _options = options;
         }
 
+        /// <summary>
+        /// GenerateToken
+        /// </summary>
+        /// <param name="context">HttpContext</param>
+        /// <param name="userName">userName</param>
+        /// <returns></returns>
         public TokenEntity GenerateToken(HttpContext context, string userName)
         {
             var identity =  GetIdentity(userName);
@@ -46,11 +60,23 @@ namespace SparkTodo.API.JWT
             };
             return response;
         }
+
+        /// <summary>
+        /// GetIdentity
+        /// </summary>
+        /// <param name="username">username</param>
+        /// <returns></returns>
         private ClaimsIdentity GetIdentity(string username)
         {
             return new ClaimsIdentity( new System.Security.Principal.GenericIdentity(username, "Token"),
                 new Claim[] { new Claim(ClaimTypes.Name, username) });
         }
+
+        /// <summary>
+        /// ToUnixEpochDate
+        /// </summary>
+        /// <param name="date">DateTime</param>
+        /// <returns></returns>
         public static long ToUnixEpochDate(DateTime date)
             => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
     }

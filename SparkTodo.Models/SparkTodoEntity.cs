@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace SparkTodo.Models
 {
+    /// <summary>
+    /// SparkTodoEntity
+    /// </summary>
     public class SparkTodoEntity:IdentityDbContext<IdentityUser>
     {
         public SparkTodoEntity(DbContextOptions options):base(options)

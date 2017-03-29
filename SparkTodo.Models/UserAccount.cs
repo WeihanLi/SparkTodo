@@ -3,6 +3,9 @@ using System;
 
 namespace SparkTodo.Models
 {
+    /// <summary>
+    /// UserAccount
+    /// </summary>
     public class UserAccount : IdentityUser
     {
         public int UserId { get; set; }
