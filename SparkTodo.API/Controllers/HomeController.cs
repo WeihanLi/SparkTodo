@@ -14,8 +14,7 @@ namespace SparkTodo.API.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            //return LocalRedirectPermanent("/swagger/");
-            return View();
+            return LocalRedirectPermanent("/swagger/");
         }
 
         /// <summary>
