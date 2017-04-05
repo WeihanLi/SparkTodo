@@ -64,11 +64,15 @@ namespace SparkTodo.API
                     TermsOfService = "None",
                     Contact = new Swashbuckle.AspNetCore.Swagger.Contact { Name = "WeihanLi" , Email="weihanli@outlook.com"}
                 });
+                // There's a bug when include .xml comments,refer to : https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/355 ,fixed in https://github.com/domaindrivendev/Swashbuckle.AspNetCore/pull/315 ,waiting for a new release
                 //Set the comments path for the swagger json and ui.
                 var basePath = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationBasePath;
                 var xmlPath = System.IO.Path.Combine(basePath, "SparkTodo.API.xml");
-                option.IncludeXmlComments(xmlPath);
+                option.IncludeXmlComments(xmlPath);               
             });
+            //temporary solution,refer to:https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/355
+            //comment it when you use a new release
+            services.AddTransient<Microsoft.AspNetCore.Mvc.ApiExplorer.IApiDescriptionProvider, Models.SwaggerApiDescriptionProvider>();
 
             // WebApiSettings services.Configure<WebApiSettings>(settings => settings.HostName =
             // Configuration["HostName"]);

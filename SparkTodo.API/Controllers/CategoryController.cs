@@ -52,6 +52,7 @@ namespace SparkTodo.API.Controllers
         /// <param name="userId">”√ªßid</param>
         /// <returns></returns>
         [Route("GetAll")]
+        [HttpGet]
         public async Task<IActionResult> GetAll(int userId)
         {
             if (userId <= 0)

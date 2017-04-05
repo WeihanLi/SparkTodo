@@ -59,6 +59,7 @@ namespace SparkTodo.API.Controllers
         /// <param name="isOnlyNotDone">是否只显示未完成的todo，默认只查询未完成的todo</param>
         /// <returns></returns>
         [Route("GetAll")]
+        [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int userId,int pageIndex=1,int pageSize=50,bool isOnlyNotDone = false)
         {
             if (userId <= 0)
