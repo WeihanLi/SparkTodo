@@ -90,7 +90,7 @@ namespace SparkTodo.Common
             return GetHashedBytes(type, bytes);
         }
 
-        public static string GetHashedString(HashType type, string str) => GetHashedString(type, str, Encoding.UTF8,false);
+        public static string GetHashedString(HashType type, string str) => GetHashedString(type, str, Encoding.UTF8, false);
 
         public static string GetHashedString(HashType type, string str, bool isLower) => GetHashedString(type, str, Encoding.UTF8, isLower);
 
