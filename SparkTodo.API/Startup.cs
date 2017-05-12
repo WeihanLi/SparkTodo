@@ -144,7 +144,10 @@ namespace SparkTodo.API
                 TokenValidationParameters = tokenValidationParameters
             });
 
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                ServeUnknownFileTypes = true
+            });
             app.UseSession();            
 
             app.UseMvcWithDefaultRoute();
