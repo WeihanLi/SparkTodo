@@ -1,12 +1,12 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
+using Microsoft.AspNetCore.Identity;
 
 namespace SparkTodo.Models
 {
     /// <summary>
     /// UserAccount
     /// </summary>
-    public class UserAccount : IdentityUser
+    public class UserAccount : IdentityUser<string>
     {
         public int UserId { get; set; }
 
