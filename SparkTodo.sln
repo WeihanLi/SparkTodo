@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.4
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SparkTodo.Models", "SparkTodo.Models\SparkTodo.Models.csproj", "{B81213C2-1940-4198-A61A-070BB33C15C4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SparkTodo.DataAccess", "SparkTodo.DataAccess\SparkTodo.DataAccess.csproj", "{5A7A91BC-A44C-430C-8590-55E2CC9CF783}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SparkTodo.API", "SparkTodo.API\SparkTodo.API.csproj", "{0310FBDD-244C-4292-AA60-E5660CB60557}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkTodo.Common", "SparkTodo.Common\SparkTodo.Common.csproj", "{53AB9842-76F0-4111-AA9C-6E5054E75D2E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,12 +27,11 @@ Global
 		{0310FBDD-244C-4292-AA60-E5660CB60557}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0310FBDD-244C-4292-AA60-E5660CB60557}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0310FBDD-244C-4292-AA60-E5660CB60557}.Release|Any CPU.Build.0 = Release|Any CPU
-		{53AB9842-76F0-4111-AA9C-6E5054E75D2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53AB9842-76F0-4111-AA9C-6E5054E75D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53AB9842-76F0-4111-AA9C-6E5054E75D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53AB9842-76F0-4111-AA9C-6E5054E75D2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1E40E60C-89AD-46FB-AB83-44435CDFA254}
 	EndGlobalSection
 EndGlobal
