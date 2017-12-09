@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using WeihanLi.Common;
@@ -34,7 +35,7 @@ namespace SparkTodo.API
             //    builder.AddUserSecrets();
             //}
 
-            builder.AddEnvironmentVariables();            
+            builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
@@ -100,15 +101,16 @@ namespace SparkTodo.API
 
             //Add MvcFramewok
             services.AddMvc();
-            services.AddSwaggerGen(option => {
+            services.AddSwaggerGen(option =>
+            {
                 option.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
                 {
                     Version = "v1",
                     Title = "SparkTodo API",
                     Description = "API for SparkTodo",
                     TermsOfService = "None",
-                    Contact = new Swashbuckle.AspNetCore.Swagger.Contact { Name = "WeihanLi" , Email="weihanli@outlook.com"}
-                });           
+                    Contact = new Swashbuckle.AspNetCore.Swagger.Contact { Name = "WeihanLi", Email = "weihanli@outlook.com" }
+                });
             });
 
             // WebApiSettings services.Configure<WebApiSettings>(settings => settings.HostName =
@@ -126,7 +128,7 @@ namespace SparkTodo.API
         }
 
         /// <summary>
-        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline. 
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
         /// <param name="app">app</param>
         /// <param name="env">environment</param>
@@ -147,18 +149,20 @@ namespace SparkTodo.API
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles(new StaticFileOptions()
+            app.UseStaticFiles(new StaticFileOptions
             {
+                FileProvider = new CompositeFileProvider(new PhysicalFileProvider(env.WebRootPath), new PhysicalFileProvider(env.ContentRootPath)),
                 ServeUnknownFileTypes = true
             });
 
-            app.UseSession();            
+            app.UseSession();
 
             app.UseMvcWithDefaultRoute();
             //Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
             //Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint
-            app.UseSwaggerUI(option => {
+            app.UseSwaggerUI(option =>
+            {
                 option.SwaggerEndpoint("/swagger/v1/swagger.json", "SparkTodo API v1");
             });
 
@@ -169,7 +173,6 @@ namespace SparkTodo.API
                 var dbContext = serviceScope.ServiceProvider.GetService<SparkTodo.Models.SparkTodoEntity>();
                 dbContext.Database.EnsureCreated();
                 //init Database,you can add your init data here
-
             }
         }
     }
