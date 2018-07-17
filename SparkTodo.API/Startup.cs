@@ -103,18 +103,20 @@ namespace SparkTodo.API
             services.AddMvc();
             services.AddSwaggerGen(option =>
             {
-                option.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                option.SwaggerDoc("SparkTodo API", new Swashbuckle.AspNetCore.Swagger.Info
                 {
-                    Version = "v1",
+                    Version = "v2",
                     Title = "SparkTodo API",
                     Description = "API for SparkTodo",
                     TermsOfService = "None",
-                    Contact = new Swashbuckle.AspNetCore.Swagger.Contact { Name = "WeihanLi", Email = "weihanli@outlook.com" }
+                    Contact = new Swashbuckle.AspNetCore.Swagger.Contact
+                    {
+                        Name = "WeihanLi",
+                        Email = "weihanli@outlook.com"
+                    }
                 });
             });
 
-            // WebApiSettings services.Configure<WebApiSettings>(settings => settings.HostName =
-            // Configuration["HostName"]);
             services.Configure<Models.WebApiSettings>(settings => settings.SecretKey = Configuration["SecretKey"]);
             // Add application services.
             //Repository
@@ -124,7 +126,7 @@ namespace SparkTodo.API
             services.AddScoped<SparkTodo.Models.SparkTodoEntity>();
 
             // Set to DependencyResolver
-            DependencyResolver.SetDependencyResolver(new MicrosoftExtensionDependencyResolver(services.BuildServiceProvider()));
+            DependencyResolver.SetDependencyResolver(services.BuildServiceProvider());
         }
 
         /// <summary>
@@ -137,6 +139,7 @@ namespace SparkTodo.API
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            loggerFactory.AddLog4Net();
 
             if (env.IsDevelopment())
             {
@@ -163,7 +166,7 @@ namespace SparkTodo.API
             //Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint
             app.UseSwaggerUI(option =>
             {
-                option.SwaggerEndpoint("/swagger/v1/swagger.json", "SparkTodo API v1");
+                option.SwaggerEndpoint("/swagger/v2/swagger.json", "SparkTodo API");
             });
 
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;

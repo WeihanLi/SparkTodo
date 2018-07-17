@@ -1,11 +1,11 @@
-using System;
-using System.Threading.Tasks;
-using SparkTodo.DataAccess;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SparkTodo.DataAccess;
 using SparkTodo.Models;
-using Microsoft.AspNetCore.Authorization;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SparkTodo.API.Controllers
 {
@@ -14,7 +14,7 @@ namespace SparkTodo.API.Controllers
     /// </summary>
     [Authorize]
     [Route("api/v1/[controller]")]
-    public class TodoController:Controller
+    public class TodoController : Controller
     {
         private readonly ITodoItemRepository _todoItemRepository;
 
@@ -35,12 +35,12 @@ namespace SparkTodo.API.Controllers
         [HttpGet("{todoId}")]
         public async Task<IActionResult> Get([FromQuery] int todoId)
         {
-            if(todoId<=0)
+            if (todoId <= 0)
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
             var todoItem = await _todoItemRepository.FetchAsync(todoId);
-            if(todoItem == null)
+            if (todoItem == null)
             {
                 return new StatusCodeResult(StatusCodes.Status404NotFound);
             }
@@ -60,17 +60,17 @@ namespace SparkTodo.API.Controllers
         /// <returns></returns>
         [Route("GetAll")]
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int userId,int pageIndex=1,int pageSize=50,bool isOnlyNotDone = false)
+        public async Task<IActionResult> GetAll([FromQuery] int userId, int pageIndex = 1, int pageSize = 50, bool isOnlyNotDone = false)
         {
             if (userId <= 0)
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
-            var todoItem = await _todoItemRepository.SelectAsync(t => t.UserId == userId,t=>t.CreatedTime);
+            var todoItem = await _todoItemRepository.SelectAsync(t => t.UserId == userId, t => t.CreatedTime);
             List<TodoItem> todoList = null;
-            if(isOnlyNotDone)
+            if (isOnlyNotDone)
             {
-                todoList = await _todoItemRepository.SelectAsync(pageIndex,pageSize,t => t.UserId == userId && !t.IsDeleted && !t.IsCompleted, t => t.CreatedTime);
+                todoList = await _todoItemRepository.SelectAsync(pageIndex, pageSize, t => t.UserId == userId && !t.IsDeleted && !t.IsCompleted, t => t.CreatedTime);
             }
             else
             {
@@ -87,7 +87,7 @@ namespace SparkTodo.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] TodoItem todo)
         {
-            if(todo.UserId <= 0 || todo.CategoryId <=0 || String.IsNullOrEmpty(todo.TodoTitle))
+            if (todo.UserId <= 0 || todo.CategoryId <= 0 || String.IsNullOrEmpty(todo.TodoTitle))
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
@@ -104,7 +104,7 @@ namespace SparkTodo.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] TodoItem todo)
         {
-            if(todo.UserId <= 0 || todo.CategoryId <=0 || String.IsNullOrEmpty(todo.TodoTitle))
+            if (todo.UserId <= 0 || todo.CategoryId <= 0 || String.IsNullOrEmpty(todo.TodoTitle))
             {
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
@@ -120,13 +120,13 @@ namespace SparkTodo.API.Controllers
         [HttpDelete("{todoId}")]
         public async Task<IActionResult> Delete(int todoId)
         {
-            if(todoId <= 0)
+            if (todoId <= 0)
             {
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
-            var todo = new TodoItem(){ TodoId = todoId , IsDeleted = true };
-            var result = await _todoItemRepository.UpdateAsync(t=>t.TodoId == todoId);
-            if(result)
+            var todo = new TodoItem() { TodoId = todoId, IsDeleted = true };
+            var result = await _todoItemRepository.UpdateAsync(t => t.TodoId == todoId);
+            if (result)
             {
                 return Ok();
             }

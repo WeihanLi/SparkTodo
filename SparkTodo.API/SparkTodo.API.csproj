@@ -16,6 +16,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netcoreapp2.0\SparkTodo.API.xml</DocumentationFile>
+    <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -48,8 +49,8 @@
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0" />
-    <PackageReference Include="WeihanLi.Common" Version="1.0.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
+    <PackageReference Include="WeihanLi.Common" Version="1.0.9" />
   </ItemGroup>
 
   <ItemGroup>
@@ -70,10 +71,4 @@
       <DependentUpon>IRepository.tt</DependentUpon>
     </Compile>
   </ItemGroup>
-
-  <!--<Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
-    <Exec Command="npm install" />
-    <Exec Command="gulp clean" />
-    <Exec Command="gulp min" />
-  </Target>-->
 </Project>
