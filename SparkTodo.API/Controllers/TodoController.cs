@@ -1,11 +1,11 @@
-using System;
+锘縰sing System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using SparkTodo.DataAccess;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SparkTodo.DataAccess;
 using SparkTodo.Models;
-using Microsoft.AspNetCore.Authorization;
-using System.Collections.Generic;
 
 namespace SparkTodo.API.Controllers
 {
@@ -14,7 +14,7 @@ namespace SparkTodo.API.Controllers
     /// </summary>
     [Authorize]
     [Route("api/v1/[controller]")]
-    public class TodoController:Controller
+    public class TodoController : Controller
     {
         private readonly ITodoItemRepository _todoItemRepository;
 
@@ -28,19 +28,19 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// 获取Todo详情
+        /// get todo by id
         /// </summary>
         /// <param name="todoId">todo id</param>
         /// <returns></returns>
         [HttpGet("{todoId}")]
         public async Task<IActionResult> Get([FromQuery] int todoId)
         {
-            if(todoId<=0)
+            if (todoId <= 0)
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
             var todoItem = await _todoItemRepository.FetchAsync(todoId);
-            if(todoItem == null)
+            if (todoItem == null)
             {
                 return new StatusCodeResult(StatusCodes.Status404NotFound);
             }
@@ -51,26 +51,26 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// 获取 todo 列表
+        /// todo list
         /// </summary>
-        /// <param name="userId">用户id</param>
-        /// <param name="pageIndex">页码索引</param>
-        /// <param name="pageSize">每页数据量</param>
-        /// <param name="isOnlyNotDone">是否只显示未完成的todo，默认只查询未完成的todo</param>
+        /// <param name="userId">userId</param>
+        /// <param name="pageIndex">pageIndex</param>
+        /// <param name="pageSize">pageSize</param>
+        /// <param name="isOnlyNotDone">isOnlyNotDone</param>
         /// <returns></returns>
         [Route("GetAll")]
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int userId,int pageIndex=1,int pageSize=50,bool isOnlyNotDone = false)
+        public async Task<IActionResult> GetAll([FromQuery] int userId, int pageIndex = 1, int pageSize = 50, bool isOnlyNotDone = false)
         {
             if (userId <= 0)
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
-            var todoItem = await _todoItemRepository.SelectAsync(t => t.UserId == userId,t=>t.CreatedTime);
+            var todoItem = await _todoItemRepository.SelectAsync(t => t.UserId == userId, t => t.CreatedTime);
             List<TodoItem> todoList = null;
-            if(isOnlyNotDone)
+            if (isOnlyNotDone)
             {
-                todoList = await _todoItemRepository.SelectAsync(pageIndex,pageSize,t => t.UserId == userId && !t.IsDeleted && !t.IsCompleted, t => t.CreatedTime);
+                todoList = await _todoItemRepository.SelectAsync(pageIndex, pageSize, t => t.UserId == userId && !t.IsDeleted && !t.IsCompleted, t => t.CreatedTime);
             }
             else
             {
@@ -80,14 +80,14 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// 修改todo信息
+        /// update todo
         /// </summary>
-        /// <param name="todo">todo信息</param>
+        /// <param name="todo">todo</param>
         /// <returns></returns>
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] TodoItem todo)
         {
-            if(todo.UserId <= 0 || todo.CategoryId <=0 || String.IsNullOrEmpty(todo.TodoTitle))
+            if (todo.UserId <= 0 || todo.CategoryId <= 0 || String.IsNullOrEmpty(todo.TodoTitle))
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
@@ -97,14 +97,14 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// 新增一个 todo
+        /// create todo
         /// </summary>
-        /// <param name="todo">todo信息</param>
+        /// <param name="todo">todo info</param>
         /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] TodoItem todo)
         {
-            if(todo.UserId <= 0 || todo.CategoryId <=0 || String.IsNullOrEmpty(todo.TodoTitle))
+            if (todo.UserId <= 0 || todo.CategoryId <= 0 || String.IsNullOrEmpty(todo.TodoTitle))
             {
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
@@ -113,20 +113,20 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// 删除某一个 todo
+        /// delete todo
         /// </summary>
         /// <param name="todoId">todo Id</param>
         /// <returns></returns>
         [HttpDelete("{todoId}")]
         public async Task<IActionResult> Delete(int todoId)
         {
-            if(todoId <= 0)
+            if (todoId <= 0)
             {
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
-            var todo = new TodoItem(){ TodoId = todoId , IsDeleted = true };
-            var result = await _todoItemRepository.UpdateAsync(t=>t.TodoId == todoId);
-            if(result)
+            var todo = new TodoItem() { TodoId = todoId, IsDeleted = true };
+            var result = await _todoItemRepository.UpdateAsync(t => t.TodoId == todoId);
+            if (result)
             {
                 return Ok();
             }

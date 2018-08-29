@@ -1,11 +1,11 @@
-using System.IO;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using SparkTodo.Models;
 
 namespace SparkTodo.API
 {
-    /// <summary>
-    /// Program
-    /// </summary>
     public class Program
     {
         /// <summary>
@@ -14,13 +14,28 @@ namespace SparkTodo.API
         /// <param name="args">arguments</param>
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
+            var host = WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .Build();
 
+            using (var serviceScope = host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var dbContext = serviceScope.ServiceProvider.GetService<SparkTodo.Models.SparkTodoEntity>();
+                dbContext.Database.EnsureCreated();
+                //init Database,you can add your init data here
+
+                var userManager = serviceScope.ServiceProvider.GetService<UserManager<UserAccount>>();
+
+                var email = "weihanli@outlook.com";
+                if (userManager.FindByEmailAsync(email).GetAwaiter().GetResult() == null)
+                {
+                    userManager.CreateAsync(new UserAccount
+                    {
+                        UserName = "weihanli@outlook.com",
+                        Email = "weihanli@outlook.com"
+                    }, "Test1234");
+                }
+            }
             host.Run();
         }
     }

@@ -1,21 +1,21 @@
-using System;
-using Microsoft.AspNetCore.Mvc;
-using SparkTodo.DataAccess;
-using Microsoft.AspNetCore.Http;
-using SparkTodo.API.JWT;
-using Microsoft.IdentityModel.Tokens;
+锘縰sing System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Linq;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using SparkTodo.API.JWT;
+using SparkTodo.DataAccess;
 
 namespace SparkTodo.API.Controllers
 {
     /// <summary>
-    /// 用户账户
+    /// Account
     /// </summary>
     [Route("api/v1/[controller]")]
     public class AccountController : Controller
@@ -45,7 +45,7 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// 用户登录
+        /// SignIn
         /// </summary>
         /// <remarks>
         /// POST /api/v1/Account/SignIn
@@ -54,12 +54,10 @@ namespace SparkTodo.API.Controllers
         ///     "Password":"test001.com"
         /// }
         /// </remarks>
-        /// <param name="loginModel">登录信息</param>
-        /// <returns></returns>
         [Route("SignIn")]
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> SignInAsync([FromForm]Models.AccountViewModels.LoginViewModel loginModel)
+        public async Task<IActionResult> SignInAsync([FromBody]Models.AccountViewModels.LoginViewModel loginModel)
         {
             if (!ModelState.IsValid)
             {
@@ -71,7 +69,7 @@ namespace SparkTodo.API.Controllers
             };
             var result = new Models.JsonResponseModel<JWT.TokenEntity>();
             Microsoft.AspNetCore.Identity.SignInResult signinResult = await _signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, true, lockoutOnFailure: false);
-            if(signinResult.Succeeded)
+            if (signinResult.Succeeded)
             {
                 _logger.LogInformation(1, "User logged in.");
                 var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_apiSetting.Value.SecretKey));
@@ -88,27 +86,27 @@ namespace SparkTodo.API.Controllers
                     AccessToken = token.AccessToken,
                     ExpiresIn = token.ExpiresIn,
                     UserEmail = userInfo.Email,
-                    UserId = userInfo.UserId,
+                    UserId = userInfo.Id,
                     UserName = userInfo.UserName
                 };
-                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = userToken, Msg = "登录成功", Status = Models.JsonResponseStatus.Success };
+                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = userToken, Msg = "", Status = Models.JsonResponseStatus.Success };
             }
             else
             {
-                if(signinResult.IsLockedOut)
+                if (signinResult.IsLockedOut)
                 {
-                    result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "登录失败，账户已被锁定", Status = Models.JsonResponseStatus.RequestError };
+                    result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "Account locked out", Status = Models.JsonResponseStatus.RequestError };
                 }
                 else
                 {
-                    result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "登录失败", Status = Models.JsonResponseStatus.AuthFail };
+                    result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "failed to authenticate", Status = Models.JsonResponseStatus.AuthFail };
                 }
             }
             return Json(result);
         }
 
         /// <summary>
-        /// 用户注册
+        /// SignUp
         /// </summary>
         /// <remarks>
         /// POST /api/v1/Account/SignUp
@@ -117,7 +115,6 @@ namespace SparkTodo.API.Controllers
         ///     "Password":"test001.com"
         /// }
         /// </remarks>
-        /// <param name="regModel">注册信息</param>
         /// <returns></returns>
         [Route("SignUp")]
         [AllowAnonymous]
@@ -132,12 +129,12 @@ namespace SparkTodo.API.Controllers
             {
                 UserName = regModel.Email,
                 Email = regModel.Email,
-                EmailConfirmed = true,//默认不需要验证邮箱，注释以启用
-                CreatedTime =DateTime.Now
+                EmailConfirmed = true,//脛卢脠脧虏禄脨猫脪陋脩茅脰陇脫脢脧盲拢卢脳垄脢脥脪脭脝么脫脙
+                CreatedTime = DateTime.Now
             };
             var result = new Models.JsonResponseModel<JWT.TokenEntity>();
             var signupResult = await _userManager.CreateAsync(userInfo, regModel.Password);
-            if(signupResult.Succeeded)
+            if (signupResult.Succeeded)
             {
                 _logger.LogInformation(3, "User created a new account");
                 var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_apiSetting.Value.SecretKey));
@@ -154,20 +151,20 @@ namespace SparkTodo.API.Controllers
                     AccessToken = token.AccessToken,
                     ExpiresIn = token.ExpiresIn,
                     UserEmail = userInfo.Email,
-                    UserId = userInfo.UserId,
+                    UserId = userInfo.Id,
                     UserName = userInfo.UserName
                 };
-                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = userToken, Msg = "注册成功", Status = Models.JsonResponseStatus.Success };
+                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = userToken, Msg = "", Status = Models.JsonResponseStatus.Success };
             }
             else
             {
-                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "sign up failed,"+String.Join(",",signupResult.Errors.Select(e => e.Description).ToArray()), Status = Models.JsonResponseStatus.ProcessFail };
+                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "sign up failed," + String.Join(",", signupResult.Errors.Select(e => e.Description).ToArray()), Status = Models.JsonResponseStatus.ProcessFail };
             }
             return Json(result);
         }
 
         /// <summary>
-        /// 退出登录
+        /// SignOut
         /// </summary>
         /// <returns></returns>
         [Route("SignOut")]
