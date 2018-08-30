@@ -17,7 +17,9 @@ namespace SparkTodo.API.Controllers
     /// <summary>
     /// Account
     /// </summary>
-    [Route("api/v1/[controller]")]
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
+    [Route("api/[controller]")]
     public class AccountController : Controller
     {
         private readonly IUserAccountRepository _userRepository;

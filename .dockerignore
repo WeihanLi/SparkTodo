@@ -1,0 +1,19 @@
+# directories
+**/bin/
+**/obj/
+**/out/
+.vs
+.vscode
+.git
+
+
+# files
+Dockerfile*
+**/*.trx
+**/*.md
+docker-compose.yml
+docker-compose.*.yml
+.gitignore
+.gitattributes
+.dockerignore
+.editorconfig

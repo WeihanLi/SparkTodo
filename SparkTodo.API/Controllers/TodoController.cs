@@ -10,10 +10,11 @@ using SparkTodo.Models;
 namespace SparkTodo.API.Controllers
 {
     /// <summary>
-    /// Todo
+    /// Todos
     /// </summary>
     [Authorize]
-    [Route("api/v1/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/[controller]")]
     public class TodoController : Controller
     {
         private readonly ITodoItemRepository _todoItemRepository;
@@ -51,7 +52,7 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// todo list
+        /// todos list
         /// </summary>
         /// <param name="userId">userId</param>
         /// <param name="pageIndex">pageIndex</param>
@@ -80,7 +81,7 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// update todo
+        /// update todos
         /// </summary>
         /// <param name="todo">todo</param>
         /// <returns></returns>
@@ -97,7 +98,7 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// create todo
+        /// create a todo
         /// </summary>
         /// <param name="todo">todo info</param>
         /// <returns></returns>

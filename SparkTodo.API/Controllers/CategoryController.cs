@@ -13,7 +13,8 @@ namespace SparkTodo.API.Controllers
     /// todo
     /// </summary>
     [Authorize]
-    [Route("api/v1/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/[controller]")]
     public class CategoryController : Controller
     {
         private readonly ICategoryRepository _categoryRepository;

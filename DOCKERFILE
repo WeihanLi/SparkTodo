@@ -1,0 +1,15 @@
+FROM microsoft/dotnet:2.1-sdk-alpine AS build-env
+WORKDIR /src
+
+# copy everything and build
+COPY . .
+RUN dotnet restore SparkTodo.API/SparkTodo.API.csproj
+RUN dotnet publish SparkTodo.API/SparkTodo.API.csproj -c Release -o out
+
+# build runtime image
+FROM microsoft/dotnet:aspnetcore-runtime
+LABEL Maintainer="WeihanLi"
+WORKDIR /app
+COPY --from=build-env /src/SparkTodo.API/out .
+EXPOSE 80
+ENTRYPOINT ["dotnet", "SparkTodo.API.dll"]
