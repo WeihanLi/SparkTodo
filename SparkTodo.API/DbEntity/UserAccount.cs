@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.AspNetCore.Identity;
 
 namespace SparkTodo.Models
@@ -6,10 +6,8 @@ namespace SparkTodo.Models
     /// <summary>
     /// UserAccount
     /// </summary>
-    public class UserAccount : IdentityUser<string>
+    public class UserAccount : IdentityUser<int>
     {
-        public int UserId { get; set; }
-
         public UserAccount()
         {
         }
@@ -22,5 +20,9 @@ namespace SparkTodo.Models
         public DateTime CreatedTime { get; set; }
 
         public bool IsDisabled { get; set; }
+    }
+
+    public class UserRole : IdentityRole<int>
+    {
     }
 }

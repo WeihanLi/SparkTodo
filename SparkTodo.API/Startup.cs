@@ -1,15 +1,18 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+ï»¿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Swashbuckle.AspNetCore.Swagger;
 using WeihanLi.Common;
 
 namespace SparkTodo.API
@@ -19,30 +22,15 @@ namespace SparkTodo.API
     /// </summary>
     public class Startup
     {
-        /// <summary>
-        /// StartUp .ctor
-        /// </summary>
-        /// <param name="env">HostingEnvironment</param>
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
-            //if (env.IsDevelopment())
-            //{
-            //    // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709
-            //    builder.AddUserSecrets();
-            //}
-
-            builder.AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration.ReplacePlaceholders();
         }
 
         /// <summary>
         /// Configuration
         /// </summary>
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
@@ -51,16 +39,18 @@ namespace SparkTodo.API
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<SparkTodo.Models.SparkTodoEntity>(options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<SparkTodo.Models.SparkTodoEntity>(options => options.UseInMemoryDatabase("SparkTodo"));
             //
-            services.AddIdentity<SparkTodo.Models.UserAccount, IdentityRole>()
+            services.AddIdentity<SparkTodo.Models.UserAccount, SparkTodo.Models.UserRole>(options =>
+                {
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                })
                 .AddEntityFrameworkStores<SparkTodo.Models.SparkTodoEntity>()
                 .AddDefaultTokenProviders();
 
-            // Add session
-            services.AddSession(options => options.IdleTimeout = System.TimeSpan.FromMinutes(20));
-
-            // Add JWT¡¡Protection
+            // Add JWTÂ¡Â¡Protection
             var secretKey = Configuration["SecretKey"];
             var signingKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(secretKey));
             var tokenValidationParameters = new TokenValidationParameters
@@ -82,17 +72,9 @@ namespace SparkTodo.API
 
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddCookie(options =>
-            {
-                options.AccessDeniedPath = "/Account/SignIn";
-                options.LoginPath = "/Account/SignIn";
-                options.LogoutPath = "/Account/SignOut";
-
-                // Cookie settings
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
                 options.Audience = "SparkTodoAudience";
@@ -100,30 +82,46 @@ namespace SparkTodo.API
             });
 
             //Add MvcFramewok
-            services.AddMvc();
+            services.AddMvc()
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
+
             services.AddSwaggerGen(option =>
             {
-                option.SwaggerDoc("SparkTodo API", new Swashbuckle.AspNetCore.Swagger.Info
+                option.SwaggerDoc("sparktodo", new Swashbuckle.AspNetCore.Swagger.Info
                 {
-                    Version = "v2",
+                    Version = "v1",
                     Title = "SparkTodo API",
                     Description = "API for SparkTodo",
                     TermsOfService = "None",
-                    Contact = new Swashbuckle.AspNetCore.Swagger.Contact
-                    {
-                        Name = "WeihanLi",
-                        Email = "weihanli@outlook.com"
-                    }
+                    Contact = new Swashbuckle.AspNetCore.Swagger.Contact { Name = "WeihanLi", Email = "weihanli@outlook.com" }
+                });
+
+                option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{typeof(Startup).Assembly.GetName().Name}.xml"), true);
+
+                option.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Name = "Authorization",
+                    In = "header",
+                    Description = "Bearer token"
+                });
+                option.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Bearer", Enumerable.Empty<string>() }
                 });
             });
 
+            // WebApiSettings services.Configure<WebApiSettings>(settings => settings.HostName =
+            // Configuration["HostName"]);
             services.Configure<Models.WebApiSettings>(settings => settings.SecretKey = Configuration["SecretKey"]);
             // Add application services.
             //Repository
             services.AddScoped<DataAccess.ICategoryRepository, DataAccess.Repository.CategoryRepository>();
             services.AddScoped<DataAccess.ITodoItemRepository, DataAccess.Repository.TodoItemRepository>();
             services.AddScoped<DataAccess.IUserAccountRepository, DataAccess.Repository.UserAccountRepository>();
-            services.AddScoped<SparkTodo.Models.SparkTodoEntity>();
 
             // Set to DependencyResolver
             DependencyResolver.SetDependencyResolver(services.BuildServiceProvider());
@@ -133,50 +131,23 @@ namespace SparkTodo.API
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
         /// <param name="app">app</param>
-        /// <param name="env">environment</param>
         /// <param name="loggerFactory">loggerFactory</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
             loggerFactory.AddLog4Net();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-                app.UseBrowserLink();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
-
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new CompositeFileProvider(new PhysicalFileProvider(env.WebRootPath), new PhysicalFileProvider(env.ContentRootPath)),
-                ServeUnknownFileTypes = true
-            });
-
-            app.UseSession();
-
-            app.UseMvcWithDefaultRoute();
             //Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
             //Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint
             app.UseSwaggerUI(option =>
             {
-                option.SwaggerEndpoint("/swagger/v2/swagger.json", "SparkTodo API");
+                option.SwaggerEndpoint("/swagger/sparktodo/swagger.json", "SparkTodo API");
+                option.RoutePrefix = string.Empty;
+                option.DocumentTitle = "SparkTodo API";
             });
 
+            app.UseMvc();
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var dbContext = serviceScope.ServiceProvider.GetService<SparkTodo.Models.SparkTodoEntity>();
-                dbContext.Database.EnsureCreated();
-                //init Database,you can add your init data here
-            }
         }
     }
 }

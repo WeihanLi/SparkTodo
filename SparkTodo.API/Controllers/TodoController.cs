@@ -1,11 +1,11 @@
+锘縰sing System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SparkTodo.DataAccess;
 using SparkTodo.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SparkTodo.API.Controllers
 {
@@ -28,7 +28,7 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// 获取Todo详情
+        /// get todo by id
         /// </summary>
         /// <param name="todoId">todo id</param>
         /// <returns></returns>
@@ -51,12 +51,12 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// 获取 todo 列表
+        /// todo list
         /// </summary>
-        /// <param name="userId">用户id</param>
-        /// <param name="pageIndex">页码索引</param>
-        /// <param name="pageSize">每页数据量</param>
-        /// <param name="isOnlyNotDone">是否只显示未完成的todo，默认只查询未完成的todo</param>
+        /// <param name="userId">userId</param>
+        /// <param name="pageIndex">pageIndex</param>
+        /// <param name="pageSize">pageSize</param>
+        /// <param name="isOnlyNotDone">isOnlyNotDone</param>
         /// <returns></returns>
         [Route("GetAll")]
         [HttpGet]
@@ -80,9 +80,9 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// 修改todo信息
+        /// update todo
         /// </summary>
-        /// <param name="todo">todo信息</param>
+        /// <param name="todo">todo</param>
         /// <returns></returns>
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] TodoItem todo)
@@ -97,9 +97,9 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// 新增一个 todo
+        /// create todo
         /// </summary>
-        /// <param name="todo">todo信息</param>
+        /// <param name="todo">todo info</param>
         /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] TodoItem todo)
@@ -113,7 +113,7 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// 删除某一个 todo
+        /// delete todo
         /// </summary>
         /// <param name="todoId">todo Id</param>
         /// <returns></returns>

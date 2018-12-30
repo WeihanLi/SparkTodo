@@ -1,23 +1,23 @@
-using System;
+锘縰sing System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SparkTodo.DataAccess;
 using SparkTodo.Models;
-using Microsoft.AspNetCore.Authorization;
-using System.Collections.Generic;
 
 namespace SparkTodo.API.Controllers
 {
     /// <summary>
-    /// todo 分类
+    /// todo
     /// </summary>
     [Authorize]
     [Route("api/v1/[controller]")]
     public class CategoryController : Controller
     {
-        readonly ICategoryRepository _categoryRepository;
-        readonly ITodoItemRepository _todoItemRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly ITodoItemRepository _todoItemRepository;
 
         /// <summary>
         /// CategoryController .ctor
@@ -31,25 +31,25 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// 获取某一个分类详情
+        /// Get todo
         /// </summary>
-        /// <param name="categoryId">分类id</param>
+        /// <param name="categoryId">categoryId</param>
         /// <returns></returns>
         [HttpGet("{categoryId}")]
         public async Task<IActionResult> Get([FromQuery] int categoryId)
         {
-            if(categoryId<=0)
+            if (categoryId <= 0)
             {
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
-            var list = await _todoItemRepository.SelectAsync(t => t.CategoryId == categoryId && t.IsDeleted == false,t=>t.CreatedTime);
+            var list = await _todoItemRepository.SelectAsync(t => t.CategoryId == categoryId && t.IsDeleted == false, t => t.CreatedTime);
             return Json(list);
         }
 
         /// <summary>
-        /// 根据用户查询 todo 分类列表
+        /// GetAll to dos
         /// </summary>
-        /// <param name="userId">用户id</param>
+        /// <param name="userId">userId</param>
         /// <returns></returns>
         [Route("GetAll")]
         [HttpGet]
@@ -59,19 +59,19 @@ namespace SparkTodo.API.Controllers
             {
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
-            List<Category> list =  await _categoryRepository.SelectAsync(ca => ca.UserId ==userId && !ca.IsDeleted,ca=>ca.CreatedTime,true);
+            List<Category> list = await _categoryRepository.SelectAsync(ca => ca.UserId == userId && !ca.IsDeleted, ca => ca.CreatedTime, true);
             return Json(list);
         }
 
         /// <summary>
-        /// 修改todo分类信息
+        /// Update CategoryInfo
         /// </summary>
-        /// <param name="category">分类信息</param>
+        /// <param name="category">category info</param>
         /// <returns></returns>
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] Category category)
         {
-            if(category.UserId <= 0 || category.CategoryId <=0 || String.IsNullOrEmpty(category.CategoryName))
+            if (category.UserId <= 0 || category.CategoryId <= 0 || String.IsNullOrEmpty(category.CategoryName))
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
@@ -81,38 +81,38 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// 新增 todo 分类
+        /// create todo category
         /// </summary>
-        /// <param name="category">分类信息</param>
+        /// <param name="category">category info</param>
         /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Category category)
         {
-            if(category.UserId <= 0 || String.IsNullOrEmpty(category.CategoryName))
+            if (category.UserId <= 0 || String.IsNullOrEmpty(category.CategoryName))
             {
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
             category.UpdatedTime = DateTime.Now;
             category.CreatedTime = DateTime.Now;
-            category = await _categoryRepository.AddAsync(category);           
+            category = await _categoryRepository.AddAsync(category);
             return Json(category);
         }
 
         /// <summary>
-        /// 删除 todo 分类
+        /// delete todo category
         /// </summary>
-        /// <param name="categoryId">分类id</param>
+        /// <param name="categoryId">categoryId</param>
         /// <returns></returns>
         [HttpDelete("{categoryId}")]
         public async Task<IActionResult> Delete(int categoryId)
         {
-            if(categoryId <= 0)
+            if (categoryId <= 0)
             {
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
-            var category = new Category(){ CategoryId = categoryId , IsDeleted = true };
-            var result = await _categoryRepository.UpdateAsync(t=>t.CategoryId == categoryId,"IsDeleted");
-            if(result)
+            var category = new Category() { CategoryId = categoryId, IsDeleted = true };
+            var result = await _categoryRepository.UpdateAsync(t => t.CategoryId == categoryId, "IsDeleted");
+            if (result)
             {
                 return Ok();
             }
