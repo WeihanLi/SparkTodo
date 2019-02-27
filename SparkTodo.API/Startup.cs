@@ -39,7 +39,7 @@ namespace SparkTodo.API
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<SparkTodo.Models.SparkTodoEntity>(options => options.UseInMemoryDatabase("SparkTodo"));
+            services.AddDbContext<SparkTodo.Models.SparkTodoDbContext>(options => options.UseInMemoryDatabase("SparkTodo"));
             //
             services.AddIdentity<SparkTodo.Models.UserAccount, SparkTodo.Models.UserRole>(options =>
                 {
@@ -47,7 +47,7 @@ namespace SparkTodo.API
                     options.Password.RequireUppercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                 })
-                .AddEntityFrameworkStores<SparkTodo.Models.SparkTodoEntity>()
+                .AddEntityFrameworkStores<SparkTodo.Models.SparkTodoDbContext>()
                 .AddDefaultTokenProviders();
 
             // Add JWT¡¡Protection
@@ -118,13 +118,14 @@ namespace SparkTodo.API
             // Configuration["HostName"]);
             services.Configure<Models.WebApiSettings>(settings => settings.SecretKey = Configuration["SecretKey"]);
             // Add application services.
+
             //Repository
-            services.AddScoped<DataAccess.ICategoryRepository, DataAccess.Repository.CategoryRepository>();
-            services.AddScoped<DataAccess.ITodoItemRepository, DataAccess.Repository.TodoItemRepository>();
-            services.AddScoped<DataAccess.IUserAccountRepository, DataAccess.Repository.UserAccountRepository>();
+            services.AddScoped<DataAccess.ICategoryRepository, DataAccess.CategoryRepository>();
+            services.AddScoped<DataAccess.ITodoItemRepository, DataAccess.TodoItemRepository>();
+            services.AddScoped<DataAccess.IUserAccountRepository, DataAccess.UserAccountRepository>();
 
             // Set to DependencyResolver
-            DependencyResolver.SetDependencyResolver(services.BuildServiceProvider());
+            DependencyResolver.SetDependencyResolver(services);
         }
 
         /// <summary>

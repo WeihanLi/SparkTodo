@@ -6,9 +6,9 @@ namespace SparkTodo.Models
     /// <summary>
     /// SparkTodoEntity
     /// </summary>
-    public class SparkTodoEntity : IdentityDbContext<UserAccount, UserRole, int>
+    public class SparkTodoDbContext : IdentityDbContext<UserAccount, UserRole, int>
     {
-        public SparkTodoEntity(DbContextOptions<SparkTodoEntity> options) : base(options)
+        public SparkTodoDbContext(DbContextOptions<SparkTodoDbContext> options) : base(options)
         {
         }
 

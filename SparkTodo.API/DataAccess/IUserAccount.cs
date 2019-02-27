@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace SparkTodo.DataAccess
 {
-    public interface IUserAccountRepository:IBaseRepository<Models.UserAccount>
+    public partial interface IUserAccountRepository
     {
         Task<bool> LoginAsync(Models.UserAccount userInfo);
     }
