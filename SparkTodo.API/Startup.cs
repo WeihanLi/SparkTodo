@@ -46,12 +46,14 @@ namespace SparkTodo.API
                     options.Password.RequireLowercase = false;
                     options.Password.RequireUppercase = false;
                     options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequiredUniqueChars = 0;
+                    options.User.RequireUniqueEmail = true;
                 })
                 .AddEntityFrameworkStores<SparkTodo.Models.SparkTodoDbContext>()
                 .AddDefaultTokenProviders();
 
-            // Add JWT¡¡Protection
-            var secretKey = Configuration["SecretKey"];
+            // Add JWT token validation
+            var secretKey = Configuration.GetAppSetting("SecretKey");
             var signingKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(secretKey));
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -97,10 +99,11 @@ namespace SparkTodo.API
                     Title = "SparkTodo API",
                     Description = "API for SparkTodo",
                     TermsOfService = "None",
-                    Contact = new Swashbuckle.AspNetCore.Swagger.Contact { Name = "WeihanLi", Email = "weihanli@outlook.com" }
+                    Contact = new Contact { Name = "WeihanLi", Email = "weihanli@outlook.com" }
                 });
 
-                option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{typeof(Startup).Assembly.GetName().Name}.xml"), true);
+                option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory,
+                    $"{typeof(Startup).Assembly.GetName().Name}.xml"), true);
 
                 option.AddSecurityDefinition("Bearer", new ApiKeyScheme
                 {
@@ -117,6 +120,7 @@ namespace SparkTodo.API
             // WebApiSettings services.Configure<WebApiSettings>(settings => settings.HostName =
             // Configuration["HostName"]);
             services.Configure<Models.WebApiSettings>(settings => settings.SecretKey = Configuration["SecretKey"]);
+
             // Add application services.
 
             //Repository

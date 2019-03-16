@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SparkTodo.DataAccess;
 using SparkTodo.Models;
+using WeihanLi.Common.Models;
 
 namespace SparkTodo.API.Controllers
 {
@@ -39,7 +39,7 @@ namespace SparkTodo.API.Controllers
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
-            var todoItem = await _todoItemRepository.FetchAsync(todoId);
+            var todoItem = await _todoItemRepository.FetchAsync(t => t.TodoId == todoId);
             if (todoItem == null)
             {
                 return new StatusCodeResult(StatusCodes.Status404NotFound);
@@ -66,17 +66,20 @@ namespace SparkTodo.API.Controllers
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
-            var todoItem = await _todoItemRepository.SelectAsync(t => t.UserId == userId, t => t.CreatedTime);
-            List<TodoItem> todoList = null;
+            PagedListModel<TodoItem> todoList = null;
             if (isOnlyNotDone)
             {
-                todoList = await _todoItemRepository.SelectAsync(pageIndex, pageSize, t => t.UserId == userId && !t.IsDeleted && !t.IsCompleted, t => t.CreatedTime);
+                todoList = await _todoItemRepository.PagedAsync(pageIndex, pageSize,
+                    t => t.UserId == userId && !t.IsDeleted && !t.IsCompleted,
+                    t => t.CreatedTime);
             }
             else
             {
-                todoList = await _todoItemRepository.SelectAsync(pageIndex, pageSize, t => t.UserId == userId && !t.IsDeleted, t => t.CreatedTime);
+                todoList = await _todoItemRepository.PagedAsync(pageIndex, pageSize,
+                    t => t.UserId == userId && !t.IsDeleted,
+                    t => t.CreatedTime);
             }
-            return Json(todoItem);
+            return Json(todoList);
         }
 
         /// <summary>
@@ -91,8 +94,13 @@ namespace SparkTodo.API.Controllers
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
-            todo.UpdatedTime = DateTime.Now;
-            var item = await _todoItemRepository.UpdateAsync(todo, "TodoTitle", "TodoContent", "IsCompleted", "CompletedTime", "CategoryId");
+            todo.UpdatedTime = DateTime.UtcNow;
+            var item = await _todoItemRepository.UpdateAsync(todo,
+                t => t.TodoTitle,
+                t => t.TodoContent,
+                t => t.IsCompleted,
+                t => t.CompletedTime,
+                t => t.UpdatedTime);
             return Json(item);
         }
 
@@ -108,7 +116,7 @@ namespace SparkTodo.API.Controllers
             {
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
-            await _todoItemRepository.AddAsync(todo);
+            await _todoItemRepository.InsertAsync(todo);
             return Json(todo);
         }
 
@@ -125,8 +133,8 @@ namespace SparkTodo.API.Controllers
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
             var todo = new TodoItem() { TodoId = todoId, IsDeleted = true };
-            var result = await _todoItemRepository.UpdateAsync(t => t.TodoId == todoId);
-            if (result)
+            var result = await _todoItemRepository.UpdateAsync(todo, t => t.IsDeleted);
+            if (result > 0)
             {
                 return Ok();
             }

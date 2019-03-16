@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -40,10 +40,10 @@ namespace SparkTodo.API.Controllers
         {
             if (categoryId <= 0)
             {
-                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+                return BadRequest();
             }
-            var list = await _todoItemRepository.SelectAsync(t => t.CategoryId == categoryId && t.IsDeleted == false, t => t.CreatedTime);
-            return Json(list);
+            var list = await _todoItemRepository.SelectAsync(t => t.CategoryId == categoryId && t.IsDeleted == false);
+            return Json(list.OrderByDescending(_ => _.CreatedTime));
         }
 
         /// <summary>
@@ -57,10 +57,10 @@ namespace SparkTodo.API.Controllers
         {
             if (userId <= 0)
             {
-                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+                return BadRequest();
             }
-            List<Category> list = await _categoryRepository.SelectAsync(ca => ca.UserId == userId && !ca.IsDeleted, ca => ca.CreatedTime, true);
-            return Json(list);
+            var list = await _categoryRepository.SelectAsync(ca => ca.UserId == userId && !ca.IsDeleted);
+            return Json(list.OrderBy(t => t.CreatedTime));
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace SparkTodo.API.Controllers
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
             category.UpdatedTime = DateTime.Now;
-            var item = await _categoryRepository.UpdateAsync(category, "CategoryName", "UpdatedTime");
+            var item = await _categoryRepository.UpdateAsync(category, c => c.CreatedTime, c => c.UpdatedTime);
             return Json(item);
         }
 
@@ -94,7 +94,7 @@ namespace SparkTodo.API.Controllers
             }
             category.UpdatedTime = DateTime.Now;
             category.CreatedTime = DateTime.Now;
-            category = await _categoryRepository.AddAsync(category);
+            var categoryId = await _categoryRepository.InsertAsync(category);
             return Json(category);
         }
 
@@ -108,11 +108,11 @@ namespace SparkTodo.API.Controllers
         {
             if (categoryId <= 0)
             {
-                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+                return BadRequest();
             }
             var category = new Category() { CategoryId = categoryId, IsDeleted = true };
-            var result = await _categoryRepository.UpdateAsync(t => t.CategoryId == categoryId, "IsDeleted");
-            if (result)
+            var result = await _categoryRepository.UpdateAsync(category, t => t.IsDeleted);
+            if (result > 0)
             {
                 return Ok();
             }

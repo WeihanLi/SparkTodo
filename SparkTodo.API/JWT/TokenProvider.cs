@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace SparkTodo.API.JWT
 {
@@ -32,7 +29,7 @@ namespace SparkTodo.API.JWT
         /// <returns></returns>
         public TokenEntity GenerateToken(HttpContext context, string userName)
         {
-            var identity =  GetIdentity(userName);
+            var identity = GetIdentity(userName);
             if (identity == null)
                 return null;
             DateTime now = DateTime.UtcNow;
@@ -51,7 +48,9 @@ namespace SparkTodo.API.JWT
                 notBefore: now,
                 expires: now.Add(_options.ValidFor),
                 signingCredentials: _options.SigningCredentials);
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            var encodedJwt = new JwtSecurityTokenHandler()
+                .WriteToken(jwt);
 
             var response = new TokenEntity
             {
@@ -68,7 +67,7 @@ namespace SparkTodo.API.JWT
         /// <returns></returns>
         private ClaimsIdentity GetIdentity(string username)
         {
-            return new ClaimsIdentity( new System.Security.Principal.GenericIdentity(username, "Token"),
+            return new ClaimsIdentity(new System.Security.Principal.GenericIdentity(username, "Token"),
                 new Claim[] { new Claim(ClaimTypes.Name, username) });
         }
 

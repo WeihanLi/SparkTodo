@@ -13,18 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Filters\**" />
-    <Content Remove="Filters\**" />
-    <EmbeddedResource Remove="Filters\**" />
-    <None Remove="Filters\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.4" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.9" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
-    <PackageReference Include="WeihanLi.Common" Version="1.0.12" />
-    <PackageReference Include="WeihanLi.Common.Logging.Log4Net" Version="1.0.12.1-preview-20190226-104150" />
+    <PackageReference Include="WeihanLi.Common" Version="1.0.14" />
+    <PackageReference Include="WeihanLi.Common.Logging.Log4Net" Version="1.0.13" />
     <PackageReference Include="WeihanLi.EntityFramework" Version="1.0.1" />
   </ItemGroup>
 
