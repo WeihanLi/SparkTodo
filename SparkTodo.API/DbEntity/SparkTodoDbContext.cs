@@ -17,6 +17,9 @@ namespace SparkTodo.Models
             builder.Entity<Category>().HasKey(c => c.CategoryId);
             builder.Entity<TodoItem>().HasKey(t => t.TodoId);
 
+            builder.Entity<Category>().HasQueryFilter(f => f.IsDeleted == false);
+            builder.Entity<TodoItem>().HasQueryFilter(f => f.IsDeleted == false);
+
             base.OnModelCreating(builder);
         }
 

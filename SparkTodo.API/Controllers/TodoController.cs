@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SparkTodo.API.Extensions;
 using SparkTodo.DataAccess;
 using SparkTodo.Models;
 using WeihanLi.Common.Models;
@@ -55,15 +56,15 @@ namespace SparkTodo.API.Controllers
         /// <summary>
         /// todos list
         /// </summary>
-        /// <param name="userId">userId</param>
         /// <param name="pageIndex">pageIndex</param>
         /// <param name="pageSize">pageSize</param>
         /// <param name="isOnlyNotDone">isOnlyNotDone</param>
         /// <returns></returns>
         [Route("GetAll")]
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int userId, int pageIndex = 1, int pageSize = 50, bool isOnlyNotDone = false)
+        public async Task<IActionResult> GetAll(int pageIndex = 1, int pageSize = 50, bool isOnlyNotDone = false)
         {
+            var userId = User.GetUserId();
             if (userId <= 0)
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
@@ -92,6 +93,7 @@ namespace SparkTodo.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] TodoItem todo)
         {
+            todo.UserId = User.GetUserId();
             if (todo.UserId <= 0 || todo.CategoryId <= 0 || String.IsNullOrEmpty(todo.TodoTitle))
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
@@ -114,6 +116,7 @@ namespace SparkTodo.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] TodoItem todo)
         {
+            todo.UserId = User.GetUserId();
             if (todo.UserId <= 0 || todo.CategoryId <= 0 || String.IsNullOrEmpty(todo.TodoTitle))
             {
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
@@ -131,6 +134,11 @@ namespace SparkTodo.API.Controllers
         public async Task<IActionResult> Delete(int todoId)
         {
             if (todoId <= 0)
+            {
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+            var userId = User.GetUserId();
+            if (!await _todoItemRepository.ExistAsync(_ => _.UserId == userId && _.TodoId == todoId))
             {
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }

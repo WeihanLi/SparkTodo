@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -58,47 +59,44 @@ namespace SparkTodo.API
             var secretKey = Configuration.GetAppSetting("SecretKey");
             var signingKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(secretKey));
 
+            var tokenAudience = Configuration.GetAppSetting("TokenAudience");
+            var tokenIssuer = Configuration.GetAppSetting("TokenIssuer");
             services.Configure<JWT.TokenOptions>(options =>
             {
-                options.Audience = Configuration.GetAppSetting("TokenAudience");
+                options.Audience = tokenAudience;
+                options.Issuer = tokenIssuer;
                 options.ValidFor = TimeSpan.FromHours(2);
-                options.Issuer = Configuration.GetAppSetting("TokenIssuer");
                 options.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
             });
 
             services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    // The signing key must match!
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = signingKey,
-                    // Validate the JWT Issuer (iss) claim
-                    ValidateIssuer = true,
-                    ValidIssuer = Configuration.GetAppSetting("TokenIssuer"),
-                    // Validate the JWT Audience (aud) claim
-                    ValidateAudience = true,
-                    ValidAudience = Configuration.GetAppSetting("TokenAudience"),
-                    // Validate the token expiry
-                    ValidateLifetime = true,
-                    // If you want to allow a certain amount of clock drift, set that here:
-                    ClockSkew = System.TimeSpan.Zero
-                };
-            });
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        // The signing key must match!
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = signingKey,
+                        // Validate the JWT Issuer (iss) claim
+                        ValidateIssuer = true,
+                        ValidIssuer = tokenIssuer,
+                        // Validate the JWT Audience (aud) claim
+                        ValidateAudience = true,
+                        ValidAudience = tokenAudience,
+                        // Validate the token expiry
+                        ValidateLifetime = true,
+                        // If you want to allow a certain amount of clock drift, set that here:
+                        ClockSkew = System.TimeSpan.Zero
+                    };
+                });
 
-            //Add MvcFramework
-            services.AddMvcCore()
-                .AddApiExplorer()
-                .AddAuthorization()
-                .AddDataAnnotations()
-                .AddFormatterMappings()
-                .AddCors()
-                .AddJsonFormatters()
+            // Add MvcFramework
+            services.AddMvc()
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
@@ -172,6 +170,10 @@ namespace SparkTodo.API
         /// <param name="loggerFactory">loggerFactory</param>
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
+            // disable claimType transform, see details here https://stackoverflow.com/questions/39141310/jwttoken-claim-name-jwttokentypes-subject-resolved-to-claimtypes-nameidentifie
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            JwtSecurityTokenHandler.DefaultOutboundAlgorithmMap.Clear();
+
             loggerFactory.AddLog4Net();
 
             //Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -184,6 +186,7 @@ namespace SparkTodo.API
                 option.DocumentTitle = "SparkTodo API";
             });
 
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
