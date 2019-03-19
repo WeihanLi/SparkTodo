@@ -92,9 +92,13 @@ namespace SparkTodo.API
             });
 
             //Add MvcFramework
-            services
-                .AddMvcCore()
+            services.AddMvcCore()
                 .AddApiExplorer()
+                .AddAuthorization()
+                .AddDataAnnotations()
+                .AddFormatterMappings()
+                .AddCors()
+                .AddJsonFormatters()
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
