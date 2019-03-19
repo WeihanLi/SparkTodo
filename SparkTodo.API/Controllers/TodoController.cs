@@ -13,8 +13,9 @@ namespace SparkTodo.API.Controllers
     /// Todos
     /// </summary>
     [Authorize]
+    [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class TodoController : Controller
     {
         private readonly ITodoItemRepository _todoItemRepository;

@@ -7,7 +7,9 @@ namespace SparkTodo.API.Controllers
     /// new Todo
     /// </summary>
     [Authorize]
-    [Route("api/v2/[controller]")]
+    [ApiVersion("2.0")]
+    [ApiController]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class SyncController : Controller
     {
     }

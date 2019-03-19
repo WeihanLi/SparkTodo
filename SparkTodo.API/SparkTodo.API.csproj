@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AssemblyName>SparkTodo.API</AssemblyName>
+    <RootNamespace>SparkTodo.API</RootNamespace>
     <OutputType>Exe</OutputType>
     <UserSecretsId>aspnet-WebApplication-0799fe3e-6eaf-4c5f-b40e-7c6bfd5dfa9a</UserSecretsId>
   </PropertyGroup>
@@ -13,12 +14,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.9" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="2.0.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
     <PackageReference Include="WeihanLi.Common" Version="1.0.14" />
     <PackageReference Include="WeihanLi.Common.Logging.Log4Net" Version="1.0.13" />
-    <PackageReference Include="WeihanLi.EntityFramework" Version="1.0.1" />
+    <PackageReference Include="WeihanLi.EntityFramework" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>

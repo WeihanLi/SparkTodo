@@ -1,16 +1,17 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Text;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using SparkTodo.API.JWT;
+using SparkTodo.API.Services;
 using SparkTodo.DataAccess;
+using WeihanLi.Common;
 
 namespace SparkTodo.API.Controllers
 {
@@ -19,14 +20,15 @@ namespace SparkTodo.API.Controllers
     /// </summary>
     [ApiVersion("1.0")]
     [ApiVersion("2.0")]
-    [Route("api/[controller]")]
+    [ApiController]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class AccountController : Controller
     {
         private readonly IUserAccountRepository _userRepository;
-        private readonly IOptions<Models.WebApiSettings> _apiSetting;
         private readonly UserManager<SparkTodo.Models.UserAccount> _userManager;
         private readonly SignInManager<SparkTodo.Models.UserAccount> _signInManager;
         private readonly ILogger _logger;
+        private readonly ITokenGenerator _tokenGenerator;
 
         /// <summary>
         /// AccountController .ctor
@@ -34,18 +36,18 @@ namespace SparkTodo.API.Controllers
         /// <param name="userManager">userManager</param>
         /// <param name="signInManager">signInManager</param>
         /// <param name="userRepository">userRepository</param>
-        /// <param name="apiSetting">apiSetting</param>
+        /// <param name="tokenGenerator"></param>
         /// <param name="loggerFactory">loggerFactory</param>
         public AccountController(UserManager<SparkTodo.Models.UserAccount> userManager,
             SignInManager<SparkTodo.Models.UserAccount> signInManager,
             IUserAccountRepository userRepository,
-            IOptions<Models.WebApiSettings> apiSetting,
+            ITokenGenerator tokenGenerator,
             ILoggerFactory loggerFactory)
         {
             _userRepository = userRepository;
-            _apiSetting = apiSetting;
             _userManager = userManager;
             _signInManager = signInManager;
+            _tokenGenerator = tokenGenerator;
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
@@ -78,16 +80,15 @@ namespace SparkTodo.API.Controllers
             {
                 _logger.LogInformation("User logged in.");
 
-                var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_apiSetting.Value.SecretKey));
-                var options = new JWT.TokenOptions
-                {
-                    Audience = "SparkTodoAudience",
-                    Issuer = "SparkTodo",
-                    SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
-                };
-                var token = new TokenProvider(options).GenerateToken(HttpContext, userInfo.Email);
-
                 userInfo = await _userRepository.FetchAsync(u => u.Email == loginModel.Email);
+                var claims = new Claim[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Jti, ObjectIdGenerator.Instance.NewId()),
+                    new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
+                    new Claim(JwtRegisteredClaimNames.NameId, userInfo.Id.ToString()),
+                };
+                var token = _tokenGenerator.GenerateToken(claims);
+
                 var userToken = new UserTokenEntity
                 {
                     AccessToken = token.AccessToken,
@@ -144,15 +145,16 @@ namespace SparkTodo.API.Controllers
             if (signupResult.Succeeded)
             {
                 _logger.LogInformation(3, "User created a new account");
-                var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_apiSetting.Value.SecretKey));
-                var options = new JWT.TokenOptions
-                {
-                    Audience = "SparkTodoAudience",
-                    Issuer = "SparkTodo",
-                    SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
-                };
-                var token = new TokenProvider(options).GenerateToken(HttpContext, userInfo.Email);
                 userInfo = await _userRepository.FetchAsync(u => u.Email == regModel.Email);
+
+                var claims = new Claim[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Jti, ObjectIdGenerator.Instance.NewId()),
+                    new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
+                    new Claim(ClaimTypes.Name, userInfo.UserName),
+                };
+                var token = _tokenGenerator.GenerateToken(claims);
+
                 var userToken = new UserTokenEntity
                 {
                     AccessToken = token.AccessToken,

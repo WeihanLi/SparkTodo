@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using SparkTodo.API.Services;
 using Swashbuckle.AspNetCore.Swagger;
 using WeihanLi.Common;
 
@@ -57,22 +57,14 @@ namespace SparkTodo.API
             // Add JWT token validation
             var secretKey = Configuration.GetAppSetting("SecretKey");
             var signingKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(secretKey));
-            var tokenValidationParameters = new TokenValidationParameters
+
+            services.Configure<JWT.TokenOptions>(options =>
             {
-                // The signing key must match!
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = signingKey,
-                // Validate the JWT Issuer (iss) claim
-                ValidateIssuer = true,
-                ValidIssuer = "SparkTodo",
-                // Validate the JWT Audience (aud) claim
-                ValidateAudience = true,
-                ValidAudience = "SparkTodoAudience",
-                // Validate the token expiry
-                ValidateLifetime = true,
-                // If you want to allow a certain amount of clock drift, set that here:
-                ClockSkew = System.TimeSpan.Zero
-            };
+                options.Audience = Configuration.GetAppSetting("TokenAudience");
+                options.ValidFor = TimeSpan.FromHours(2);
+                options.Issuer = Configuration.GetAppSetting("TokenIssuer");
+                options.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+            });
 
             services.AddAuthentication(options =>
             {
@@ -81,25 +73,57 @@ namespace SparkTodo.API
                 options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.Audience = "SparkTodoAudience";
-                options.TokenValidationParameters = tokenValidationParameters;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    // The signing key must match!
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = signingKey,
+                    // Validate the JWT Issuer (iss) claim
+                    ValidateIssuer = true,
+                    ValidIssuer = Configuration.GetAppSetting("TokenIssuer"),
+                    // Validate the JWT Audience (aud) claim
+                    ValidateAudience = true,
+                    ValidAudience = Configuration.GetAppSetting("TokenAudience"),
+                    // Validate the token expiry
+                    ValidateLifetime = true,
+                    // If you want to allow a certain amount of clock drift, set that here:
+                    ClockSkew = System.TimeSpan.Zero
+                };
             });
 
-            //Add MvcFramewok
-            services.AddMvc()
+            //Add MvcFramework
+            services
+                .AddMvcCore()
+                .AddApiExplorer()
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                });                
-            //https://www.hanselman.com/blog/ASPNETCoreRESTfulWebAPIVersioningMadeEasy.aspx
-            services.AddApiVersioning(options =>
-            {
-                options.AssumeDefaultVersionWhenUnspecified = true;
-                options.DefaultApiVersion = new ApiVersion(1, 0);
-                options.ReportApiVersions = true;
-            });
+                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                });
 
+            // Add api version
+            // https://www.hanselman.com/blog/ASPNETCoreRESTfulWebAPIVersioningMadeEasy.aspx
+            services.AddApiVersioning(options =>
+                {
+                    options.AssumeDefaultVersionWhenUnspecified = true;
+                    options.DefaultApiVersion = ApiVersion.Default;
+                    options.ReportApiVersions = true;
+                });
+            // see https://github.com/Microsoft/aspnet-api-versioning/blob/master/samples/aspnetcore/SwaggerSample/Startup.cs for details
+            //services.AddVersionedApiExplorer(options =>
+            //    {
+            //        // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+            //        // note: the specified format code will format the version as "'v'major[.minor][-status]"
+            //        options.GroupNameFormat = "'v'VVV";
+
+            //        // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+            //        // can also be used to control the format of the API version in route templates
+            //        options.SubstituteApiVersionInUrl = true;
+            //    });
+
+            // swagger
             services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("sparktodo", new Swashbuckle.AspNetCore.Swagger.Info
@@ -111,9 +135,9 @@ namespace SparkTodo.API
                     Contact = new Contact { Name = "WeihanLi", Email = "weihanli@outlook.com" }
                 });
 
-                option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory,
-                    $"{typeof(Startup).Assembly.GetName().Name}.xml"), true);
-
+                // include document file
+                option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{typeof(Startup).Assembly.GetName().Name}.xml"), true);
+                // bear authentication
                 option.AddSecurityDefinition("Bearer", new ApiKeyScheme
                 {
                     Name = "Authorization",
@@ -126,12 +150,8 @@ namespace SparkTodo.API
                 });
             });
 
-            // WebApiSettings services.Configure<WebApiSettings>(settings => settings.HostName =
-            // Configuration["HostName"]);
-            services.Configure<Models.WebApiSettings>(settings => settings.SecretKey = Configuration["SecretKey"]);
-
             // Add application services.
-
+            services.AddSingleton<ITokenGenerator, TokenGenerator>();
             //Repository
             services.AddScoped<DataAccess.ICategoryRepository, DataAccess.CategoryRepository>();
             services.AddScoped<DataAccess.ITodoItemRepository, DataAccess.TodoItemRepository>();
@@ -161,7 +181,6 @@ namespace SparkTodo.API
             });
 
             app.UseMvc();
-            System.Console.OutputEncoding = System.Text.Encoding.UTF8;
         }
     }
 }
