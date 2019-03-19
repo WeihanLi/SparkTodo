@@ -20,7 +20,7 @@ namespace SparkTodo.API
 
             using (var serviceScope = host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                var dbContext = serviceScope.ServiceProvider.GetService<SparkTodo.Models.SparkTodoEntity>();
+                var dbContext = serviceScope.ServiceProvider.GetService<SparkTodo.Models.SparkTodoDbContext>();
                 dbContext.Database.EnsureCreated();
                 //init Database,you can add your init data here
 
@@ -33,7 +33,7 @@ namespace SparkTodo.API
                     {
                         UserName = "weihanli@outlook.com",
                         Email = "weihanli@outlook.com"
-                    }, "Test1234");
+                    }, "Test1234").Wait();
                 }
             }
             host.Run();

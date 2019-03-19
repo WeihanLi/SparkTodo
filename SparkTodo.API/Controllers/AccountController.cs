@@ -37,7 +37,10 @@ namespace SparkTodo.API.Controllers
         /// <param name="apiSetting">apiSetting</param>
         /// <param name="loggerFactory">loggerFactory</param>
         public AccountController(UserManager<SparkTodo.Models.UserAccount> userManager,
-            SignInManager<SparkTodo.Models.UserAccount> signInManager, IUserAccountRepository userRepository, IOptions<Models.WebApiSettings> apiSetting, ILoggerFactory loggerFactory)
+            SignInManager<SparkTodo.Models.UserAccount> signInManager,
+            IUserAccountRepository userRepository,
+            IOptions<Models.WebApiSettings> apiSetting,
+            ILoggerFactory loggerFactory)
         {
             _userRepository = userRepository;
             _apiSetting = apiSetting;
@@ -70,10 +73,11 @@ namespace SparkTodo.API.Controllers
                 Email = loginModel.Email
             };
             var result = new Models.JsonResponseModel<JWT.TokenEntity>();
-            Microsoft.AspNetCore.Identity.SignInResult signinResult = await _signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, true, lockoutOnFailure: false);
+            var signinResult = await _signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, true, lockoutOnFailure: false);
             if (signinResult.Succeeded)
             {
-                _logger.LogInformation(1, "User logged in.");
+                _logger.LogInformation("User logged in.");
+
                 var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_apiSetting.Value.SecretKey));
                 var options = new JWT.TokenOptions
                 {
@@ -82,6 +86,7 @@ namespace SparkTodo.API.Controllers
                     SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
                 };
                 var token = new TokenProvider(options).GenerateToken(HttpContext, userInfo.Email);
+
                 userInfo = await _userRepository.FetchAsync(u => u.Email == loginModel.Email);
                 var userToken = new UserTokenEntity
                 {
@@ -121,7 +126,7 @@ namespace SparkTodo.API.Controllers
         [Route("SignUp")]
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> SignUpAsync([FromForm]Models.AccountViewModels.RegisterViewModel regModel)
+        public async Task<IActionResult> SignUpAsync([FromBody]Models.AccountViewModels.RegisterViewModel regModel)
         {
             if (!ModelState.IsValid)
             {
@@ -131,7 +136,7 @@ namespace SparkTodo.API.Controllers
             {
                 UserName = regModel.Email,
                 Email = regModel.Email,
-                EmailConfirmed = true,//Ä¬ÈÏ²»ÐèÒªÑéÖ¤ÓÊÏä£¬×¢ÊÍÒÔÆôÓÃ
+                EmailConfirmed = true,
                 CreatedTime = DateTime.Now
             };
             var result = new Models.JsonResponseModel<JWT.TokenEntity>();

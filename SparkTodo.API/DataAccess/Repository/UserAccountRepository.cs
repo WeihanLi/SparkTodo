@@ -1,20 +1,14 @@
-using System;
-using System.Threading.Tasks;
+Ôªøusing System.Threading.Tasks;
 using SparkTodo.Models;
-using System.Linq;
 
-namespace SparkTodo.DataAccess.Repository
+namespace SparkTodo.DataAccess
 {
-    public class UserAccountRepository : BaseRepository<Models.UserAccount>, IUserAccountRepository
+    public partial class UserAccountRepository
     {
-        public UserAccountRepository(SparkTodoEntity dbEntity) : base(dbEntity)
-        {
-        }
-
         /// <summary>
-        /// µ«¬º
+        /// ÁôªÂΩï
         /// </summary>
-        /// <param name="userInfo">µ«¬º–≈œ¢</param>
+        /// <param name="userInfo">ÁôªÂΩï‰ø°ÊÅØ</param>
         /// <returns></returns>
         public async Task<bool> LoginAsync(UserAccount userInfo)
         {

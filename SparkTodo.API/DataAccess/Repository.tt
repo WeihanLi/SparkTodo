@@ -1,0 +1,35 @@
+﻿<#@ template  debug="false" hostSpecific="true" language="C#" #>
+<#@ output extension=".generated.cs" encoding="utf-8" #>
+<#@ Assembly Name="System.Core" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#
+	string[] types = {
+		"TodoItem",
+		"Category",
+		"UserAccount"
+	};
+#>
+using SparkTodo.Models;
+using Microsoft.Extensions.DependencyInjection;
+using WeihanLi.EntityFramework;
+
+namespace SparkTodo.DataAccess
+{
+<# 
+	foreach (var item in types)
+    {
+#>
+	public partial interface I<#= item #>Repository: IEFRepository<SparkTodoDbContext, <#= item #>>{}
+
+	public partial class <#= item #>Repository : EFRepository<SparkTodoDbContext, <#= item #>>,  I<#= item #>Repository
+    {
+        public <#= item #>Repository(SparkTodoDbContext dbContext) : base(dbContext)
+        {
+        }
+    }
+<#		 
+    } 
+#>
+}

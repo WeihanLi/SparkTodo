@@ -10,21 +10,21 @@
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <RootNamespace>SparkTodo</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="2.1.0" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.9" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
-    <PackageReference Include="WeihanLi.Common" Version="1.0.9.1" />
+    <PackageReference Include="WeihanLi.Common" Version="1.0.14" />
+    <PackageReference Include="WeihanLi.Common.Logging.Log4Net" Version="1.0.13" />
+    <PackageReference Include="WeihanLi.EntityFramework" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="DataAccess\IRepository.tt">
+    <None Update="DataAccess\Repository.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>IRepository.cs</LastGenOutput>
+      <LastGenOutput>Repository.generated.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
@@ -33,14 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="DataAccess\IRepository.cs">
+    <Compile Update="DataAccess\Repository.generated.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>IRepository.tt</DependentUpon>
+      <DependentUpon>Repository.tt</DependentUpon>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Filters\" />
   </ItemGroup>
 </Project>
