@@ -29,4 +29,12 @@ namespace SparkTodo.DataAccess
         {
         }
     }
+	public partial interface ISyncVersionRepository: IEFRepository<SparkTodoDbContext, SyncVersion>{}
+
+	public partial class SyncVersionRepository : EFRepository<SparkTodoDbContext, SyncVersion>,  ISyncVersionRepository
+    {
+        public SyncVersionRepository(SparkTodoDbContext dbContext) : base(dbContext)
+        {
+        }
+    }
 }

@@ -8,7 +8,8 @@
 	string[] types = {
 		"TodoItem",
 		"Category",
-		"UserAccount"
+		"UserAccount",
+        "SyncVersion"
 	};
 #>
 using SparkTodo.Models;

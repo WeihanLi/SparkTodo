@@ -26,5 +26,7 @@ namespace SparkTodo.Models
         public virtual DbSet<Category> Categories { get; set; }
 
         public virtual DbSet<TodoItem> TodoItems { get; set; }
+
+        public virtual DbSet<SyncVersion> SyncVersions { get; set; }
     }
 }
