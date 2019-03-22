@@ -43,7 +43,7 @@ namespace SparkTodo.API
         {
             // Add framework services.
             // dbContextPool size tip https://www.cnblogs.com/dudu/p/10398225.html
-            services.AddDbContextPool<SparkTodo.Models.SparkTodoDbContext>(options => options.UseSqlite("SparkTodo"), poolSize: 64);
+            services.AddDbContextPool<SparkTodo.Models.SparkTodoDbContext>(options => options.UseInMemoryDatabase("SparkTodo"), poolSize: 64);
             //
             services.AddIdentity<SparkTodo.Models.UserAccount, SparkTodo.Models.UserRole>(options =>
                 {
