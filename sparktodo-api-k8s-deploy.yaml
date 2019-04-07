@@ -33,7 +33,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: sparktodo-api-service
+  name: sparktodo-api
 spec:
   selector:
     app: sparktodo-api
