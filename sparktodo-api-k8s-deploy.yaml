@@ -1,11 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sparktodo-api-deployment
+  name: sparktodo-api
   labels:
     app: sparktodo-api
 spec:
   replicas: 3
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: sparktodo-api
@@ -26,8 +27,16 @@ spec:
         - name: sparktodo-api
           image: weihanli/sparktodo-api:latest
           imagePullPolicy: IfNotPresent # 默认是IfNotPresent，如果设置成Always，则每一次部署都会重新拉取容器映像（否则，如果本地存在指定的镜像版本，就不会再去拉取）
+          resources:
+            limits:
+              memory: "32Mi"
+              cpu: "100m"
           ports:
             - containerPort: 80
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
 
 ---
 apiVersion: v1
