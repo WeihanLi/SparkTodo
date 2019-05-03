@@ -26,4 +26,4 @@ steps:
     runOptions: inline
 
     inline: |
-      kubectl set image deployment/sparktodo-api-deployment sparktodo-api=$(imageName) --record=true
+      kubectl set image deployment/sparktodo-api sparktodo-api=$(imageName) --record=true
