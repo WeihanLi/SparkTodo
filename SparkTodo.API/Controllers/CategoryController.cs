@@ -130,10 +130,10 @@ namespace SparkTodo.API.Controllers
             }
             var category = new Category() { CategoryId = categoryId, IsDeleted = true };
             var result = await _categoryRepository.UpdateAsync(category, t => t.IsDeleted);
-            await _todoItemRepository.UpdateAsync(_ => _.CategoryId == categoryId, _ => _.CategoryId, -1);
 
             if (result > 0)
             {
+                await _todoItemRepository.UpdateAsync(_ => _.CategoryId == categoryId, _ => _.CategoryId, -1);
                 return Ok();
             }
             else
