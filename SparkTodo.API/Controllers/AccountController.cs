@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -18,8 +19,8 @@ namespace SparkTodo.API.Controllers
     /// <summary>
     /// Account
     /// </summary>
-    [ApiVersion("1.0")]
-    [ApiVersion("2.0")]
+    [ApiVersion("1")]
+    [ApiVersion("2")]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class AccountController : Controller
@@ -181,6 +182,7 @@ namespace SparkTodo.API.Controllers
         [HttpPost]
         public async Task<IActionResult> SignOut()
         {
+            await HttpContext.SignOutAsync();
             await _signInManager.SignOutAsync();
             _logger.LogInformation(4, "User logged out.");
             return Ok();

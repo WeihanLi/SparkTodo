@@ -15,7 +15,7 @@ namespace SparkTodo.API.Controllers
     /// todo
     /// </summary>
     [Authorize]
-    [ApiVersion("1.0")]
+    [ApiVersion("1")]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class CategoryController : Controller
