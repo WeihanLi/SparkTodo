@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -6,7 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using SparkTodo.API.Extensions;
 using SparkTodo.DataAccess;
 using SparkTodo.Models;
-using WeihanLi.Common.Models;
+using WeihanLi.EntityFramework;
+using WeihanLi.Extensions;
 
 namespace SparkTodo.API.Controllers
 {
@@ -69,19 +72,17 @@ namespace SparkTodo.API.Controllers
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
-            PagedListModel<TodoItem> todoList = null;
+            Expression<Func<TodoItem, bool>> predict = t => t.UserId == userId;
             if (isOnlyNotDone)
             {
-                todoList = await _todoItemRepository.PagedAsync(pageIndex, pageSize,
-                    t => t.UserId == userId && !t.IsDeleted && !t.IsCompleted,
-                    t => t.CreatedTime);
+                predict = predict.And(t => !t.IsCompleted);
             }
-            else
-            {
-                todoList = await _todoItemRepository.PagedAsync(pageIndex, pageSize,
-                    t => t.UserId == userId && !t.IsDeleted,
-                    t => t.CreatedTime);
-            }
+            var todoList = await _todoItemRepository.GetPagedListAsync(
+                builder => builder.WithPredict(predict)
+                                    .WithOrderBy(q => q.OrderBy(_ => _.CreatedTime)),
+                pageIndex,
+                pageSize);
+
             return Json(todoList);
         }
 
@@ -94,7 +95,7 @@ namespace SparkTodo.API.Controllers
         public async Task<IActionResult> Put([FromBody] TodoItem todo)
         {
             todo.UserId = User.GetUserId();
-            if (todo.UserId <= 0 || todo.CategoryId <= 0 || String.IsNullOrEmpty(todo.TodoTitle))
+            if (todo.UserId <= 0 || todo.CategoryId <= 0 || string.IsNullOrEmpty(todo.TodoTitle))
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
