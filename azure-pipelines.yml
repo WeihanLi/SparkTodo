@@ -21,12 +21,3 @@ steps:
     docker login -u $(dockerId) -p $(pswd)
     docker push $(imageName)
   displayName: 'Push docker image'
-
-- task: SSH@0
-  displayName: 'Run shell inline on remote machine'
-  inputs:
-    sshEndpoint: 'weihanli-vm'
-    runOptions: inline
-
-    inline: |
-      kubectl set image deployment/sparktodo-api sparktodo-api=$(imageName) --record=true

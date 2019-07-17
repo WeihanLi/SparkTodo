@@ -18,8 +18,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
-    <PackageReference Include="WeihanLi.Common" Version="1.0.22" />
-    <PackageReference Include="WeihanLi.Common.Logging.Log4Net" Version="1.0.17" />
+    <PackageReference Include="WeihanLi.Common" Version="1.0.23.1" />
+    <PackageReference Include="WeihanLi.Common.Logging.Log4Net" Version="1.0.22.6" />
     <PackageReference Include="WeihanLi.EntityFramework" Version="1.0.8" />
   </ItemGroup>
 
