@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk-alpine AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0-alpine AS build-env
 WORKDIR /app
 
 COPY SparkTodo.API/SparkTodo.API.csproj SparkTodo.API/
@@ -9,7 +9,7 @@ COPY . .
 RUN dotnet publish -c Release -o out
 
 # build runtime image
-FROM microsoft/dotnet:2.1-aspnetcore-runtime-alpine
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-alpine
 LABEL Maintainer="WeihanLi"
 WORKDIR /app
 COPY --from=build-env /app/SparkTodo.API/out .
