@@ -5,8 +5,9 @@ COPY SparkTodo.API/SparkTodo.API.csproj SparkTodo.API/
 RUN dotnet restore SparkTodo.API/SparkTodo.API.csproj
 
 # copy everything and build
-WORKDIR /app/SparkTodo.API
 COPY . .
+
+WORKDIR /app/SparkTodo.API
 RUN dotnet publish -c Release -o out
 
 # build runtime image
