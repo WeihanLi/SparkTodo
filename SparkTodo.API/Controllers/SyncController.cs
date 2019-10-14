@@ -45,7 +45,15 @@ namespace SparkTodo.API.Controllers
         public async Task<IActionResult> Get(long version)
         {
             var userId = User.GetUserId();
-            var latestVersionId = (await _versionRepository.SelectAsync(1, _ => _.UserId == userId, _ => _.VersionId)).FirstOrDefault()?.VersionId ?? -1;
+            var latestVersionId = (await _versionRepository.FetchAsync(_ => _.UserId == userId, _ => _.VersionId))?.VersionId ?? -1;
+            if (latestVersionId <= 0)
+            {
+                return Ok(new SyncTodoModel()
+                {
+                    SyncTodoItems = Array.Empty<SyncTodoItemModel>(),
+                    Version = latestVersionId
+                });
+            }
             if (version > 0 && latestVersionId == version)
             {
                 return Content("[]", "application/json", Encoding.UTF8);
@@ -61,16 +69,19 @@ namespace SparkTodo.API.Controllers
                         TodoItem = _,
                         Type = OperationType.Add,
                     }).ToArray(),
-                    Version = version
+                    Version = latestVersionId
                 });
             }
             else
             {
-                //
                 var versionInfo = await _versionRepository.FetchAsync(_ => _.VersionId == latestVersionId && _.UserId == userId);
                 if (null == versionInfo)
                 {
-                    return BadRequest(new { Error = "请求参数异常，请求的版本不存在" });
+                    return Ok(new SyncTodoModel()
+                    {
+                        SyncTodoItems = Array.Empty<SyncTodoItemModel>(),
+                        Version = -1
+                    });
                 }
 
                 var items = await _todoItemRepository

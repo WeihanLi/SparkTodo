@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
+using SparkTodo.DataAccess;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using WeihanLi.Common;
 
@@ -116,17 +117,6 @@ namespace SparkTodo.API
                     options.DefaultApiVersion = ApiVersion.Default;
                     options.ReportApiVersions = true;
                 });
-            // see https://github.com/Microsoft/aspnet-api-versioning/blob/master/samples/aspnetcore/SwaggerSample/Startup.cs for details
-            //services.AddVersionedApiExplorer(options =>
-            //    {
-            //        // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
-            //        // note: the specified format code will format the version as "'v'major[.minor][-status]"
-            //        options.GroupNameFormat = "'v'VVV";
-
-            //        // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
-            //        // can also be used to control the format of the API version in route templates
-            //        options.SubstituteApiVersionInUrl = true;
-            //    });
 
             // swagger
             // https://stackoverflow.com/questions/58197244/swaggerui-with-netcore-3-0-bearer-token-authorization
@@ -192,9 +182,10 @@ namespace SparkTodo.API
             // Add application services.
             services.AddSingleton<ITokenGenerator, TokenGenerator>();
             //Repository
-            services.AddScoped<DataAccess.ICategoryRepository, DataAccess.CategoryRepository>();
-            services.AddScoped<DataAccess.ITodoItemRepository, DataAccess.TodoItemRepository>();
-            services.AddScoped<DataAccess.IUserAccountRepository, DataAccess.UserAccountRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ITodoItemRepository, TodoItemRepository>();
+            services.AddScoped<IUserAccountRepository, UserAccountRepository>();
+            services.AddScoped<ISyncVersionRepository, SyncVersionRepository>();
 
             // Set to DependencyResolver
             DependencyResolver.SetDependencyResolver(services);
