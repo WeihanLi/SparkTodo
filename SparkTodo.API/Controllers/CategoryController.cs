@@ -54,7 +54,7 @@ namespace SparkTodo.API.Controllers
         /// GetAll to dos
         /// </summary>
         /// <returns></returns>
-        [Route("GetAll")]
+        [Route("")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -75,7 +75,7 @@ namespace SparkTodo.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] Category category)
         {
-            if (category.UserId <= 0 || category.CategoryId <= 0 || String.IsNullOrEmpty(category.CategoryName))
+            if (category.UserId <= 0 || category.CategoryId <= 0 || string.IsNullOrEmpty(category.CategoryName))
             {
                 return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
             }
@@ -99,7 +99,7 @@ namespace SparkTodo.API.Controllers
         public async Task<IActionResult> Post([FromBody] Category category)
         {
             category.UserId = User.GetUserId();
-            if (category.UserId <= 0 || String.IsNullOrEmpty(category.CategoryName))
+            if (category.UserId <= 0 || string.IsNullOrEmpty(category.CategoryName))
             {
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }

@@ -14,9 +14,6 @@ using WeihanLi.Extensions;
 
 namespace SparkTodo.API.Controllers
 {
-    /// <summary>
-    /// new Todo
-    /// </summary>
     [Authorize]
     [ApiVersion("2")]
     [ApiController]
@@ -77,7 +74,7 @@ namespace SparkTodo.API.Controllers
                 }
 
                 var items = await _todoItemRepository
-                    .SelectAsync(_ => _.UpdatedTime > versionInfo.SyncTime && _.UserId == userId) // TODO:这里应该忽略 queryFilter 的
+                        .SelectAsync(_ => _.UpdatedTime > versionInfo.SyncTime && _.UserId == userId)
                     ;
                 items.RemoveAll(_ => _.IsDeleted && _.CreatedTime > versionInfo.SyncTime); // remove add then delete items
 

@@ -63,7 +63,7 @@ namespace SparkTodo.API.Controllers
         /// <param name="pageSize">pageSize</param>
         /// <param name="isOnlyNotDone">isOnlyNotDone</param>
         /// <returns></returns>
-        [Route("GetAll")]
+        [Route("")]
         [HttpGet]
         public async Task<IActionResult> GetAll(int pageIndex = 1, int pageSize = 50, bool isOnlyNotDone = false)
         {
@@ -118,7 +118,7 @@ namespace SparkTodo.API.Controllers
         public async Task<IActionResult> Post([FromBody] TodoItem todo)
         {
             todo.UserId = User.GetUserId();
-            if (todo.UserId <= 0 || todo.CategoryId <= 0 || String.IsNullOrEmpty(todo.TodoTitle))
+            if (todo.UserId <= 0 || todo.CategoryId <= 0 || string.IsNullOrEmpty(todo.TodoTitle))
             {
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }

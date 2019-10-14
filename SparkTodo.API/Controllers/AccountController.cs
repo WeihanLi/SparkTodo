@@ -168,7 +168,7 @@ namespace SparkTodo.API.Controllers
             }
             else
             {
-                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "sign up failed," + String.Join(",", signupResult.Errors.Select(e => e.Description).ToArray()), Status = Models.JsonResponseStatus.ProcessFail };
+                result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "sign up failed," + string.Join(",", signupResult.Errors.Select(e => e.Description).ToArray()), Status = Models.JsonResponseStatus.ProcessFail };
             }
             return Json(result);
         }

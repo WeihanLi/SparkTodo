@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
@@ -12,10 +11,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SparkTodo.API.Services;
-using Swashbuckle.AspNetCore.Swagger;
+using SparkTodo.API.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using WeihanLi.Common;
 
 namespace SparkTodo.API
@@ -43,7 +44,7 @@ namespace SparkTodo.API
         {
             // Add framework services.
             // dbContextPool size tip https://www.cnblogs.com/dudu/p/10398225.html
-            services.AddDbContextPool<SparkTodo.Models.SparkTodoDbContext>(options => options.UseInMemoryDatabase("SparkTodo"), poolSize: 64);
+            services.AddDbContextPool<SparkTodo.Models.SparkTodoDbContext>(options => options.UseInMemoryDatabase("SparkTodo"), 100);
             //
             services.AddIdentity<SparkTodo.Models.UserAccount, SparkTodo.Models.UserRole>(options =>
                 {
@@ -75,6 +76,7 @@ namespace SparkTodo.API
                     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
@@ -97,8 +99,8 @@ namespace SparkTodo.API
                 });
 
             // Add MvcFramework
-            services.AddMvc()
-                .AddJsonOptions(options =>
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -127,29 +129,63 @@ namespace SparkTodo.API
             //    });
 
             // swagger
+            // https://stackoverflow.com/questions/58197244/swaggerui-with-netcore-3-0-bearer-token-authorization
             services.AddSwaggerGen(option =>
             {
-                option.SwaggerDoc("sparktodo", new Swashbuckle.AspNetCore.Swagger.Info
+                option.SwaggerDoc("sparktodo", new OpenApiInfo
                 {
                     Version = "v1",
                     Title = "SparkTodo API",
                     Description = "API for SparkTodo",
-                    TermsOfService = "None",
-                    Contact = new Contact { Name = "WeihanLi", Email = "weihanli@outlook.com" }
+                    Contact = new OpenApiContact() { Name = "WeihanLi", Email = "weihanli@outlook.com" }
                 });
+
+                option.SwaggerDoc("v1", new OpenApiInfo { Version = "v1", Title = "API V1" });
+                option.SwaggerDoc("v2", new OpenApiInfo { Version = "v2", Title = "API V2" });
+
+                option.DocInclusionPredicate((docName, apiDesc) =>
+                {
+                    var versions = apiDesc.CustomAttributes()
+                        .OfType<ApiVersionAttribute>()
+                        .SelectMany(attr => attr.Versions);
+
+                    return versions.Any(v => $"v{v.ToString()}" == docName);
+                });
+
+                option.OperationFilter<RemoveVersionParameterOperationFilter>();
+                option.DocumentFilter<SetVersionInPathDocumentFilter>();
 
                 // include document file
                 option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{typeof(Startup).Assembly.GetName().Name}.xml"), true);
-                // bear authentication
-                option.AddSecurityDefinition("Bearer", new ApiKeyScheme
+
+                // Add security definitions
+                //option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                //{
+                //    Description = "Please enter into field the word 'Bearer' followed by a space and the JWT value",
+                //    Name = "Authorization",
+                //    In = ParameterLocation.Header,
+                //    Type = SecuritySchemeType.Http,
+                //    BearerFormat = "JWT",
+                //    Scheme = "Bearer"
+                //});
+
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
+                    Description = "Please enter into field the word 'Bearer' followed by a space and the JWT value",
                     Name = "Authorization",
-                    In = "header",
-                    Description = "Bearer token"
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
                 });
-                option.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
-                    { "Bearer", Enumerable.Empty<string>() }
+                    { new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference()
+                        {
+                            Id = "Bearer",
+                            Type = ReferenceType.SecurityScheme
+                        }
+                    }, Array.Empty<string>() }
                 });
             });
 
@@ -175,20 +211,25 @@ namespace SparkTodo.API
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             JwtSecurityTokenHandler.DefaultOutboundAlgorithmMap.Clear();
 
-            loggerFactory.AddLog4Net();
+            app.UseStaticFiles();
 
             //Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
             //Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint
             app.UseSwaggerUI(option =>
             {
-                option.SwaggerEndpoint("/swagger/sparktodo/swagger.json", "SparkTodo API");
+                option.SwaggerEndpoint("/swagger/v2/swagger.json", "V2 Docs");
+                option.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
+
                 option.RoutePrefix = string.Empty;
                 option.DocumentTitle = "SparkTodo API";
             });
 
+            app.UseRouting();
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }
