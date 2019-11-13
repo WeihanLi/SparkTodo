@@ -67,9 +67,9 @@ namespace SparkTodo.API.JWT
         public DateTime IssuedAt => DateTime.UtcNow;
 
         /// <summary>
-        /// Set the timespan the token will be valid for (default is 5 min/300 seconds)
+        /// Set the timespan the token will be valid for (default is 2 hour/7200 seconds)
         /// </summary>
-        public TimeSpan ValidFor { get; set; } = TimeSpan.FromMinutes(5);
+        public TimeSpan ValidFor { get; set; } = TimeSpan.FromHours(2);
 
         /// <summary>
         /// "exp" (Expiration Time) Claim (returns IssuedAt + ValidFor)
