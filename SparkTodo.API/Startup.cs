@@ -195,8 +195,7 @@ namespace SparkTodo.API
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
         /// <param name="app">app</param>
-        /// <param name="loggerFactory">loggerFactory</param>
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app)
         {
             // disable claimType transform, see details here https://stackoverflow.com/questions/39141310/jwttoken-claim-name-jwttokentypes-subject-resolved-to-claimtypes-nameidentifie
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
