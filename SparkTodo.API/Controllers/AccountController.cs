@@ -172,20 +172,5 @@ namespace SparkTodo.API.Controllers
             }
             return Json(result);
         }
-
-        /// <summary>
-        /// SignOut
-        /// </summary>
-        /// <returns></returns>
-        [Route("SignOut")]
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> SignOut()
-        {
-            await HttpContext.SignOutAsync();
-            await _signInManager.SignOutAsync();
-            _logger.LogInformation(4, "User logged out.");
-            return Ok();
-        }
     }
 }
