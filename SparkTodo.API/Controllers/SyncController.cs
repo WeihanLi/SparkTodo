@@ -56,7 +56,11 @@ namespace SparkTodo.API.Controllers
             }
             if (version > 0 && latestVersionId == version)
             {
-                return Content("[]", "application/json", Encoding.UTF8);
+                return Ok(new SyncTodoModel()
+                {
+                    SyncTodoItems = Array.Empty<SyncTodoItemModel>(),
+                    Version = version
+                });
             }
             //
             if (version <= 0)
