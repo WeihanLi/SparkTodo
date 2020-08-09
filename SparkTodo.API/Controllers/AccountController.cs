@@ -84,7 +84,7 @@ namespace SparkTodo.API.Controllers
                 userInfo = await _userRepository.FetchAsync(u => u.Email == loginModel.Email);
                 var claims = new Claim[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Jti, ObjectIdGenerator.Instance.NewId()),
+                    new Claim(JwtRegisteredClaimNames.Jti, GuidIdGenerator.Instance.NewId()),
                     new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
                     new Claim(JwtRegisteredClaimNames.NameId, userInfo.Id.ToString()),
                 };
@@ -150,7 +150,7 @@ namespace SparkTodo.API.Controllers
 
                 var claims = new Claim[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Jti, ObjectIdGenerator.Instance.NewId()),
+                    new Claim(JwtRegisteredClaimNames.Jti, GuidIdGenerator.Instance.NewId()),
                     new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
                     new Claim(ClaimTypes.Name, userInfo.UserName),
                 };
