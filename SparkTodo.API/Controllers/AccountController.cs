@@ -152,7 +152,7 @@ namespace SparkTodo.API.Controllers
                 {
                     new Claim(JwtRegisteredClaimNames.Jti, GuidIdGenerator.Instance.NewId()),
                     new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
-                    new Claim(ClaimTypes.Name, userInfo.UserName),
+                    new Claim(JwtRegisteredClaimNames.NameId, userInfo.Id.ToString()),
                 };
                 var token = _tokenGenerator.GenerateToken(claims);
 

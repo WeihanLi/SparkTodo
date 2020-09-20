@@ -33,8 +33,8 @@ namespace SparkTodo.API
                 {
                     userManager.CreateAsync(new UserAccount
                     {
-                        UserName = "weihanli@outlook.com",
-                        Email = "weihanli@outlook.com"
+                        UserName = email,
+                        Email = email
                     }, "Test1234").Wait();
                 }
             }
