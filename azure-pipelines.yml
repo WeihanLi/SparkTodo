@@ -16,8 +16,15 @@ variables:
   imageName: '$(dockerId)/$(repoName):$(tagName)'
 
 steps:
-# - script: dotnet build -c Release
-#   displayName: 'dotnet build'
+- task: UseDotNet@2
+  displayName: 'Use .NET Core sdk'
+  inputs:
+    packageType: sdk
+    version: 5.0.x
+    includePreviewVersions: true
+
+- script: dotnet build -c Release
+  displayName: 'dotnet build'
 
 - script: docker build -f Dockerfile -t $(imageName) -t $(latestImageName) .
   displayName: 'Docker build Script'
