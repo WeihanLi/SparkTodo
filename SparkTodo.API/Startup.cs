@@ -185,9 +185,6 @@ namespace SparkTodo.API
             services.AddScoped<ITodoItemRepository, TodoItemRepository>();
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
             services.AddScoped<ISyncVersionRepository, SyncVersionRepository>();
-
-            // Set to DependencyResolver
-            DependencyResolver.SetDependencyResolver(services);
         }
 
         /// <summary>
@@ -199,6 +196,13 @@ namespace SparkTodo.API
             // disable claimType transform, see details here https://stackoverflow.com/questions/39141310/jwttoken-claim-name-jwttokentypes-subject-resolved-to-claimtypes-nameidentifie
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             JwtSecurityTokenHandler.DefaultOutboundAlgorithmMap.Clear();
+            
+            //
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers["DotNetVersion"] = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+                await next();
+            });
 
             app.UseStaticFiles();
 
