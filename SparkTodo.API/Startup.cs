@@ -137,7 +137,7 @@ namespace SparkTodo.API
                         .OfType<ApiVersionAttribute>()
                         .SelectMany(attr => attr.Versions);
 
-                    return versions.Any(v => $"v{v.ToString()}" == docName);
+                    return versions.Any(v => $"v{v}" == docName);
                 });
 
                 option.OperationFilter<RemoveVersionParameterOperationFilter>();
@@ -169,10 +169,8 @@ namespace SparkTodo.API
             // Add application services.
             services.AddSingleton<ITokenGenerator, TokenGenerator>();
             //Repository
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<ITodoItemRepository, TodoItemRepository>();
-            services.AddScoped<IUserAccountRepository, UserAccountRepository>();
-            services.AddScoped<ISyncVersionRepository, SyncVersionRepository>();
+            services.RegisterAssemblyTypesAsImplementedInterfaces(t => t.Name.EndsWith("Repository"),
+                ServiceLifetime.Scoped, typeof(IUserAccountRepository).Assembly);
         }
 
         /// <summary>
