@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,7 +13,7 @@ namespace SparkTodo.API
         /// program entry
         /// </summary>
         /// <param name="args">arguments</param>
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webHostBuilder =>
@@ -24,21 +25,22 @@ namespace SparkTodo.API
             using (var serviceScope = host.Services.CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<SparkTodoDbContext>();
-                dbContext.Database.EnsureCreated();
+                await dbContext.Database.EnsureCreatedAsync();
+
                 //init Database,you can add your init data here
                 var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserAccount>>();
-
                 var email = "weihanli@outlook.com";
-                if (userManager.FindByEmailAsync(email).GetAwaiter().GetResult() == null)
+                if (await userManager.FindByEmailAsync(email) == null)
                 {
-                    userManager.CreateAsync(new UserAccount
+                    await userManager.CreateAsync(new UserAccount
                     {
                         UserName = email,
                         Email = email
-                    }, "Test1234").Wait();
+                    }, "Test1234");
                 }
             }
-            host.Run();
+
+            await host.RunAsync();
         }
     }
 }

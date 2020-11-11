@@ -37,7 +37,7 @@ namespace SparkTodo.API.Controllers
         /// <param name="categoryId">categoryId</param>
         /// <returns></returns>
         [HttpGet("{categoryId}")]
-        public async Task<IActionResult> Get([FromQuery] int categoryId)
+        public async Task<IActionResult> Get(int categoryId)
         {
             if (categoryId <= 0)
             {
@@ -51,15 +51,10 @@ namespace SparkTodo.API.Controllers
         /// GetAll to dos
         /// </summary>
         /// <returns></returns>
-        [Route("")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var userId = User.GetUserId();
-            if (userId <= 0)
-            {
-                return BadRequest();
-            }
             var list = await _categoryRepository.SelectAsync(ca => ca.UserId == userId && !ca.IsDeleted);
             return Ok(list.OrderBy(t => t.CreatedTime));
         }
@@ -74,15 +69,15 @@ namespace SparkTodo.API.Controllers
         {
             if (category.UserId <= 0 || category.CategoryId <= 0 || string.IsNullOrEmpty(category.CategoryName))
             {
-                return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
+                return BadRequest();
             }
             if (!await _categoryRepository.ExistAsync(_ => _.CategoryId == category.CategoryId))
             {
-                return new StatusCodeResult(StatusCodes.Status404NotFound);
+                return NotFound();
             }
             category.UserId = User.GetUserId();
             category.IsDeleted = false;
-            category.UpdatedTime = DateTime.Now;
+            category.UpdatedTime = DateTime.UtcNow;
             var item = await _categoryRepository.UpdateAsync(category, c => c.CreatedTime, c => c.UpdatedTime);
             return Ok(item);
         }
@@ -98,12 +93,12 @@ namespace SparkTodo.API.Controllers
             category.UserId = User.GetUserId();
             if (category.UserId <= 0 || string.IsNullOrEmpty(category.CategoryName))
             {
-                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+                return BadRequest();
             }
 
             category.IsDeleted = false;
-            category.UpdatedTime = DateTime.Now;
-            category.CreatedTime = DateTime.Now;
+            category.UpdatedTime = DateTime.UtcNow;
+            category.CreatedTime = DateTime.UtcNow;
 
             await _categoryRepository.InsertAsync(category);
             return Ok(category);
@@ -124,20 +119,21 @@ namespace SparkTodo.API.Controllers
             var userId = User.GetUserId();
             if (!await _categoryRepository.ExistAsync(_ => _.CategoryId == categoryId && _.UserId == userId))
             {
-                return BadRequest();
+                return NotFound();
             }
-            var category = new Category() { CategoryId = categoryId, IsDeleted = true };
+            var category = new Category()
+            {
+                CategoryId = categoryId,
+                IsDeleted = true
+            };
             var result = await _categoryRepository.UpdateAsync(category, t => t.IsDeleted);
-
             if (result > 0)
             {
                 await _todoItemRepository.UpdateAsync(_ => _.CategoryId == categoryId, _ => _.CategoryId, -1);
                 return Ok();
             }
-            else
-            {
-                return new StatusCodeResult(StatusCodes.Status501NotImplemented);
-            }
+
+            return new StatusCodeResult(StatusCodes.Status501NotImplemented);
         }
     }
 }

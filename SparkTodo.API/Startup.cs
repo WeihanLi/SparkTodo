@@ -120,7 +120,7 @@ namespace SparkTodo.API
             // https://stackoverflow.com/questions/58197244/swaggerui-with-netcore-3-0-bearer-token-authorization
             services.AddSwaggerGen(option =>
             {
-                option.SwaggerDoc("sparktodo", new OpenApiInfo
+                option.SwaggerDoc("spark todo", new OpenApiInfo
                 {
                     Version = "v1",
                     Title = "SparkTodo API",
@@ -145,17 +145,6 @@ namespace SparkTodo.API
 
                 // include document file
                 option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{typeof(Startup).Assembly.GetName().Name}.xml"), true);
-
-                // Add security definitions
-                //option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-                //{
-                //    Description = "Please enter into field the word 'Bearer' followed by a space and the JWT value",
-                //    Name = "Authorization",
-                //    In = ParameterLocation.Header,
-                //    Type = SecuritySchemeType.Http,
-                //    BearerFormat = "JWT",
-                //    Scheme = "Bearer"
-                //});
 
                 option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
@@ -194,7 +183,7 @@ namespace SparkTodo.API
         {
             // disable claimType transform, see details here https://stackoverflow.com/questions/39141310/jwttoken-claim-name-jwttokentypes-subject-resolved-to-claimtypes-nameidentifie
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            JwtSecurityTokenHandler.DefaultOutboundAlgorithmMap.Clear();
+            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
             //
             app.Use(async (context, next) =>
@@ -202,8 +191,6 @@ namespace SparkTodo.API
                 context.Response.Headers["DotNetVersion"] = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
                 await next();
             });
-
-            app.UseStaticFiles();
 
             //Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

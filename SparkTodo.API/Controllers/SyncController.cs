@@ -75,46 +75,39 @@ namespace SparkTodo.API.Controllers
                     Version = latestVersionId
                 });
             }
-            else
+
+            var versionInfo = await _versionRepository.FetchAsync(_ => _.VersionId == latestVersionId && _.UserId == userId);
+            if (null == versionInfo)
             {
-                var versionInfo = await _versionRepository.FetchAsync(_ => _.VersionId == latestVersionId && _.UserId == userId);
-                if (null == versionInfo)
-                {
-                    return Ok(new SyncTodoModel()
-                    {
-                        SyncTodoItems = Array.Empty<SyncTodoItemModel>(),
-                        Version = -1
-                    });
-                }
-
-                var items = await _todoItemRepository
-                        .SelectAsync(_ => _.UpdatedTime > versionInfo.SyncTime && _.UserId == userId)
-                    ;
-                items.RemoveAll(_ => _.IsDeleted && _.CreatedTime > versionInfo.SyncTime); // remove add then delete items
-
                 return Ok(new SyncTodoModel()
                 {
-                    SyncTodoItems = items.Select(_ => new SyncTodoItemModel()
-                    {
-                        TodoItem = _,
-                        Type = _.CreatedTime > versionInfo.SyncTime ?
-                            OperationType.Add :
-                            (_.IsDeleted ? OperationType.Delete : OperationType.Update),
-                    }).ToArray(),
-                    Version = latestVersionId
+                    SyncTodoItems = Array.Empty<SyncTodoItemModel>(),
+                    Version = -1
                 });
             }
+
+            var items = await _todoItemRepository
+                    .SelectAsync(_ => _.UpdatedTime > versionInfo.SyncTime && _.UserId == userId)
+                ;
+            items.RemoveAll(_ => _.IsDeleted && _.CreatedTime > versionInfo.SyncTime); // remove add then delete items
+
+            return Ok(new SyncTodoModel()
+            {
+                SyncTodoItems = items.Select(_ => new SyncTodoItemModel()
+                {
+                    TodoItem = _,
+                    Type = _.CreatedTime > versionInfo.SyncTime ?
+                        OperationType.Add :
+                        (_.IsDeleted ? OperationType.Delete : OperationType.Update),
+                }).ToArray(),
+                Version = latestVersionId
+            });
         }
 
         // push
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] SyncTodoModel syncData)
         {
-            if (syncData?.SyncTodoItems == null || syncData.SyncTodoItems.Length == 0)
-            {
-                return BadRequest();
-            }
-
             var userId = User.GetUserId();
             var latestVersionId = (await _versionRepository.SelectAsync(1, _ => _.UserId == userId, _ => _.VersionId)).FirstOrDefault()?.VersionId ?? -1;
             if (latestVersionId > 0 && latestVersionId > syncData.Version)
@@ -123,8 +116,8 @@ namespace SparkTodo.API.Controllers
             }
 
             // TODO: 使用 redis 分布式锁，锁当前用户的操作，顺序同步
-
             // 处理 todoItem
+            using var uow = _todoItemRepository.DbContext.GetUnitOfWork();
             var toAddTodoItems = syncData.SyncTodoItems.Where(_ => _.Type == OperationType.Add).Select(_ => _.TodoItem).ToArray();
             var todoRepository = HttpContext.RequestServices.GetRequiredService<ITodoItemRepository>();
             await todoRepository.InsertAsync(toAddTodoItems);
@@ -135,7 +128,6 @@ namespace SparkTodo.API.Controllers
             {
                 await todoRepository.UpdateAsync(item);
             }
-
             var version = new SyncVersion()
             {
                 SyncData = syncData.ToJson(),
@@ -143,10 +135,11 @@ namespace SparkTodo.API.Controllers
                 SyncTime = DateTime.UtcNow
             };
             await _versionRepository.InsertAsync(version);
+            await uow.CommitAsync();
 
             return Ok(new
             {
-                VersionId = version.VersionId
+                version.VersionId
             });
         }
     }

@@ -1,4 +1,5 @@
-﻿using SparkTodo.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using SparkTodo.Models;
 
 namespace SparkTodo.API.Models
 {
@@ -13,6 +14,7 @@ namespace SparkTodo.API.Models
     {
         public long Version { get; set; }
 
+        [Required]
         public SyncTodoItemModel[] SyncTodoItems { get; set; }
     }
 

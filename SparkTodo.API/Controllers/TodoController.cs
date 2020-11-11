@@ -13,9 +13,6 @@ using WeihanLi.Extensions;
 
 namespace SparkTodo.API.Controllers
 {
-    /// <summary>
-    /// Todos
-    /// </summary>
     [Authorize]
     [ApiController]
     [ApiVersion("1")]
@@ -33,45 +30,25 @@ namespace SparkTodo.API.Controllers
             _todoItemRepository = todoItemRepository;
         }
 
-        /// <summary>
-        /// get todo by id
-        /// </summary>
-        /// <param name="todoId">todo id</param>
-        /// <returns></returns>
         [HttpGet("{todoId}")]
-        public async Task<IActionResult> Get([FromQuery] int todoId)
+        public async Task<IActionResult> Get(int todoId)
         {
             if (todoId <= 0)
             {
-                return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
+                return BadRequest();
             }
             var todoItem = await _todoItemRepository.FetchAsync(t => t.TodoId == todoId);
             if (todoItem == null)
             {
-                return new StatusCodeResult(StatusCodes.Status404NotFound);
+                return NotFound();
             }
-            else
-            {
-                return Ok(todoItem);
-            }
+            return Ok(todoItem);
         }
 
-        /// <summary>
-        /// todos list
-        /// </summary>
-        /// <param name="pageIndex">pageIndex</param>
-        /// <param name="pageSize">pageSize</param>
-        /// <param name="isOnlyNotDone">isOnlyNotDone</param>
-        /// <returns></returns>
-        [Route("")]
         [HttpGet]
         public async Task<IActionResult> GetAll(int pageIndex = 1, int pageSize = 50, bool isOnlyNotDone = false)
         {
             var userId = User.GetUserId();
-            if (userId <= 0)
-            {
-                return new StatusCodeResult(StatusCodes.Status406NotAcceptable);
-            }
             Expression<Func<TodoItem, bool>> predict = t => t.UserId == userId;
             if (isOnlyNotDone)
             {
@@ -86,11 +63,6 @@ namespace SparkTodo.API.Controllers
             return Ok(todoList);
         }
 
-        /// <summary>
-        /// update todos
-        /// </summary>
-        /// <param name="todo">todo</param>
-        /// <returns></returns>
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] TodoItem todo)
         {
@@ -109,39 +81,30 @@ namespace SparkTodo.API.Controllers
             return Ok(item);
         }
 
-        /// <summary>
-        /// create a todo
-        /// </summary>
-        /// <param name="todo">todo info</param>
-        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] TodoItem todo)
         {
             todo.UserId = User.GetUserId();
             if (todo.UserId <= 0 || todo.CategoryId <= 0 || string.IsNullOrEmpty(todo.TodoTitle))
             {
-                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+                return BadRequest();
             }
+            todo.UpdatedTime = DateTime.UtcNow;
             await _todoItemRepository.InsertAsync(todo);
             return Ok(todo);
         }
 
-        /// <summary>
-        /// delete todo
-        /// </summary>
-        /// <param name="todoId">todo Id</param>
-        /// <returns></returns>
         [HttpDelete("{todoId}")]
         public async Task<IActionResult> Delete(int todoId)
         {
             if (todoId <= 0)
             {
-                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+                return BadRequest();
             }
             var userId = User.GetUserId();
             if (!await _todoItemRepository.ExistAsync(_ => _.UserId == userId && _.TodoId == todoId))
             {
-                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+                return NotFound();
             }
             var todo = new TodoItem() { TodoId = todoId, IsDeleted = true };
             var result = await _todoItemRepository.UpdateAsync(todo, t => t.IsDeleted);
