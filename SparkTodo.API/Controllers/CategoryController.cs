@@ -31,12 +31,7 @@ namespace SparkTodo.API.Controllers
             _todoItemRepository = todoItemRepository;
         }
 
-        /// <summary>
-        /// Get todo
-        /// </summary>
-        /// <param name="categoryId">categoryId</param>
-        /// <returns></returns>
-        [HttpGet("{categoryId}")]
+        [HttpGet("{categoryId}/todo")]
         public async Task<IActionResult> Get(int categoryId)
         {
             if (categoryId <= 0)
@@ -48,7 +43,7 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// GetAll to dos
+        /// get all categories
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -83,7 +78,7 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// create todo category
+        /// create category
         /// </summary>
         /// <param name="category">category info</param>
         /// <returns></returns>
@@ -105,7 +100,7 @@ namespace SparkTodo.API.Controllers
         }
 
         /// <summary>
-        /// delete todo category
+        /// delete category
         /// </summary>
         /// <param name="categoryId">categoryId</param>
         /// <returns></returns>

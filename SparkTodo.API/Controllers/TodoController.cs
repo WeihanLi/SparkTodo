@@ -46,13 +46,17 @@ namespace SparkTodo.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(int pageIndex = 1, int pageSize = 50, bool isOnlyNotDone = false)
+        public async Task<IActionResult> GetAll(int pageIndex = 1, int pageSize = 50, bool isOnlyNotDone = false, int categoryId = -1)
         {
             var userId = User.GetUserId();
             Expression<Func<TodoItem, bool>> predict = t => t.UserId == userId;
             if (isOnlyNotDone)
             {
                 predict = predict.And(t => !t.IsCompleted);
+            }
+            if (categoryId > 0)
+            {
+                predict = predict.And(t => t.CategoryId == categoryId);
             }
             var todoList = await _todoItemRepository.GetPagedListAsync(
                 builder => builder.WithPredict(predict)
