@@ -17,7 +17,6 @@ using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
 using SparkTodo.DataAccess;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using WeihanLi.Common;
 
 namespace SparkTodo.API
 {
@@ -196,7 +195,7 @@ namespace SparkTodo.API
             // disable claimType transform, see details here https://stackoverflow.com/questions/39141310/jwttoken-claim-name-jwttokentypes-subject-resolved-to-claimtypes-nameidentifie
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             JwtSecurityTokenHandler.DefaultOutboundAlgorithmMap.Clear();
-            
+
             //
             app.Use(async (context, next) =>
             {

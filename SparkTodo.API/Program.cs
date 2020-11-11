@@ -21,12 +21,12 @@ namespace SparkTodo.API
                 })
                 .Build();
 
-            using (var serviceScope = host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            using (var serviceScope = host.Services.CreateScope())
             {
-                var dbContext = serviceScope.ServiceProvider.GetService<SparkTodo.Models.SparkTodoDbContext>();
+                var dbContext = serviceScope.ServiceProvider.GetRequiredService<SparkTodoDbContext>();
                 dbContext.Database.EnsureCreated();
                 //init Database,you can add your init data here
-                var userManager = serviceScope.ServiceProvider.GetService<UserManager<UserAccount>>();
+                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserAccount>>();
 
                 var email = "weihanli@outlook.com";
                 if (userManager.FindByEmailAsync(email).GetAwaiter().GetResult() == null)

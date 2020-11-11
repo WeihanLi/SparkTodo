@@ -11,14 +11,11 @@ using WeihanLi.EntityFramework;
 
 namespace SparkTodo.API.Controllers
 {
-    /// <summary>
-    /// todo
-    /// </summary>
     [Authorize]
     [ApiVersion("1")]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class CategoryController : Controller
+    public class CategoryController : ControllerBase
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly ITodoItemRepository _todoItemRepository;
@@ -47,7 +44,7 @@ namespace SparkTodo.API.Controllers
                 return BadRequest();
             }
             var list = await _todoItemRepository.SelectAsync(t => t.CategoryId == categoryId && t.IsDeleted == false);
-            return Json(list.OrderByDescending(_ => _.CreatedTime));
+            return Ok(list.OrderByDescending(_ => _.CreatedTime));
         }
 
         /// <summary>
@@ -64,7 +61,7 @@ namespace SparkTodo.API.Controllers
                 return BadRequest();
             }
             var list = await _categoryRepository.SelectAsync(ca => ca.UserId == userId && !ca.IsDeleted);
-            return Json(list.OrderBy(t => t.CreatedTime));
+            return Ok(list.OrderBy(t => t.CreatedTime));
         }
 
         /// <summary>
@@ -87,7 +84,7 @@ namespace SparkTodo.API.Controllers
             category.IsDeleted = false;
             category.UpdatedTime = DateTime.Now;
             var item = await _categoryRepository.UpdateAsync(category, c => c.CreatedTime, c => c.UpdatedTime);
-            return Json(item);
+            return Ok(item);
         }
 
         /// <summary>
@@ -107,8 +104,9 @@ namespace SparkTodo.API.Controllers
             category.IsDeleted = false;
             category.UpdatedTime = DateTime.Now;
             category.CreatedTime = DateTime.Now;
-            var categoryId = await _categoryRepository.InsertAsync(category);
-            return Json(category);
+
+            await _categoryRepository.InsertAsync(category);
+            return Ok(category);
         }
 
         /// <summary>

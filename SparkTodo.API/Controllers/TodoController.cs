@@ -20,7 +20,7 @@ namespace SparkTodo.API.Controllers
     [ApiController]
     [ApiVersion("1")]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class TodoController : Controller
+    public class TodoController : ControllerBase
     {
         private readonly ITodoItemRepository _todoItemRepository;
 
@@ -52,7 +52,7 @@ namespace SparkTodo.API.Controllers
             }
             else
             {
-                return Json(todoItem);
+                return Ok(todoItem);
             }
         }
 
@@ -83,7 +83,7 @@ namespace SparkTodo.API.Controllers
                 pageIndex,
                 pageSize);
 
-            return Json(todoList);
+            return Ok(todoList);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace SparkTodo.API.Controllers
                 t => t.IsCompleted,
                 t => t.CompletedTime,
                 t => t.UpdatedTime);
-            return Json(item);
+            return Ok(item);
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace SparkTodo.API.Controllers
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
             await _todoItemRepository.InsertAsync(todo);
-            return Json(todo);
+            return Ok(todo);
         }
 
         /// <summary>
@@ -149,10 +149,8 @@ namespace SparkTodo.API.Controllers
             {
                 return Ok();
             }
-            else
-            {
-                return new StatusCodeResult(StatusCodes.Status501NotImplemented);
-            }
+
+            return new StatusCodeResult(StatusCodes.Status501NotImplemented);
         }
     }
 }

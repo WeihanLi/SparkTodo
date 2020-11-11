@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +17,7 @@ namespace SparkTodo.API.Controllers
     [ApiVersion("2")]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class SyncController : Controller
+    public class SyncController : ControllerBase
     {
         private readonly ISyncVersionRepository _versionRepository;
         private readonly ITodoItemRepository _todoItemRepository;
@@ -109,7 +108,7 @@ namespace SparkTodo.API.Controllers
 
         // push
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]SyncTodoModel syncData)
+        public async Task<IActionResult> Post([FromBody] SyncTodoModel syncData)
         {
             if (syncData?.SyncTodoItems == null || syncData.SyncTodoItems.Length == 0)
             {

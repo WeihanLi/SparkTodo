@@ -3,7 +3,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +22,7 @@ namespace SparkTodo.API.Controllers
     [ApiVersion("2")]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class AccountController : Controller
+    public class AccountController : ControllerBase
     {
         private readonly IUserAccountRepository _userRepository;
         private readonly UserManager<SparkTodo.Models.UserAccount> _userManager;
@@ -65,7 +64,7 @@ namespace SparkTodo.API.Controllers
         [Route("SignIn")]
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> SignInAsync([FromBody]Models.AccountViewModels.LoginViewModel loginModel)
+        public async Task<IActionResult> SignInAsync([FromBody] Models.AccountViewModels.LoginViewModel loginModel)
         {
             if (!ModelState.IsValid)
             {
@@ -111,7 +110,7 @@ namespace SparkTodo.API.Controllers
                     result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "failed to authenticate", Status = Models.JsonResponseStatus.AuthFail };
                 }
             }
-            return Json(result);
+            return Ok(result);
         }
 
         /// <summary>
@@ -128,7 +127,7 @@ namespace SparkTodo.API.Controllers
         [Route("SignUp")]
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> SignUpAsync([FromBody]Models.AccountViewModels.RegisterViewModel regModel)
+        public async Task<IActionResult> SignUpAsync([FromBody] Models.AccountViewModels.RegisterViewModel regModel)
         {
             if (!ModelState.IsValid)
             {
@@ -170,7 +169,7 @@ namespace SparkTodo.API.Controllers
             {
                 result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = null, Msg = "sign up failed," + string.Join(",", signupResult.Errors.Select(e => e.Description).ToArray()), Status = Models.JsonResponseStatus.ProcessFail };
             }
-            return Json(result);
+            return Ok(result);
         }
     }
 }
