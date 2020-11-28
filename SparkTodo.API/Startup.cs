@@ -43,8 +43,7 @@ namespace SparkTodo.API
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            // dbContextPool size tip https://www.cnblogs.com/dudu/p/10398225.html
-            services.AddDbContextPool<SparkTodo.Models.SparkTodoDbContext>(options => options.UseInMemoryDatabase("SparkTodo"), 100);
+            services.AddDbContextPool<SparkTodo.Models.SparkTodoDbContext>(options => options.UseInMemoryDatabase("SparkTodo"));
             //
             services.AddIdentity<SparkTodo.Models.UserAccount, SparkTodo.Models.UserRole>(options =>
                 {
@@ -94,7 +93,7 @@ namespace SparkTodo.API
                         // Validate the token expiry
                         ValidateLifetime = true,
                         // If you want to allow a certain amount of clock drift, set that here:
-                        ClockSkew = System.TimeSpan.Zero
+                        ClockSkew = System.TimeSpan.FromMinutes(2)
                     };
                 });
 
@@ -177,7 +176,7 @@ namespace SparkTodo.API
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
-            //
+            // emit dotnet rumtime version to response header
             app.Use(async (context, next) =>
             {
                 context.Response.Headers["DotNetVersion"] = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
@@ -197,6 +196,10 @@ namespace SparkTodo.API
             });
 
             app.UseRouting();
+            app.UseCors(builder=>
+            {
+                builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(_=>true);
+            });
 
             app.UseHttpMetrics();
 
