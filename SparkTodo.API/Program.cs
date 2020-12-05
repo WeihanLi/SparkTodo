@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Prometheus.DotNetRuntime;
 using SparkTodo.Models;
 
 namespace SparkTodo.API
@@ -15,6 +16,12 @@ namespace SparkTodo.API
         /// <param name="args">arguments</param>
         public static async Task Main(string[] args)
         {
+            DotNetRuntimeStatsBuilder.Customize()
+                .WithContentionStats()
+                .WithGcStats()
+                .WithThreadPoolStats()
+                .StartCollecting();
+            
             var host = Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webHostBuilder =>
                 {
