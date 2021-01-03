@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Prometheus.DotNetRuntime;
 using SparkTodo.Models;
 
@@ -21,11 +22,15 @@ namespace SparkTodo.API
                 .WithGcStats()
                 .WithThreadPoolStats()
                 .StartCollecting();
-            
+
             var host = Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webHostBuilder =>
                 {
                     webHostBuilder.UseStartup<Startup>();
+                })
+                .ConfigureLogging(loggingBuilder =>
+                {
+                    loggingBuilder.AddJsonConsole();
                 })
                 .Build();
 
