@@ -1,12 +1,11 @@
-using System;
-using System.Net.Http;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Text;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using SparkTodo.DataAccess;
+using SparkTodo.Models;
+using SparkTodo.WebExtension.Services;
+using WeihanLi.EntityFramework;
 
 namespace SparkTodo.WebExtension
 {
@@ -16,12 +15,21 @@ namespace SparkTodo.WebExtension
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-            // builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddBrowserExtensionServices(options =>
                 {
                     options.ProjectNamespace = typeof(Program).Namespace;
                 });
-            await builder.Build().RunAsync();
+            builder.Services.AddDbContextPool<SparkTodoDbContext>(options =>
+                options.UseInMemoryDatabase("SparkTodo")
+            );
+            builder.Services.AddSingleton<TodoScheduler>();
+            //Repository
+            builder.Services.RegisterAssemblyTypesAsImplementedInterfaces(t => t.Name.EndsWith("Repository"),
+                ServiceLifetime.Scoped, typeof(IUserAccountRepository).Assembly);
+            var host = builder.Build();
+            await host.Services.GetRequiredService<TodoScheduler>()
+                .Start();
+            await host.RunAsync();
         }
     }
 }

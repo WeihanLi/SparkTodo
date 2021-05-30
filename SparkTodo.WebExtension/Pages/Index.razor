@@ -1,8 +1,59 @@
 @page "/"
 @page "/index.html"
+@using SparkTodo.WebExtension.Services
+@using SparkTodo.Models
+@using WeihanLi.Extensions
 @inherits Blazor.BrowserExtension.Pages.IndexPage
+@inject TodoScheduler scheduler
 
-<h1>Hello, world!</h1>
+<div class="container">
+    <h1>Hello, world!</h1>
+    Welcome to SparkTodo
+    <button @onclick="AddNewTodo" class="btn btn-info">Add new todo</button>
+</div>
+<div class="container todo-item-list">
+    <div class="todo-item">
+        @foreach (var item in TodoItems)
+        {
+            <div>
+                <input type="checkbox" checked="@item.IsCompleted" />
+                <h4>@item.TodoTitle</h4> -- <span class="small">@item.CreatedTime.ToStandardTimeString()</span>
+            </div>
+            <div class="todo-item-details">
+                <p>@item.TodoContent</p>
+            </div>
+            <div class="todo-item-scheduled-time">
+                <button @onclick="()=>Delete(item.TodoId)" class="btn btn-danger">Delete</button>
+                @(item.ScheduledTime.HasValue ? item.ScheduledTime.Value.ToStandardTimeString() : "")
+            </div>
+        }
+    </div>
+</div>
 
-Welcome to your new app.
+@code
+{
+    public List<TodoItem> TodoItems { get; private set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        TodoItems = await scheduler.GetAllTasks();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task AddNewTodo()
+    {
+        var task = await scheduler.CreateTask(new TodoItem()
+        {
+            TodoTitle = $"test-{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}",
+            TodoContent = "test test test",
+            ScheduledTime = DateTime.UtcNow.AddMinutes(11),
+        });
+        TodoItems.Add(task);
+    }
+
+    private async Task Delete(int id)
+    {
+        await scheduler.DeleteTask(id);
+        TodoItems.RemoveWhere(x => x.TodoId == id);
+    }
+}

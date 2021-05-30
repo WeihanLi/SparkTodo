@@ -23,6 +23,8 @@ namespace SparkTodo.Models
 
         public DateTime? CompletedTime { get; set; }
 
+        public DateTime? ScheduledTime { get; set; }
+
         public DateTime UpdatedTime { get; set; }
 
         public int CategoryId { get; set; }
