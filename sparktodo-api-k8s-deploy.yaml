@@ -33,6 +33,10 @@ spec:
               cpu: "50m"
           ports:
             - containerPort: 80
+          securityContext:
+            capabilities:
+              add:
+                - "SYS_PTRACE"
 
 ---
 apiVersion: v1
