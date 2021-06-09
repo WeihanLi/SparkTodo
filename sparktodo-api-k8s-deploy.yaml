@@ -28,15 +28,17 @@ spec:
           image: weihanli/sparktodo-api:latest
           imagePullPolicy: IfNotPresent # 默认是IfNotPresent，如果设置成Always，则每一次部署都会重新拉取容器映像（否则，如果本地存在指定的镜像版本，就不会再去拉取）
           resources:
-            limits:
+            requests:
               memory: "64Mi"
+              cpu: "20m"
+            limits:
+              memory: "128Mi"
               cpu: "50m"
           ports:
             - containerPort: 80
           securityContext:
             capabilities:
-              add:
-                - "SYS_PTRACE"
+              add: ["SYS_PTRACE"]
 
 ---
 apiVersion: v1
