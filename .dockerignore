@@ -5,7 +5,7 @@
 .vs
 .vscode
 .git
-
+SparkTodo.WebExtension
 
 # files
 Dockerfile*
