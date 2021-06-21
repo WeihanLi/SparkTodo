@@ -1,3 +1,12 @@
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine AS base
+# https://www.abhith.net/blog/docker-sql-error-on-aspnet-core-alpine/
+RUN apk add icu-libs
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT false
+# use forward headers
+ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+LABEL Maintainer="WeihanLi"
+EXPOSE 80
+
 FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build-env
 WORKDIR /app
 
@@ -17,11 +26,9 @@ WORKDIR /app/SparkTodo.API
 RUN dotnet publish -c Release -o out
 
 # build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine
-LABEL Maintainer="WeihanLi"
-WORKDIR /app
-COPY --from=build-env /app/SparkTodo.API/out .
+FROM base AS final
 COPY --from=build-env /root/.dotnet/tools /root/.dotnet/tools
 ENV PATH="/root/.dotnet/tools:${PATH}"
-EXPOSE 80
+WORKDIR /app
+COPY --from=build-env /app/SparkTodo.API/out .
 ENTRYPOINT ["dotnet", "SparkTodo.API.dll"]
