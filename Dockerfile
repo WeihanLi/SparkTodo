@@ -3,6 +3,8 @@ WORKDIR /app
 
 # install dotnet tool
 RUN dotnet tool install --global dotnet-dump
+RUN dotnet tool install --global dotnet-gcdump
+RUN dotnet tool install --global dotnet-counters
 
 COPY SparkTodo.Shared/SparkTodo.Shared.csproj SparkTodo.Shared/
 COPY SparkTodo.API/SparkTodo.API.csproj SparkTodo.API/
