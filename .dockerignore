@@ -5,6 +5,7 @@
 .vs
 .vscode
 .git
+.idea
 SparkTodo.WebExtension
 
 # files
