@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SparkTodo.DataAccess;
 using SparkTodo.Models;
-using WebExtension.Net;
-using WebExtension.Net.Notifications;
+using WebExtensions.Net;
+using WebExtensions.Net.Notifications;
 using WeihanLi.Common.Data;
 using WeihanLi.EntityFramework;
 
@@ -16,12 +16,12 @@ namespace SparkTodo.WebExtension.Services
     {
         private static readonly int[] TimeToReminder = { 15, 10, 5 };
 
-        private readonly IWebExtensionApi _webExtensionApi;
+        private readonly IWebExtensionsApi _webExtensionApi;
         private readonly ITodoItemRepository _repository;
         private readonly ILogger<TodoScheduler> _logger;
 
         public TodoScheduler(
-            IWebExtensionApi webExtensionApi,
+            IWebExtensionsApi webExtensionApi,
             ITodoItemRepository repository,
             ILogger<TodoScheduler> logger)
         {
