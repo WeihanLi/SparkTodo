@@ -16,7 +16,6 @@
   "permissions": [
     "*://*/*",
     "notifications",
-    "webRequest",
-    "webRequestBlocking"
+    "webRequest"
   ]
 }

@@ -10,8 +10,16 @@
 
 如果你对 C# 开发浏览器扩展感兴趣，这一定是你的不二之选。
 
+## Features
+
+目前只是数据都在本地的一个浏览器扩展，主要是做了一个 push notification。
+
 ## References
 
 - [Official Blazor Documentation](https://docs.microsoft.com/en-us/aspnet/core/blazor/?WT.mc_id=DT-MVP-5004222)
 - [MS Learn for Blazor Tutorial](https://docs.microsoft.com/en-us/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5004222)
 - [Blazor Extensions for build a browser extensions](https://github.com/mingyaulee/Blazor.BrowserExtension)
+- <https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions>
+- <https://developer.chrome.com/docs/extensions/mv3/getstarted/>
+- <https://github.com/GoogleChrome/chrome-extensions-samples>
+

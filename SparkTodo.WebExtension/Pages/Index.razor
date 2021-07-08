@@ -4,12 +4,28 @@
 @using SparkTodo.Models
 @using WeihanLi.Extensions
 @inherits Blazor.BrowserExtension.Pages.IndexPage
+@inject IJSRuntime JS
 @inject TodoScheduler scheduler
 
 <div class="container">
     <h1>Hello, world!</h1>
     Welcome to SparkTodo
     <button @onclick="AddNewTodo" class="btn btn-info">Add new todo</button>
+</div>
+<div id="todo-popup" style="display: none; width: 80%;max-width: 600px;margin: 0 auto;">
+    <div class="form-group">
+        <label for="edit-item-title">Todo Title</label>
+        <input class="form-control" id="edit-item-title" @bind="EditItem.TodoTitle" required/>
+    </div>
+    <div class="form-group">
+        <label for="edit-item-details">Todo Content</label>
+        <input class="form-control" id="edit-item-details" @bind="EditItem.TodoContent" required/>
+    </div>
+    <div class="form-group">
+        <button type="button" class="btn btn-primary" @onclick="SubmitTodo">Submit</button>
+        &nbsp;&nbsp;
+        <button type="button" class="btn btn-secondary" @onclick="Reset">Close</button>
+    </div>
 </div>
 <div class="container todo-item-list">
     <div class="todo-item">
@@ -23,16 +39,22 @@
                 <p>@item.TodoContent</p>
             </div>
             <div class="todo-item-scheduled-time">
+                <button @onclick="()=>Edit(item)" class="btn btn-info">Edit</button>
                 <button @onclick="()=>Delete(item.TodoId)" class="btn btn-danger">Delete</button>
                 @(item.ScheduledTime.HasValue ? item.ScheduledTime.Value.ToStandardTimeString() : "")
             </div>
         }
     </div>
 </div>
-
 @code
 {
-    public List<TodoItem> TodoItems { get; private set; }
+    private List<TodoItem> TodoItems { get; set; }
+    private TodoItem _editItem = new ();
+    private TodoItem EditItem
+    {
+        get => _editItem;
+        set => _editItem = value ?? new();
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -42,18 +64,50 @@
 
     private async Task AddNewTodo()
     {
-        var task = await scheduler.CreateTask(new TodoItem()
-        {
-            TodoTitle = $"test-{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}",
-            TodoContent = "test test test",
-            ScheduledTime = DateTime.UtcNow.AddMinutes(11),
-        });
-        TodoItems.Add(task);
+        // var task = await scheduler.CreateTask(new TodoItem()
+        // {
+        //     TodoTitle = $"test-{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}",
+        //     TodoContent = "test test test",
+        //     ScheduledTime = DateTime.UtcNow.AddMinutes(11),
+        // });
+        // TodoItems.Add(task);
+        EditItem = null;
+        await JS.InvokeVoidAsync("toggleElement", "todo-popup");
     }
 
     private async Task Delete(int id)
     {
         await scheduler.DeleteTask(id);
         TodoItems.RemoveWhere(x => x.TodoId == id);
+    }
+
+    private async Task Edit(TodoItem item)
+    {
+        EditItem = item;
+        await JS.InvokeVoidAsync("toggleElement", "todo-popup");
+    }
+
+    private async Task Reset()
+    {
+        await JS.InvokeVoidAsync("toggleElement", "todo-popup");
+    }
+
+    private async Task SubmitTodo()
+    {
+        if (string.IsNullOrEmpty(EditItem.TodoTitle))
+        {
+            return;
+        }
+        if (EditItem.TodoId > 0)
+        {
+            await scheduler.UpdateTask(EditItem);
+        }
+        else
+        {
+            var newItem = await scheduler.CreateTask(EditItem);
+            TodoItems.Add(newItem);
+        }
+        EditItem = null;
+        await JS.InvokeVoidAsync("toggleElement", "todo-popup");
     }
 }
