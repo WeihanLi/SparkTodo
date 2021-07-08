@@ -98,6 +98,7 @@
         {
             return;
         }
+        EditItem.ScheduledTime = DateTime.UtcNow.AddMinutes(11);
         if (EditItem.TodoId > 0)
         {
             await scheduler.UpdateTask(EditItem);
