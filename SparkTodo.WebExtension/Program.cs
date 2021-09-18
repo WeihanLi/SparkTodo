@@ -9,10 +9,10 @@ using SparkTodo.WebExtension.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
-            builder.Services.AddBrowserExtensionServices(options =>
-                {
-                    options.ProjectNamespace = typeof(Program).Namespace;
-                });
+builder.Services.AddBrowserExtensionServices(options =>
+    {
+        options.ProjectNamespace = typeof(Program).Namespace;
+    });
 builder.Services.AddDbContextPool<SparkTodoDbContext>(options =>
     options.UseInMemoryDatabase("SparkTodo")
 );
