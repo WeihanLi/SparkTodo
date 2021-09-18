@@ -35,7 +35,21 @@ spec:
               memory: "128Mi"
               cpu: "50m"
           ports:
-            - containerPort: 80
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
           securityContext:
             capabilities:
               add: ["SYS_PTRACE"]

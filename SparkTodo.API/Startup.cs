@@ -156,7 +156,7 @@ namespace SparkTodo.API
                     }, Array.Empty<string>() }
                 });
             });
-
+            services.AddHealthChecks();
             // Add application services.
             services.AddSingleton<ITokenGenerator, TokenGenerator>();
             //Repository
@@ -206,6 +206,7 @@ namespace SparkTodo.API
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapMetrics();
                 endpoints.MapControllers();
             });
