@@ -3,7 +3,7 @@ name: default
 on: [push, pull_request]
 
 jobs:
-  linux-build:
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
