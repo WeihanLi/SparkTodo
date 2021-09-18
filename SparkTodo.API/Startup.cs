@@ -170,11 +170,11 @@ namespace SparkTodo.API
         /// <param name="app">app</param>
         public void Configure(IApplicationBuilder app)
         {
-            // disable claimType transform, see details here https://stackoverflow.com/questions/39141310/jwttoken-claim-name-jwttokentypes-subject-resolved-to-claimtypes-nameidentifie
+            // Disable claimType transform, see details here https://stackoverflow.com/questions/39141310/jwttoken-claim-name-jwttokentypes-subject-resolved-to-claimtypes-nameidentifie
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
-            // emit dotnet rumtime version to response header
+            // Emit dotnet runtime version to response header
             app.Use(async (context, next) =>
             {
                 context.Response.Headers["DotNetVersion"] = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
