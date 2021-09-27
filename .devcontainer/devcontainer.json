@@ -1,7 +1,8 @@
 {
     "name": "dotnet-httpie CodeSpace",
     "dockerFile": "Dockerfile",
-    "forwardPorts": [80],
+    "appPort": [80, 5000],
+    "forwardPorts": [80, 5000],
     // Install needed extensions
     "extensions": [
         "ms-dotnettools.csharp",
