@@ -12,10 +12,6 @@
         "SyncVersion"
 	};
 #>
-using SparkTodo.Models;
-using Microsoft.Extensions.DependencyInjection;
-using WeihanLi.EntityFramework;
-
 namespace SparkTodo.DataAccess
 {
 <# 

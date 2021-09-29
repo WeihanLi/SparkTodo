@@ -1,4 +1,4 @@
-﻿namespace SparkTodo.API.Models
+﻿namespace SparkTodo.Models
 {
     /// <summary>
     /// JsonResponseModel 

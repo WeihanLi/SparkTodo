@@ -1,11 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using SparkTodo.DataAccess;
-using SparkTodo.Models;
-using SparkTodo.WebExtension;
-using SparkTodo.WebExtension.Services;
+﻿using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

@@ -13,6 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="SparkTodo.WebExtension"/>
+    <Using Include="SparkTodo.WebExtension.Services"/>
+    <Using Include="WebExtensions.Net"/>
     <ProjectReference Include="..\SparkTodo.Shared\SparkTodo.Shared.csproj" />
   </ItemGroup>
 

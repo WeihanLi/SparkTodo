@@ -1,16 +1,7 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using SparkTodo.API.JWT;
-using SparkTodo.API.Models;
 using SparkTodo.API.Services;
-using SparkTodo.DataAccess;
-using WeihanLi.Common;
 
 namespace SparkTodo.API.Controllers
 {

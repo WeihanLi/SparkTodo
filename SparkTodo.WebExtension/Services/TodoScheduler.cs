@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using SparkTodo.DataAccess;
-using SparkTodo.Models;
-using WebExtensions.Net;
-using WebExtensions.Net.Notifications;
+﻿using WebExtensions.Net.Notifications;
 using WeihanLi.Common.Data;
-using WeihanLi.EntityFramework;
 
 namespace SparkTodo.WebExtension.Services
 {

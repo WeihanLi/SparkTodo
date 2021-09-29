@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace SparkTodo.DataAccess
+﻿namespace SparkTodo.DataAccess
 {
     public partial interface IUserAccountRepository
     {

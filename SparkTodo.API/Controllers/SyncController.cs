@@ -1,17 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using SparkTodo.API.Extensions;
-using SparkTodo.API.Models;
-using SparkTodo.DataAccess;
-using SparkTodo.Models;
-using WeihanLi.EntityFramework;
-using WeihanLi.Extensions;
-
-namespace SparkTodo.API.Controllers
+﻿namespace SparkTodo.API.Controllers
 {
     [Authorize]
     [ApiVersion("2")]

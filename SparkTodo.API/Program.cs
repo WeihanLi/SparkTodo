@@ -1,26 +1,12 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.IO;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Prometheus;
 using Prometheus.DotNetRuntime;
-using SparkTodo.API;
 using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
-using SparkTodo.DataAccess;
-using SparkTodo.Models;
-using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Linq;
 using System.Reflection;
 
 DotNetRuntimeStatsBuilder.Customize()
@@ -188,12 +174,9 @@ app.UseHttpMetrics();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapHealthChecks("/health");
-    endpoints.MapMetrics();
-    endpoints.MapControllers();
-});
+app.MapHealthChecks("/health");
+app.MapMetrics();
+app.MapControllers();
 
 using (var serviceScope = app.Services.CreateScope())
 {

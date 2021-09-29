@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace SparkTodo.API.Models.AccountViewModels
+namespace SparkTodo.Models.AccountViewModels
 {
     /// <summary>
     /// LoginViewModel

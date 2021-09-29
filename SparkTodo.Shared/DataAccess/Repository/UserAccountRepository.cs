@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using SparkTodo.Models;
-
-namespace SparkTodo.DataAccess
+﻿namespace SparkTodo.DataAccess
 {
     public partial class UserAccountRepository
     {

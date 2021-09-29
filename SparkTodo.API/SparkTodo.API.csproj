@@ -12,6 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="Microsoft.AspNetCore.Authorization"/>
+    <Using Include="Microsoft.AspNetCore.Identity"/>
+    <Using Include="Microsoft.AspNetCore.Mvc"/>
+    <Using Include="SparkTodo.API.Extensions"/>
+
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0-rc.*" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0-rc.*" />

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace SparkTodo.API.JWT
+﻿namespace SparkTodo.API.JWT
 {
     /// <summary>
     /// TokenOptions

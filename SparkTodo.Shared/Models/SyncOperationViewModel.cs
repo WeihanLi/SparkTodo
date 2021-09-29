@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using SparkTodo.Models;
-
-namespace SparkTodo.API.Models
+﻿namespace SparkTodo.Models
 {
     public enum OperationType
     {

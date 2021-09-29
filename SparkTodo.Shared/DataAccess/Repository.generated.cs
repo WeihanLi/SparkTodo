@@ -1,9 +1,4 @@
-﻿ 
-using SparkTodo.Models;
-using Microsoft.Extensions.DependencyInjection;
-using WeihanLi.EntityFramework;
-
-namespace SparkTodo.DataAccess
+﻿namespace SparkTodo.DataAccess
 {
 	public partial interface ITodoItemRepository: IEFRepository<SparkTodoDbContext, TodoItem>{}
 

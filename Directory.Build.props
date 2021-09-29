@@ -1,0 +1,14 @@
+﻿<Project>
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Include="Microsoft.EntityFrameworkCore"/>
+    <Using Include="SparkTodo.DataAccess"/>
+    <Using Include="SparkTodo.Models"/>
+    <Using Include="System.Linq.Expressions"/>
+    <Using Include="WeihanLi.Common"/>
+    <Using Include="WeihanLi.EntityFramework"/>
+    <Using Include="WeihanLi.Extensions"/>
+  </ItemGroup>
+</Project>
