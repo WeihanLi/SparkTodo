@@ -1,35 +1,34 @@
-﻿namespace SparkTodo.DataAccess
+﻿namespace SparkTodo.DataAccess;
+
+public partial interface ITodoItemRepository: IEFRepository<SparkTodoDbContext, TodoItem>{}
+
+public partial class TodoItemRepository : EFRepository<SparkTodoDbContext, TodoItem>,  ITodoItemRepository
 {
-	public partial interface ITodoItemRepository: IEFRepository<SparkTodoDbContext, TodoItem>{}
-
-	public partial class TodoItemRepository : EFRepository<SparkTodoDbContext, TodoItem>,  ITodoItemRepository
+    public TodoItemRepository(SparkTodoDbContext dbContext) : base(dbContext)
     {
-        public TodoItemRepository(SparkTodoDbContext dbContext) : base(dbContext)
-        {
-        }
     }
-	public partial interface ICategoryRepository: IEFRepository<SparkTodoDbContext, Category>{}
+}
+public partial interface ICategoryRepository: IEFRepository<SparkTodoDbContext, Category>{}
 
-	public partial class CategoryRepository : EFRepository<SparkTodoDbContext, Category>,  ICategoryRepository
+public partial class CategoryRepository : EFRepository<SparkTodoDbContext, Category>,  ICategoryRepository
+{
+    public CategoryRepository(SparkTodoDbContext dbContext) : base(dbContext)
     {
-        public CategoryRepository(SparkTodoDbContext dbContext) : base(dbContext)
-        {
-        }
     }
-	public partial interface IUserAccountRepository: IEFRepository<SparkTodoDbContext, UserAccount>{}
+}
+public partial interface IUserAccountRepository: IEFRepository<SparkTodoDbContext, UserAccount>{}
 
-	public partial class UserAccountRepository : EFRepository<SparkTodoDbContext, UserAccount>,  IUserAccountRepository
+public partial class UserAccountRepository : EFRepository<SparkTodoDbContext, UserAccount>,  IUserAccountRepository
+{
+    public UserAccountRepository(SparkTodoDbContext dbContext) : base(dbContext)
     {
-        public UserAccountRepository(SparkTodoDbContext dbContext) : base(dbContext)
-        {
-        }
     }
-	public partial interface ISyncVersionRepository: IEFRepository<SparkTodoDbContext, SyncVersion>{}
+}
+public partial interface ISyncVersionRepository: IEFRepository<SparkTodoDbContext, SyncVersion>{}
 
-	public partial class SyncVersionRepository : EFRepository<SparkTodoDbContext, SyncVersion>,  ISyncVersionRepository
+public partial class SyncVersionRepository : EFRepository<SparkTodoDbContext, SyncVersion>,  ISyncVersionRepository
+{
+    public SyncVersionRepository(SparkTodoDbContext dbContext) : base(dbContext)
     {
-        public SyncVersionRepository(SparkTodoDbContext dbContext) : base(dbContext)
-        {
-        }
     }
 }

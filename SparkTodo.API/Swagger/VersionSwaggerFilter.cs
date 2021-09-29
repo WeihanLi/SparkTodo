@@ -1,32 +1,31 @@
 ﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace SparkTodo.API.Swagger
+namespace SparkTodo.API.Swagger;
+
+public class SetVersionInPathDocumentFilter : IDocumentFilter
 {
-    public class SetVersionInPathDocumentFilter : IDocumentFilter
+    public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
-        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
+        var updatedPaths = new OpenApiPaths();
+
+        foreach (var entry in swaggerDoc.Paths)
         {
-            var updatedPaths = new OpenApiPaths();
-
-            foreach (var entry in swaggerDoc.Paths)
-            {
-                updatedPaths.Add(
-                    entry.Key.Replace("v{version}", swaggerDoc.Info.Version),
-                    entry.Value);
-            }
-
-            swaggerDoc.Paths = updatedPaths;
+            updatedPaths.Add(
+                entry.Key.Replace("v{version}", swaggerDoc.Info.Version),
+                entry.Value);
         }
+
+        swaggerDoc.Paths = updatedPaths;
     }
+}
 
-    public class RemoveVersionParameterOperationFilter : IOperationFilter
+public class RemoveVersionParameterOperationFilter : IOperationFilter
+{
+    public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        public void Apply(OpenApiOperation operation, OperationFilterContext context)
-        {
-            // Remove version parameter from all Operations
-            var versionParameter = operation.Parameters.Single(p => p.Name == "version");
-            operation.Parameters.Remove(versionParameter);
-        }
+        // Remove version parameter from all Operations
+        var versionParameter = operation.Parameters.Single(p => p.Name == "version");
+        operation.Parameters.Remove(versionParameter);
     }
 }

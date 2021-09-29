@@ -12,21 +12,20 @@
         "SyncVersion"
 	};
 #>
-namespace SparkTodo.DataAccess
-{
+namespace SparkTodo.DataAccess;
+
 <# 
 	foreach (var item in types)
     {
 #>
-	public partial interface I<#= item #>Repository: IEFRepository<SparkTodoDbContext, <#= item #>>{}
+public partial interface I<#= item #>Repository: IEFRepository<SparkTodoDbContext, <#= item #>>{}
 
-	public partial class <#= item #>Repository : EFRepository<SparkTodoDbContext, <#= item #>>,  I<#= item #>Repository
+public partial class <#= item #>Repository : EFRepository<SparkTodoDbContext, <#= item #>>,  I<#= item #>Repository
+{
+    public <#= item #>Repository(SparkTodoDbContext dbContext) : base(dbContext)
     {
-        public <#= item #>Repository(SparkTodoDbContext dbContext) : base(dbContext)
-        {
-        }
     }
+}
 <#		 
     } 
 #>
-}
