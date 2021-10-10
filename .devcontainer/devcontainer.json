@@ -1,12 +1,13 @@
 {
     "name": "dotnet-httpie CodeSpace",
     "dockerFile": "Dockerfile",
-    "appPort": [80, 5000],
+    "runArgs": [
+        "--cap-add=SYS_PTRACE"
+    ],
     "forwardPorts": [80, 5000], // [codespace]-[port].githubpreview.dev
     // Install needed extensions
     "extensions": [
         "ms-dotnettools.csharp",
-        "davidanson.vscode-markdownlint",
-        "github.vscode-pull-request-github"
+        "davidanson.vscode-markdownlint"
     ]
 }

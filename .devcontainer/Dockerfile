@@ -1,6 +1,6 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine
+FROM mcr.microsoft.com/dotnet/sdk:6.0
 # install dependencies
-RUN apk add git
+
 # install dotnet tool
 RUN dotnet tool install --global dotnet-dump
 RUN dotnet tool install --global dotnet-gcdump
