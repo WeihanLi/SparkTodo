@@ -1,5 +1,5 @@
 {
-    "name": "dotnet-httpie CodeSpace",
+    "name": "Codespace",
     "dockerFile": "Dockerfile",
     "runArgs": [
         "--cap-add=SYS_PTRACE"
