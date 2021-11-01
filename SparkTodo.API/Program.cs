@@ -8,6 +8,9 @@ using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
+using System.Text.Json;
 
 DotNetRuntimeStatsBuilder.Customize()
     .WithContentionStats()
@@ -16,7 +19,14 @@ DotNetRuntimeStatsBuilder.Customize()
     .StartCollecting();
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Logging.AddJsonConsole();
+builder.Logging.AddJsonConsole(options =>
+{
+    options.JsonWriterOptions = new JsonWriterOptions
+    {
+        // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-character-encoding?WT.mc_id=DT-MVP-5004222
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
+});
 
 // Add framework services.
 builder.Services.AddDbContextPool<SparkTodo.Models.SparkTodoDbContext>(options => options.UseInMemoryDatabase("SparkTodo"));
