@@ -12,16 +12,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Include="Microsoft.AspNetCore.Authorization"/>
-    <Using Include="Microsoft.AspNetCore.Identity"/>
-    <Using Include="Microsoft.AspNetCore.Mvc"/>
-    <Using Include="SparkTodo.API.Extensions"/>
+    <Using Include="Microsoft.AspNetCore.Authorization" />
+    <Using Include="Microsoft.AspNetCore.Identity" />
+    <Using Include="Microsoft.AspNetCore.Mvc" />
+    <Using Include="SparkTodo.API.Extensions" />
 
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0-rc.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0-rc.*" />
-    <PackageReference Include="prometheus-net.DotNetRuntime" Version="4.2.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0" />
+    <PackageReference Include="prometheus-net.DotNetRuntime" Version="4.2.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     <PackageReference Include="prometheus-net.AspNetCore" Version="5.0.1" />
   </ItemGroup>
 
