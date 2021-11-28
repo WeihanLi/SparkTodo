@@ -9,7 +9,6 @@ using SparkTodo.API.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using System.Text.Encodings.Web;
-using System.Text.Unicode;
 using System.Text.Json;
 
 DotNetRuntimeStatsBuilder.Customize()
