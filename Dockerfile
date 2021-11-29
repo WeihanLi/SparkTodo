@@ -1,13 +1,10 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS base
-# https://www.abhith.net/blog/docker-sql-error-on-aspnet-core-alpine/
-RUN apk add icu-libs
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT false
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 # use forward headers
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 LABEL Maintainer="WeihanLi"
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
 # install dotnet tool
