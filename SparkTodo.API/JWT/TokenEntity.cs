@@ -18,7 +18,7 @@ public class TokenEntity
 /// <summary>
 /// 包含用户信息的Token
 /// </summary>
-public class UserTokenEntity:TokenEntity
+public class UserTokenEntity : TokenEntity
 {
     /// <summary>
     /// 用户id

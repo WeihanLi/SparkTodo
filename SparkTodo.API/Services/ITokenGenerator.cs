@@ -1,5 +1,5 @@
-﻿using System.Security.Claims;
-using SparkTodo.API.JWT;
+﻿using SparkTodo.API.JWT;
+using System.Security.Claims;
 
 namespace SparkTodo.API.Services;
 

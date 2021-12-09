@@ -1,5 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Prometheus;
@@ -7,6 +6,7 @@ using Prometheus.DotNetRuntime;
 using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -66,19 +66,19 @@ builder.Services.AddAuthentication(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-                        // The signing key must match!
-                        ValidateIssuerSigningKey = true,
+            // The signing key must match!
+            ValidateIssuerSigningKey = true,
             IssuerSigningKey = signingKey,
-                        // Validate the JWT Issuer (iss) claim
-                        ValidateIssuer = true,
+            // Validate the JWT Issuer (iss) claim
+            ValidateIssuer = true,
             ValidIssuer = tokenIssuer,
-                        // Validate the JWT Audience (aud) claim
-                        ValidateAudience = true,
+            // Validate the JWT Audience (aud) claim
+            ValidateAudience = true,
             ValidAudience = tokenAudience,
-                        // Validate the token expiry
-                        ValidateLifetime = true,
-                        // If you want to allow a certain amount of clock drift, set that here:
-                        ClockSkew = System.TimeSpan.FromMinutes(2)
+            // Validate the token expiry
+            ValidateLifetime = true,
+            // If you want to allow a certain amount of clock drift, set that here:
+            ClockSkew = System.TimeSpan.FromMinutes(2)
         };
     });
 

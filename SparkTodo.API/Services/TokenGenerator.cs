@@ -1,7 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using SparkTodo.API.JWT;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using TokenOptions = SparkTodo.API.JWT.TokenOptions;
 
 namespace SparkTodo.API.Services;

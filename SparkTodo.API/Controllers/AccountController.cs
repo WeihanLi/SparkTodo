@@ -1,7 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using SparkTodo.API.JWT;
+﻿using SparkTodo.API.JWT;
 using SparkTodo.API.Services;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace SparkTodo.API.Controllers;
 /// <summary>

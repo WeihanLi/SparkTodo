@@ -96,7 +96,7 @@ public class TodoScheduler
                         var minutesDiff = (scheduledTime - DateTime.UtcNow.AddMinutes(minutes)).TotalMinutes;
                         if (minutesDiff is > 0 and < 1)
                         {
-                            await SendNotification(item, (int)(scheduledTime-DateTime.UtcNow).TotalMinutes);
+                            await SendNotification(item, (int)(scheduledTime - DateTime.UtcNow).TotalMinutes);
                             _logger.LogInformation($"Notification sent for {item.TodoTitle}({item.TodoId})");
                             break;
                         }
