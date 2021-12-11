@@ -36,7 +36,7 @@ builder.Services.AddIdentity<SparkTodo.Models.UserAccount, SparkTodo.Models.User
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredUniqueChars = 0;
-    options.User.RequireUniqueEmail = true;
+    options.User.RequireUniqueEmail =true;
 })
     .AddEntityFrameworkStores<SparkTodo.Models.SparkTodoDbContext>()
     .AddDefaultTokenProviders();
