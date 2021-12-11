@@ -19,9 +19,9 @@ jobs:
     - name: check for changes
       run: |
         if git diff --exit-code; then
-          echo "::set-env name=has_changes::true"
+          echo "has_changes=false" >> $GITHUB_ENV
         else
-          echo "::set-env name=has_changes::false"
+          echo "has_changes=true" >> $GITHUB_ENV
         fi
     - name: Commit and Push
       if: ${{ env.has_changes == 'true' }}
