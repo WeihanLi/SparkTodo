@@ -16,18 +16,20 @@ jobs:
       run: dotnet build
     - name: format
       run: dotnet format
-    - name: Commit files
+    - name: check for changes
+      run: |
+        if git diff --exit-code; then
+          echo "::set-env name=has_changes::true"
+        else
+          echo "::set-env name=has_changes::false"
+        fi
+    - name: Commit and Push
+      if: ${{ env.has_changes == 'true' }}
       shell: bash
       run: |
-        git add -A
-        git diff HEAD --exit-code > /dev/null 2> /dev/null 
-        rc = $?
-        if [$rc != 0]
-        then
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "weihanli@outlook.com"
-          git commit -m 'Automated dotnet-format update from $env:GITHUB_REF_NAME $env:GITHUB_SHA'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git push origin $env:GITHUB_REF_NAME
-        fi
+        git config --local user.name "github-actions[bot]"
+        git config --local user.email "weihanli@outlook.com"
+        git commit -am 'Automated dotnet-format update from $env:GITHUB_REF_NAME $env:GITHUB_SHA'
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git push origin $env:GITHUB_REF_NAME
  
