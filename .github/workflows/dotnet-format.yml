@@ -22,7 +22,7 @@ jobs:
         git add -A
         git diff HEAD --exit-code
         rc = $?
-        if [[$rc != 0]]
+        if [$rc != 0]
         then
           git config --local user.name "github-actions[bot]"
           git config --local user.email "weihanli@outlook.com"
