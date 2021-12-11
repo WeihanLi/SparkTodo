@@ -34,6 +34,6 @@ jobs:
         git add -u
         git commit -m 'Automated dotnet-format update from commit ${env:GITHUB_SHA} on $GITHUB_REF'
         git log -1
-        git remote -v
-        # git push https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/${GITHUB_REPOSITORY}.git ${GITHUB_REF}
- 
+        remote_repo="https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${REPOSITORY}.git"
+        echo $remote_repo
+        git push "${remote_repo}" HEAD:${INPUT_BRANCH}
