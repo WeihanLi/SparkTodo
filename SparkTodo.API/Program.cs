@@ -20,7 +20,7 @@ DotNetRuntimeStatsBuilder.Customize()
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddJsonConsole(options =>
 {
-    options.JsonWriterOptions =new JsonWriterOptions
+    options.JsonWriterOptions = new JsonWriterOptions
     {
         // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-character-encoding?WT.mc_id=DT-MVP-5004222
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
