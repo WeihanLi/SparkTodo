@@ -27,12 +27,12 @@ jobs:
       if: ${{ env.has_changes == 'true' }}
       shell: bash
       run: |
-        echo $env:GITHUB_REF_NAME
-        echo ${{ github.ref.name }}
+        echo $GITHUB_REF_NAME
+        echo $GITHUB_SHA
         git config --local user.name "github-actions[bot]"
         git config --local user.email "weihanli@outlook.com"
         git add -A
-        git commit -m 'Automated dotnet-format update from $env:GITHUB_REF_NAME $env:GITHUB_SHA'
+        git commit -m 'Automated dotnet-format update from $env:GITHUB_REF_NAME $GITHUB_SHA'
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-        git push origin $env:GITHUB_REF_NAME
+        git push origin $GITHUB_REF_NAME
  
