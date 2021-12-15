@@ -1,12 +1,11 @@
 name: dotnet-outdated
 
 on:
+  schedule:
+    - cron:  '0 1 * * *'
   push:
     branches: 
-    - "master"
-    - "main"
-    - "dev"
-
+      - "master"
 jobs:
   build:
     runs-on: ubuntu-latest
