@@ -20,7 +20,7 @@ jobs:
     - name: build
       run: dotnet build
     - name: install dotnet-outdated
-      run: dotnet tool install -g dotnet-outdated
+      run: dotnet tool install --global dotnet-outdated-tool
     - name: Run dotnet-outdated
       run: dotnet-outdated -u
     - name: Build again
