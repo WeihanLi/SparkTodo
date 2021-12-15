@@ -43,3 +43,4 @@ jobs:
           This PR updates the outdated NuGet packages.
         labels: automated pr
         branch: update-nuget-dependencies
+        base: ${{ github.ref }}
