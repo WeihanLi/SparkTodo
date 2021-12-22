@@ -17,7 +17,9 @@ spec:
         - name: "sparktodo-api"
           image: "weihanli.azurecr.io/weihanli/sparktodo-api"
           ports:
-          - containerPort: 80
+          - name: http
+            containerPort: 80
+            protocol: TCP
           resources:
             requests:
               memory: "64Mi"
