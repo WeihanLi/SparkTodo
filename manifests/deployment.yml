@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "hongkongdefault0-be50"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "hongkongdefault0-be50"
+  template:
+    metadata:
+      labels:
+        app: "hongkongdefault0-be50"
+    spec:
+      containers:
+        - name: "hongkongdefault0-be50"
+          image: "weihanli.azurecr.io/hongkongdefault0"
+          ports:
+          - containerPort: 80
