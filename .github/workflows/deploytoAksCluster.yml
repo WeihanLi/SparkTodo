@@ -43,6 +43,7 @@ jobs:
         namespace: default
         manifests: |
           manifests/deployment.yml
+          manifests/hpa.yml
           manifests/service.yml
         images: |
           weihanli.azurecr.io/weihanli/sparktodo-api:${{ github.sha }}
