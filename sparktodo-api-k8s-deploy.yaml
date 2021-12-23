@@ -19,6 +19,9 @@ spec:
 
   template: # 用来指定Pod的模板，与Pod的定义类似
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "52323"
       labels: # 根据模板创建的Pod会被贴上该标签，与上面的matchLabels对应
         app: sparktodo-api
     
@@ -53,7 +56,37 @@ spec:
           securityContext:
             capabilities:
               add: ["SYS_PTRACE"]
-
+        - name: monitor
+          image: mcr.microsoft.com/dotnet/monitor:6.0.0
+          # DO NOT use the --no-auth argument for deployments in production
+          args: [ "--no-auth" ]
+          imagePullPolicy: Always
+          env:
+          - name: DOTNETMONITOR_DiagnosticPort__ConnectionMode
+            value: Listen
+          - name: DOTNETMONITOR_DiagnosticPort__EndpointName
+            value: /diag/port
+          - name: DOTNETMONITOR_Storage__DumpTempFolder
+            value: /dumps
+          - name: DOTNETMONITOR_Urls
+            value: "http://*:52323"
+          volumeMounts:
+          - mountPath: /diag
+            name: diagvol
+          - mountPath: /dumps
+            name: dumpsvol
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 256Mi
+      volumes:
+      - name: diagvol
+        emptyDir: {}
+      - name: dumpsvol
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
