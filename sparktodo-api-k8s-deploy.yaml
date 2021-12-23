@@ -12,24 +12,24 @@ spec:
       app: sparktodo-api
   minReadySeconds: 0
   strategy:
-    type: RollingUpdate # 策略类型，使用RollingUpdate可以保证部署期间服务不间断
+    type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 1 # 部署时最大允许停止的Pod数量（与replicas相比）
-      maxSurge: 1 # 部署时最大允许创建的Pod数量（与replicas相比）
+      maxUnavailable: 1
+      maxSurge: 1
 
-  template: # 用来指定Pod的模板，与Pod的定义类似
+  template:
     metadata:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "52323"
-      labels: # 根据模板创建的Pod会被贴上该标签，与上面的matchLabels对应
+      labels:
         app: sparktodo-api
     
     spec:
       containers:
         - name: sparktodo-api
           image: weihanli/sparktodo-api:latest
-          imagePullPolicy: Always # 默认是IfNotPresent，如果设置成 Always，则每一次部署都会重新拉取容器映像（否则，如果本地存在指定的镜像版本，就不会再去拉取）
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "64Mi"
