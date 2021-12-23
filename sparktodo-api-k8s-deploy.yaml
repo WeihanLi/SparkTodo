@@ -58,9 +58,6 @@ spec:
             name: diagvol
           - mountPath: /dumps
             name: dumpsvol
-          securityContext:
-            capabilities:
-              add: ["SYS_PTRACE"]
         - name: monitor
           image: mcr.microsoft.com/dotnet/monitor:6.0.0
           # DO NOT use the --no-auth argument for deployments in production
@@ -89,6 +86,9 @@ spec:
             limits:
               cpu: 100m
               memory: 256Mi
+          securityContext:
+            capabilities:
+              add: ["SYS_PTRACE"]
       volumes:
       - name: diagvol
         emptyDir: {}
