@@ -37,6 +37,11 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "50m"
+          env:
+          - name: ASPNETCORE_URLS
+            value: http://+:80
+          - name: DOTNET_DiagnosticPorts
+            value: /diag/port
           ports:
             - name: http
               containerPort: 80
