@@ -53,6 +53,11 @@ spec:
               port: 80
             initialDelaySeconds: 60
             periodSeconds: 30
+          volumeMounts:
+          - mountPath: /diag
+            name: diagvol
+          - mountPath: /dumps
+            name: dumpsvol
           securityContext:
             capabilities:
               add: ["SYS_PTRACE"]
