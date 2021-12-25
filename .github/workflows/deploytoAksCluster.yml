@@ -45,6 +45,7 @@ jobs:
           manifests/deployment.yml
           manifests/hpa.yml
           manifests/service.yml
+          manifests/ingress.yml
         images: |
           weihanli.azurecr.io/weihanli/sparktodo-api:${{ github.sha }}
         imagepullsecrets: |
