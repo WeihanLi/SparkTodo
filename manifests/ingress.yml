@@ -1,26 +1,19 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: sparktodo-api
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  name: sparktodo-api-ingress
 spec:
   rules:
-  - host: "sparktodo.lemonsharp.com"
-    http:
-      paths:
-      - pathType: Prefix
-        path: "/api"
-        backend:
-          service:
-            name: sparktodo-api
-            port:
-              number: 80
-  - host: "grafana.lemonsharp.top"
+  - host: "sparktodo-api.lemonsharp.top"
     http:
       paths:
       - pathType: Prefix
         path: "/"
         backend:
           service:
-            name: grafana
+            name: sparktodo-api
             port:
               number: 80
