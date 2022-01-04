@@ -38,8 +38,6 @@ spec:
               memory: "128Mi"
               cpu: "50m"
           env:
-          - name: ASPNETCORE_URLS
-            value: http://+:80
           - name: DOTNET_DiagnosticPorts
             value: /diag/port
           ports:
@@ -64,7 +62,7 @@ spec:
           - mountPath: /dumps
             name: dumpsvol
         - name: monitor
-          image: mcr.microsoft.com/dotnet/monitor:6.0.0
+          image: mcr.microsoft.com/dotnet/monitor
           # DO NOT use the --no-auth argument for deployments in production
           args: [ "--no-auth" ]
           imagePullPolicy: Always
@@ -78,7 +76,7 @@ spec:
           - name: DOTNETMONITOR_Storage__DumpTempFolder
             value: /dumps
           - name: DOTNETMONITOR_Urls
-            value: "http://*:52323"
+            value: "http://+:52323"
           volumeMounts:
           - mountPath: /diag
             name: diagvol
@@ -91,9 +89,6 @@ spec:
             limits:
               cpu: 100m
               memory: 256Mi
-          securityContext:
-            capabilities:
-              add: ["SYS_PTRACE"]
       volumes:
       - name: diagvol
         emptyDir: {}
@@ -112,6 +107,6 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 80
+    targetPort: 52323
     nodePort: 31256
   type: NodePort
