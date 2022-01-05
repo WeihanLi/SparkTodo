@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Options;
+﻿// Copyright (c) Weihan Li. All rights reserved.
+// Licensed under the MIT license.
+
+using Microsoft.Extensions.Options;
 using SparkTodo.API.JWT;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

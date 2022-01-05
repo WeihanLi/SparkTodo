@@ -1,4 +1,7 @@
-﻿namespace SparkTodo.Models;
+﻿// Copyright (c) Weihan Li. All rights reserved.
+// Licensed under the MIT license.
+
+namespace SparkTodo.Models;
 
 public class SyncVersion
 {

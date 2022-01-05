@@ -1,4 +1,7 @@
-﻿using Microsoft.OpenApi.Models;
+﻿// Copyright (c) Weihan Li. All rights reserved.
+// Licensed under the MIT license.
+
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SparkTodo.API.Swagger;

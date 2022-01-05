@@ -1,4 +1,7 @@
-﻿using System.Security.Claims;
+﻿// Copyright (c) Weihan Li. All rights reserved.
+// Licensed under the MIT license.
+
+using System.Security.Claims;
 
 namespace SparkTodo.API.Extensions;
 

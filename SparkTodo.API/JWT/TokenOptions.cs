@@ -1,4 +1,7 @@
-﻿namespace SparkTodo.API.JWT;
+﻿// Copyright (c) Weihan Li. All rights reserved.
+// Licensed under the MIT license.
+
+namespace SparkTodo.API.JWT;
 
 /// <summary>
 /// TokenOptions

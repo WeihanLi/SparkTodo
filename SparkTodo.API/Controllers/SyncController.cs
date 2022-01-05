@@ -1,4 +1,7 @@
-﻿namespace SparkTodo.API.Controllers;
+﻿// Copyright (c) Weihan Li. All rights reserved.
+// Licensed under the MIT license.
+
+namespace SparkTodo.API.Controllers;
 
 [Authorize]
 [ApiVersion("2")]

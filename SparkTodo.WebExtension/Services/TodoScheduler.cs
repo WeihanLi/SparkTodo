@@ -1,4 +1,7 @@
-﻿using WebExtensions.Net.Notifications;
+﻿// Copyright (c) Weihan Li. All rights reserved.
+// Licensed under the MIT license.
+
+using WebExtensions.Net.Notifications;
 using WeihanLi.Common.Data;
 
 namespace SparkTodo.WebExtension.Services;
