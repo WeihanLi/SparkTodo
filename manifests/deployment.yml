@@ -1,25 +1,35 @@
-apiVersion : apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "sparktodo-api"
+  name: sparktodo-api
+  labels:
+    app: sparktodo-api
 spec:
-  replicas: 2
+  replicas: 1
   revisionHistoryLimit: 0
   selector:
     matchLabels:
-      app: "sparktodo-api"
+      app: sparktodo-api
+  minReadySeconds: 0
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "52323"
       labels:
-        app: "sparktodo-api"
+        app: sparktodo-api
+    
     spec:
       containers:
-        - name: "sparktodo-api"
-          image: "weihanli.azurecr.io/weihanli/sparktodo-api"
-          ports:
-          - name: http
-            containerPort: 80
-            protocol: TCP
+        - name: sparktodo-api
+          image: weihanli/sparktodo-api:latest
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "64Mi"
@@ -27,18 +37,60 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "50m"
+          env:
+          - name: DOTNET_DiagnosticPorts
+            value: /diag/port
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
           livenessProbe:
             httpGet:
               path: /health
-              port: http
+              port: 80
             initialDelaySeconds: 60
             periodSeconds: 30
           readinessProbe:
             httpGet:
               path: /health
-              port: http
+              port: 80
             initialDelaySeconds: 60
             periodSeconds: 30
-          securityContext:
-            capabilities:
-              add: ["SYS_PTRACE"]
+          volumeMounts:
+          - mountPath: /diag
+            name: diagvol
+          - mountPath: /dumps
+            name: dumpsvol
+        - name: monitor
+          image: mcr.microsoft.com/dotnet/monitor
+          # DO NOT use the --no-auth argument for deployments in production
+          args: [ "--no-auth" ]
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 52323
+          env:
+          - name: DOTNETMONITOR_DiagnosticPort__ConnectionMode
+            value: Listen
+          - name: DOTNETMONITOR_DiagnosticPort__EndpointName
+            value: /diag/port
+          - name: DOTNETMONITOR_Storage__DumpTempFolder
+            value: /dumps
+          - name: DOTNETMONITOR_Urls
+            value: "http://+:52323"
+          volumeMounts:
+          - mountPath: /diag
+            name: diagvol
+          - mountPath: /dumps
+            name: dumpsvol
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 256Mi
+      volumes:
+      - name: diagvol
+        emptyDir: {}
+      - name: dumpsvol
+        emptyDir: {}

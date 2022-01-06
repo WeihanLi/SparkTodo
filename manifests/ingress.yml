@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    cert-manager.io/cluster-issuer: letsencrypt
   name: sparktodo-api-ingress
 spec:
   rules:
@@ -17,3 +17,7 @@ spec:
             name: sparktodo-api
             port:
               number: 80
+  tls:
+  - hosts:
+    - '*.lemonsharp.top'
+    secretName: lemonsharp-top-tls
