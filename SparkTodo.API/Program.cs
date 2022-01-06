@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Prometheus;
-using Prometheus.DotNetRuntime;
 using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -13,12 +12,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-
-DotNetRuntimeStatsBuilder.Customize()
-    .WithContentionStats()
-    .WithGcStats()
-    .WithThreadPoolStats()
-    .StartCollecting();
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddJsonConsole(options =>
