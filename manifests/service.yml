@@ -11,5 +11,9 @@ spec:
       targetPort: 80
       protocol: TCP
       name: http
+    - name: dotnet-monitor
+      port: 52323
+      protocol: TCP
+      targetPort: 52323
     selector:
         app: "sparktodo-api"
