@@ -4,6 +4,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
   name: sparktodo-api-ingress
 spec:
   rules:
@@ -11,12 +12,19 @@ spec:
     http:
       paths:
       - pathType: Prefix
-        path: "/"
+        path: "/?(.*)"
         backend:
           service:
             name: sparktodo-api
             port:
               number: 80
+      - pathType: Prefix
+        path: "/monitor/?(.*)"
+        backend:
+          service:
+            name: sparktodo-api
+            port:
+              number: 52323
   tls:
   - hosts:
     - sparktodo-api.lemonsharp.top
