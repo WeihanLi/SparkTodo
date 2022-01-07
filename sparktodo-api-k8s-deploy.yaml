@@ -63,7 +63,6 @@ spec:
             name: dumpsvol
         - name: monitor
           image: mcr.microsoft.com/dotnet/monitor
-          # DO NOT use the --no-auth argument for deployments in production
           args: [ "--no-auth" ]
           imagePullPolicy: Always
           ports:
@@ -84,10 +83,10 @@ spec:
             name: dumpsvol
           resources:
             requests:
-              cpu: 50m
+              cpu: 20m
               memory: 32Mi
             limits:
-              cpu: 100m
+              cpu: 50m
               memory: 256Mi
       volumes:
       - name: diagvol

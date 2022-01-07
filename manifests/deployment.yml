@@ -87,10 +87,10 @@ spec:
             name: tmpvol
           resources:
             requests:
-              cpu: 50m
+              cpu: 20m
               memory: 32Mi
             limits:
-              cpu: 100m
+              cpu: 50m
               memory: 256Mi
       volumes:
       - name: diagvol
