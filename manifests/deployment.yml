@@ -61,9 +61,10 @@ spec:
             name: diagvol
           - mountPath: /dumps
             name: dumpsvol
+          - mountPath: /tmp
+            name: tmpvol
         - name: monitor
           image: mcr.microsoft.com/dotnet/monitor
-          # DO NOT use the --no-auth argument for deployments in production
           args: [ "--no-auth" ]
           imagePullPolicy: Always
           ports:
@@ -82,6 +83,8 @@ spec:
             name: diagvol
           - mountPath: /dumps
             name: dumpsvol
+          - mountPath: /tmp
+            name: tmpvol
           resources:
             requests:
               cpu: 50m
@@ -93,4 +96,6 @@ spec:
       - name: diagvol
         emptyDir: {}
       - name: dumpsvol
+        emptyDir: {}
+      - name: tmpvol
         emptyDir: {}
