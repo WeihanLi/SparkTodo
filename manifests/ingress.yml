@@ -19,5 +19,4 @@ spec:
               number: 80
   tls:
   - hosts:
-    - '*.lemonsharp.top'
-    secretName: lemonsharp-top-tls
+    - sparktodo-api.lemonsharp.top
