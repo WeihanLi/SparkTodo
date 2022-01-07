@@ -94,19 +94,3 @@ spec:
         emptyDir: {}
       - name: dumpsvol
         emptyDir: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: sparktodo-api
-  annotations:
-    prometheus.io/should_be_scraped: "true"
-spec:
-  selector:
-    app: sparktodo-api
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 52323
-    nodePort: 31256
-  type: NodePort
