@@ -12,7 +12,7 @@
   </PropertyGroup>
    
   <Target Name="husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0 and '$(IsCrossTargetingBuild)' == 'true'">
-    <Exec Command="dotnet tool restore" StandardOutputImportance="low" StandardErrorImportance="High" />
+    <Exec Command="dotnet tool restore" StandardOutputImportance="low" StandardErrorImportance="High" WorkingDirectory="../" />
     <Exec Command="dotnet husky install" StandardOutputImportance="low" StandardErrorImportance="High" WorkingDirectory="../" />
   </Target>
 
