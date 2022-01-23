@@ -24,7 +24,7 @@ public interface IKubernetesService
 
 public class KubernetesService : IKubernetesService
 {
-    private static readonly bool IsInK8sClsuter = KubernetesClientConfiguration.IsInCluster();
+    private static readonly bool IsInK8sCluster = KubernetesClientConfiguration.IsInCluster();
     private volatile KubernetesEnvironment _environment = null;
     private readonly AsyncLock _lock = new();
 
@@ -37,7 +37,7 @@ public class KubernetesService : IKubernetesService
                 if (_environment is null)
                 {
                     var host = Environment.MachineName;
-                    if (IsInK8sClsuter)
+                    if (IsInK8sCluster)
                     {
                         var config = KubernetesClientConfiguration.InClusterConfig();
                         _environment = new KubernetesEnvironment()
@@ -48,13 +48,18 @@ public class KubernetesService : IKubernetesService
 
                         var client = new Kubernetes(config);
                         var podListResult = await client.ListNamespacedPodAsync(config.Namespace);
-                        var podInfo = podListResult.Items.First(x => x.Metadata.Name == host);
+                        foreach(var item in podListResult.Items)
+                        {
+                            System.Console.WriteLine("Pod: {item.Name()}");
+                        }
+                        var podInfo = podListResult.Items.First(x => x.Name() == host);
                         _environment.PodInfo = podInfo;
 
                         // deployment
                         var deploymentListResult = await client.ListNamespacedDeploymentAsync(config.Namespace);
                         foreach (var item in deploymentListResult.Items)
                         {
+                            System.Console.WriteLine("Deployment: {item.Name()}");
                             if (item.Spec.Selector.MatchLabels.Count > 0)
                             {
                                 var labelMatch = item.Spec.Selector.MatchLabels
@@ -76,20 +81,14 @@ public class KubernetesService : IKubernetesService
                         var serviceListResult = await client.ListNamespacedServiceAsync(config.Namespace);
                         foreach (var item in serviceListResult.Items)
                         {
-                            if (item.Spec.Selector.Count > 0)
+                            System.Console.WriteLine("Service: {item.Name()}");
+                            var labelMatch = item.Spec.Selector
+                                .All(p => podInfo.GetLabel(p.Key) == p.Value);
+                            if (labelMatch)
                             {
-                                var labelMatch = item.Spec.Selector
-                                    .All(p => podInfo.GetLabel(p.Key) == p.Value);
-                                if (labelMatch)
-                                {
-                                    _environment.ServiceName = item.Name();
-                                    _environment.ServiceInfo = item;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                // TODO: match pod according to Selector.MatchExpressions
+                                _environment.ServiceName = item.Name();
+                                _environment.ServiceInfo = item;
+                                break;
                             }
                         }
                     }
