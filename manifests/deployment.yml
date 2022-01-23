@@ -10,12 +10,6 @@ spec:
   selector:
     matchLabels:
       app: sparktodo-api
-  minReadySeconds: 0
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 1
 
   template:
     metadata:
