@@ -48,7 +48,7 @@ public class KubernetesService : IKubernetesService
 
                         var client = new Kubernetes(config);
                         var podListResult = await client.ListNamespacedPodAsync(config.Namespace);
-                        foreach(var item in podListResult.Items)
+                        foreach (var item in podListResult.Items)
                         {
                             System.Console.WriteLine("Pod: {item.Name()}");
                         }
