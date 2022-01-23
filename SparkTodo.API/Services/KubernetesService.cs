@@ -40,7 +40,7 @@ public class KubernetesService : IKubernetesService
                     if (IsInK8sCluster)
                     {
                         var config = KubernetesClientConfiguration.InClusterConfig();
-                        _environment = new KubernetesEnvironment()
+                        var environment = new KubernetesEnvironment()
                         {
                             Namespace = config.Namespace,
                             PodName = host,
@@ -53,7 +53,7 @@ public class KubernetesService : IKubernetesService
                             System.Console.WriteLine("Pod: {item.Name()}");
                         }
                         var podInfo = podListResult.Items.First(x => x.Name() == host);
-                        _environment.PodInfo = podInfo;
+                        environment.PodInfo = podInfo;
 
                         // deployment
                         var deploymentListResult = await client.ListNamespacedDeploymentAsync(config.Namespace);
@@ -66,8 +66,8 @@ public class KubernetesService : IKubernetesService
                                     .All(p => podInfo.GetLabel(p.Key) == p.Value);
                                 if (labelMatch)
                                 {
-                                    _environment.DeploymentName = item.Name();
-                                    _environment.DeploymentInfo = item;
+                                    environment.DeploymentName = item.Name();
+                                    environment.DeploymentInfo = item;
                                     break;
                                 }
                             }
@@ -86,11 +86,13 @@ public class KubernetesService : IKubernetesService
                                 .All(p => podInfo.GetLabel(p.Key) == p.Value);
                             if (labelMatch)
                             {
-                                _environment.ServiceName = item.Name();
-                                _environment.ServiceInfo = item;
+                                environment.ServiceName = item.Name();
+                                environment.ServiceInfo = item;
                                 break;
                             }
                         }
+
+                        _environment = environment;
                     }
                     else
                     {
