@@ -138,10 +138,10 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddHealthChecks();
 // Add application services.
 builder.Services.AddSingleton<ITokenGenerator, TokenGenerator>();
+builder.Services.AddSingleton<IKubernetesService, KubernetesService>();
 //Repository
 builder.Services.RegisterAssemblyTypesAsImplementedInterfaces(t => t.Name.EndsWith("Repository"),
     ServiceLifetime.Scoped, typeof(IUserAccountRepository).Assembly);
-
 
 var app = builder.Build();
 
@@ -181,6 +181,7 @@ app.UseAuthorization();
 
 app.MapHealthChecks("/health");
 app.MapMetrics();
+app.Map("/kube-env", (IKubernetesService kubernetesService) => kubernetesService.GetKubernetesEnvironment());
 app.MapControllers();
 
 using (var serviceScope = app.Services.CreateScope())
