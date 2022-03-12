@@ -24,9 +24,9 @@ builder.Logging.AddJsonConsole(options =>
 });
 
 // Add framework services.
-builder.Services.AddDbContextPool<SparkTodo.Models.SparkTodoDbContext>(options => options.UseInMemoryDatabase("SparkTodo"));
+builder.Services.AddDbContextPool<SparkTodoDbContext>(options => options.UseInMemoryDatabase("SparkTodo"));
 //
-builder.Services.AddIdentity<SparkTodo.Models.UserAccount, SparkTodo.Models.UserRole>(options =>
+builder.Services.AddIdentity<UserAccount, UserRole>(options =>
 {
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
@@ -34,11 +34,12 @@ builder.Services.AddIdentity<SparkTodo.Models.UserAccount, SparkTodo.Models.User
     options.Password.RequiredUniqueChars = 0;
     options.User.RequireUniqueEmail = true;
 })
-    .AddEntityFrameworkStores<SparkTodo.Models.SparkTodoDbContext>()
+    .AddEntityFrameworkStores<SparkTodoDbContext>()
     .AddDefaultTokenProviders();
 
 // Add JWT token validation
 var secretKey = builder.Configuration.GetAppSetting("SecretKey");
+ArgumentNullException.ThrowIfNull(secretKey);
 var signingKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(secretKey));
 
 var tokenAudience = builder.Configuration.GetAppSetting("TokenAudience");
@@ -74,7 +75,7 @@ builder.Services.AddAuthentication(options =>
             // Validate the token expiry
             ValidateLifetime = true,
             // If you want to allow a certain amount of clock drift, set that here:
-            ClockSkew = System.TimeSpan.FromMinutes(2)
+            ClockSkew = TimeSpan.FromMinutes(2)
         };
     });
 
@@ -169,9 +170,9 @@ app.UseSwaggerUI(option =>
 });
 
 app.UseRouting();
-app.UseCors(builder =>
+app.UseCors(b =>
 {
-    builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(_ => true);
+    b.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(_ => true);
 });
 
 app.UseHttpMetrics();

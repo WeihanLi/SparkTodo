@@ -5,5 +5,5 @@ namespace SparkTodo.DataAccess;
 
 public partial interface IUserAccountRepository
 {
-    Task<bool> LoginAsync(Models.UserAccount userInfo);
+    Task<bool> LoginAsync(UserAccount userInfo);
 }

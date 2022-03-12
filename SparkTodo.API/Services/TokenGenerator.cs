@@ -32,7 +32,7 @@ public class TokenGenerator : ITokenGenerator
         var jwt = new JwtSecurityToken(
             issuer: _tokenOptions.Issuer,
             audience: _tokenOptions.Audience,
-            claims: claims,
+            claims: claimList,
             notBefore: now,
             expires: now.Add(_tokenOptions.ValidFor),
             signingCredentials: _tokenOptions.SigningCredentials);

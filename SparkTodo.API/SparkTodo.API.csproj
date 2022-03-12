@@ -16,18 +16,18 @@
     <Exec Command="dotnet husky install" StandardOutputImportance="low" StandardErrorImportance="High" WorkingDirectory="../" />
   </Target>
 
-  <ItemGroup>
+  <ItemGroup>    
     <Using Include="Microsoft.AspNetCore.Authorization" />
     <Using Include="Microsoft.AspNetCore.Identity" />
     <Using Include="Microsoft.AspNetCore.Mvc" />
     <Using Include="SparkTodo.API.Extensions" />
     <PackageReference Include="KubernetesClient" Version="7.0.15" />
-
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
-    <PackageReference Include="prometheus-net.AspNetCore" Version="6.0.0" />
+    <PackageReference Include="WeihanLi.Web.Extensions" Version="1.2.0-*" />
+    <PackageReference Include="prometheus-net.AspNetCore" Version="6.0.0" />    
   </ItemGroup>
 
   <ItemGroup>

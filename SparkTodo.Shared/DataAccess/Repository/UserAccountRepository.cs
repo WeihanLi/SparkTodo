@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Weihan Li. All rights reserved.
 // Licensed under the MIT license.
 
+// ReSharper disable once CheckNamespace
 namespace SparkTodo.DataAccess;
 
 public partial class UserAccountRepository

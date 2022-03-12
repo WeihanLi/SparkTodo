@@ -5,8 +5,10 @@ using SparkTodo.API.JWT;
 using SparkTodo.API.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using WeihanLi.Common.Models;
 
 namespace SparkTodo.API.Controllers;
+
 /// <summary>
 /// Account
 /// </summary>
@@ -17,8 +19,8 @@ namespace SparkTodo.API.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IUserAccountRepository _userRepository;
-    private readonly UserManager<SparkTodo.Models.UserAccount> _userManager;
-    private readonly SignInManager<SparkTodo.Models.UserAccount> _signInManager;
+    private readonly UserManager<UserAccount> _userManager;
+    private readonly SignInManager<UserAccount> _signInManager;
     private readonly ITokenGenerator _tokenGenerator;
 
     /// <summary>
@@ -28,8 +30,8 @@ public class AccountController : ControllerBase
     /// <param name="signInManager">signInManager</param>
     /// <param name="userRepository">userRepository</param>
     /// <param name="tokenGenerator"></param>
-    public AccountController(UserManager<SparkTodo.Models.UserAccount> userManager,
-        SignInManager<SparkTodo.Models.UserAccount> signInManager,
+    public AccountController(UserManager<UserAccount> userManager,
+        SignInManager<UserAccount> signInManager,
         IUserAccountRepository userRepository,
         ITokenGenerator tokenGenerator)
     {
@@ -54,11 +56,12 @@ public class AccountController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> SignInAsync([FromBody] Models.AccountViewModels.LoginViewModel loginModel)
     {
-        JsonResponseModel result;
+        Result result;
         var signinResult = await _signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, true, lockoutOnFailure: false);
         if (signinResult.Succeeded)
         {
             var userInfo = await _userRepository.FetchAsync(u => u.Email == loginModel.Email);
+            ArgumentNullException.ThrowIfNull(userInfo);
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Jti, GuidIdGenerator.Instance.NewId()),
@@ -75,18 +78,11 @@ public class AccountController : ControllerBase
                 UserId = userInfo.Id,
                 UserName = userInfo.UserName
             };
-            result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = userToken, Msg = "", Status = Models.JsonResponseStatus.Success };
+            result = Result.Success(userToken);
         }
         else
         {
-            if (signinResult.IsLockedOut)
-            {
-                result = new Models.JsonResponseModel<JWT.TokenEntity> { Msg = "Account locked out", Status = Models.JsonResponseStatus.RequestError };
-            }
-            else
-            {
-                result = new Models.JsonResponseModel<JWT.TokenEntity> { Msg = "failed to authenticate", Status = Models.JsonResponseStatus.AuthFail };
-            }
+            result = Result.Fail(signinResult.IsLockedOut ? "Account locked out" : "failed to authenticate");
         }
         return Ok(result);
     }
@@ -107,19 +103,19 @@ public class AccountController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> SignUpAsync([FromBody] Models.AccountViewModels.RegisterViewModel regModel)
     {
-        var userInfo = new SparkTodo.Models.UserAccount()
+        var userInfo = new UserAccount()
         {
             UserName = regModel.Email,
             Email = regModel.Email,
             EmailConfirmed = true,
             CreatedTime = DateTime.UtcNow
         };
-        JsonResponseModel<TokenEntity> result;
+        Result<UserTokenEntity> result;
         var signUpResult = await _userManager.CreateAsync(userInfo, regModel.Password);
         if (signUpResult.Succeeded)
         {
             userInfo = await _userRepository.FetchAsync(u => u.Email == regModel.Email);
-
+            ArgumentNullException.ThrowIfNull(userInfo);
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Jti, GuidIdGenerator.Instance.NewId()),
@@ -136,11 +132,12 @@ public class AccountController : ControllerBase
                 UserId = userInfo.Id,
                 UserName = userInfo.UserName
             };
-            result = new Models.JsonResponseModel<JWT.TokenEntity> { Data = userToken, Msg = "", Status = Models.JsonResponseStatus.Success };
+            result = Result.Success(userToken);
         }
         else
         {
-            result = new Models.JsonResponseModel<JWT.TokenEntity> { Msg = "sign up failed," + string.Join(",", signUpResult.Errors.Select(e => e.Description).ToArray()), Status = Models.JsonResponseStatus.ProcessFail };
+            result = Result.Fail<UserTokenEntity>(
+                $"sign up failed,{string.Join(",", signUpResult.Errors.Select(e => e.Description).ToArray())}");
         }
         return Ok(result);
     }
