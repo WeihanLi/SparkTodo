@@ -64,7 +64,6 @@ public class AccountController : ControllerBase
             ArgumentNullException.ThrowIfNull(userInfo);
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Jti, GuidIdGenerator.Instance.NewId()),
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
                 new Claim(JwtRegisteredClaimNames.NameId, userInfo.Id.ToString()),
             };
@@ -117,7 +116,6 @@ public class AccountController : ControllerBase
             ArgumentNullException.ThrowIfNull(userInfo);
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Jti, GuidIdGenerator.Instance.NewId()),
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
                 new Claim(JwtRegisteredClaimNames.NameId, userInfo.Id.ToString()),
             };
