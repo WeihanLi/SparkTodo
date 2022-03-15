@@ -1,22 +1,9 @@
 ﻿// Copyright (c) Weihan Li. All rights reserved.
 // Licensed under the MIT license.
 
-namespace SparkTodo.API.JWT;
-/// <summary>
-/// Token
-/// </summary>
-public class TokenEntity
-{
-    /// <summary>
-    /// AccessToken
-    /// </summary>
-    public string AccessToken { get; set; }
+using WeihanLi.Web.Authorization.Token;
 
-    /// <summary>
-    /// ExpiresIn
-    /// </summary>
-    public int ExpiresIn { get; set; }
-}
+namespace SparkTodo.API.JWT;
 
 /// <summary>
 /// 包含用户信息的Token

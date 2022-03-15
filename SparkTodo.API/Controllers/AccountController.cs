@@ -2,10 +2,10 @@
 // Licensed under the MIT license.
 
 using SparkTodo.API.JWT;
-using SparkTodo.API.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using WeihanLi.Common.Models;
+using WeihanLi.Web.Authorization.Token;
 
 namespace SparkTodo.API.Controllers;
 
@@ -21,7 +21,7 @@ public class AccountController : ControllerBase
     private readonly IUserAccountRepository _userRepository;
     private readonly UserManager<UserAccount> _userManager;
     private readonly SignInManager<UserAccount> _signInManager;
-    private readonly ITokenGenerator _tokenGenerator;
+    private readonly ITokenService _tokenService;
 
     /// <summary>
     /// AccountController .ctor
@@ -29,16 +29,16 @@ public class AccountController : ControllerBase
     /// <param name="userManager">userManager</param>
     /// <param name="signInManager">signInManager</param>
     /// <param name="userRepository">userRepository</param>
-    /// <param name="tokenGenerator"></param>
+    /// <param name="tokenService"></param>
     public AccountController(UserManager<UserAccount> userManager,
         SignInManager<UserAccount> signInManager,
         IUserAccountRepository userRepository,
-        ITokenGenerator tokenGenerator)
+        ITokenService tokenService)
     {
         _userRepository = userRepository;
         _userManager = userManager;
         _signInManager = signInManager;
-        _tokenGenerator = tokenGenerator;
+        _tokenService = tokenService;
     }
 
     /// <summary>
@@ -68,8 +68,7 @@ public class AccountController : ControllerBase
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
                 new Claim(JwtRegisteredClaimNames.NameId, userInfo.Id.ToString()),
             };
-            var token = _tokenGenerator.GenerateToken(claims);
-
+            var token = await _tokenService.GenerateToken(claims);
             var userToken = new UserTokenEntity
             {
                 AccessToken = token.AccessToken,
@@ -122,8 +121,7 @@ public class AccountController : ControllerBase
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
                 new Claim(JwtRegisteredClaimNames.NameId, userInfo.Id.ToString()),
             };
-            var token = _tokenGenerator.GenerateToken(claims);
-
+            var token = await _tokenService.GenerateToken(claims);
             var userToken = new UserTokenEntity
             {
                 AccessToken = token.AccessToken,

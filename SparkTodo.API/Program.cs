@@ -2,9 +2,9 @@
 // Licensed under the MIT license.
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Prometheus;
+using SparkTodo.API.JWT;
 using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using WeihanLi.Web.Authorization.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddJsonConsole(options =>
@@ -38,46 +39,26 @@ builder.Services.AddIdentity<UserAccount, UserRole>(options =>
     .AddDefaultTokenProviders();
 
 // Add JWT token validation
-var secretKey = builder.Configuration.GetAppSetting("SecretKey");
-ArgumentNullException.ThrowIfNull(secretKey);
-var signingKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(secretKey));
-
-var tokenAudience = builder.Configuration.GetAppSetting("TokenAudience");
-var tokenIssuer = builder.Configuration.GetAppSetting("TokenIssuer");
-builder.Services.Configure<SparkTodo.API.JWT.TokenOptions>(options =>
-{
-    options.Audience = tokenAudience;
-    options.Issuer = tokenIssuer;
-    options.ValidFor = TimeSpan.FromHours(2);
-    options.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
-});
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            // The signing key must match!
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = signingKey,
-            // Validate the JWT Issuer (iss) claim
-            ValidateIssuer = true,
-            ValidIssuer = tokenIssuer,
-            // Validate the JWT Audience (aud) claim
-            ValidateAudience = true,
-            ValidAudience = tokenAudience,
-            // Validate the token expiry
-            ValidateLifetime = true,
-            // If you want to allow a certain amount of clock drift, set that here:
-            ClockSkew = TimeSpan.FromMinutes(2)
-        };
-    });
+}).AddJwtBearer();
+
+var secretKey = builder.Configuration.GetAppSetting("SecretKey");
+ArgumentNullException.ThrowIfNull(secretKey);
+var tokenAudience = builder.Configuration.GetAppSetting("TokenAudience");
+var tokenIssuer = builder.Configuration.GetAppSetting("TokenIssuer");
+builder.Services.AddJwtTokenService(options =>
+{
+    options.Audience = tokenAudience;
+    options.Issuer = tokenIssuer;
+    options.ValidFor = TimeSpan.FromHours(2);
+    options.SecretKey = secretKey;
+});
+builder.Services.ConfigureOptions<JwtTokenServiceConfigureOptions>();
 
 // Add MvcFramework
 builder.Services.AddControllers();
@@ -138,7 +119,6 @@ builder.Services.AddSwaggerGen(option =>
 });
 builder.Services.AddHealthChecks();
 // Add application services.
-builder.Services.AddSingleton<ITokenGenerator, TokenGenerator>();
 builder.Services.AddSingleton<IKubernetesService, KubernetesService>();
 //Repository
 builder.Services.RegisterAssemblyTypesAsImplementedInterfaces(t => t.Name.EndsWith("Repository"),
