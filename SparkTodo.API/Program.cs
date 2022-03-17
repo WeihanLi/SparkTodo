@@ -51,14 +51,13 @@ var secretKey = builder.Configuration.GetAppSetting("SecretKey");
 ArgumentNullException.ThrowIfNull(secretKey);
 var tokenAudience = builder.Configuration.GetAppSetting("TokenAudience");
 var tokenIssuer = builder.Configuration.GetAppSetting("TokenIssuer");
-builder.Services.AddJwtTokenService(options =>
+builder.Services.AddJwtTokenServiceWithJwtBearerAuth(options =>
 {
     options.Audience = tokenAudience;
     options.Issuer = tokenIssuer;
     options.ValidFor = TimeSpan.FromHours(2);
     options.SecretKey = secretKey;
 });
-builder.Services.ConfigureOptions<JwtTokenServiceConfigureOptions>();
 
 // Add MvcFramework
 builder.Services.AddControllers();
