@@ -4,7 +4,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Prometheus;
-using SparkTodo.API.JWT;
 using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
