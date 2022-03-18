@@ -139,4 +139,24 @@ public class AccountController : ControllerBase
         }
         return Ok(result);
     }
+
+    [Route("RefreshToken")]
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> RefreshToken([FromQuery] string refreshToken)
+    {
+        try
+        {
+            var result = await _tokenService.RefreshToken(refreshToken);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new
+            {
+                e.Message,
+                e.StackTrace
+            });
+        }
+    }
 }
