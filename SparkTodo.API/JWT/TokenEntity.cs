@@ -8,7 +8,7 @@ namespace SparkTodo.API.JWT;
 /// <summary>
 /// 包含用户信息的Token
 /// </summary>
-public class UserTokenEntity : TokenEntity
+public class UserTokenEntity : TokenEntityWithRefreshToken
 {
     /// <summary>
     /// 用户id

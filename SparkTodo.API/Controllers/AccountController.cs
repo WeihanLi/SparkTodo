@@ -67,10 +67,11 @@ public class AccountController : ControllerBase
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
                 new Claim(JwtRegisteredClaimNames.NameId, userInfo.Id.ToString()),
             };
-            var token = await _tokenService.GenerateToken(claims);
+            var token = (TokenEntityWithRefreshToken)await _tokenService.GenerateToken(claims);
             var userToken = new UserTokenEntity
             {
                 AccessToken = token.AccessToken,
+                RefreshToken = token.RefreshToken,
                 ExpiresIn = token.ExpiresIn,
                 UserEmail = userInfo.Email,
                 UserId = userInfo.Id,
@@ -119,11 +120,12 @@ public class AccountController : ControllerBase
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
                 new Claim(JwtRegisteredClaimNames.NameId, userInfo.Id.ToString()),
             };
-            var token = await _tokenService.GenerateToken(claims);
+            var token = (TokenEntityWithRefreshToken)await _tokenService.GenerateToken(claims);
             var userToken = new UserTokenEntity
             {
                 AccessToken = token.AccessToken,
                 ExpiresIn = token.ExpiresIn,
+                RefreshToken = token.RefreshToken,
                 UserEmail = userInfo.Email,
                 UserId = userInfo.Id,
                 UserName = userInfo.UserName
