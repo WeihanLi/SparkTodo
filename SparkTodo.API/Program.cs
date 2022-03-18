@@ -56,6 +56,7 @@ builder.Services.AddJwtTokenServiceWithJwtBearerAuth(options =>
     options.Issuer = tokenIssuer;
     options.ValidFor = TimeSpan.FromHours(2);
     options.SecretKey = secretKey;
+    options.EnableRefreshToken = true;
 });
 
 // Add MvcFramework
