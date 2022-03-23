@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Weihan Li. All rights reserved.
 // Licensed under the MIT license.
 
-using SparkTodo.API.JWT;
+using SparkTodo.API.Response;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using WeihanLi.Common.Models;

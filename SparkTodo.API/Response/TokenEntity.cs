@@ -3,7 +3,7 @@
 
 using WeihanLi.Web.Authorization.Token;
 
-namespace SparkTodo.API.JWT;
+namespace SparkTodo.API.Response;
 
 /// <summary>
 /// 包含用户信息的Token
