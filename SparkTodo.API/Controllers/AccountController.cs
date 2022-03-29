@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using WeihanLi.Common.Models;
 using WeihanLi.Web.Authorization.Token;
+using WeihanLi.Web.Filters;
 
 namespace SparkTodo.API.Controllers;
 
@@ -143,20 +144,10 @@ public class AccountController : ControllerBase
     [Route("RefreshToken")]
     [Authorize]
     [HttpPost]
+    [ApiResultFilter]
     public async Task<IActionResult> RefreshToken([FromQuery] string refreshToken)
     {
-        try
-        {
-            var result = await _tokenService.RefreshToken(refreshToken);
-            return Ok(result);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new
-            {
-                e.Message,
-                e.StackTrace
-            });
-        }
+        var result = await _tokenService.RefreshToken(refreshToken);
+        return Ok(result);
     }
 }

@@ -1,12 +1,15 @@
 ﻿// Copyright (c) Weihan Li. All rights reserved.
 // Licensed under the MIT license.
 
+using WeihanLi.Web.Filters;
+
 namespace SparkTodo.API.Controllers;
 
 [Authorize]
 [ApiVersion("2")]
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
+[ApiResultFilter]
 public class SyncController : ControllerBase
 {
     private readonly ISyncVersionRepository _versionRepository;
