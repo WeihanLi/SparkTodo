@@ -102,7 +102,7 @@ public class SyncController : ControllerBase
     public async Task<IActionResult> Post([FromBody] SyncTodoModel syncData)
     {
         var userId = User.GetUserId();
-        var latestVersionId = (await _versionRepository.SelectAsync(1, _ => _.UserId == userId, _ => _.VersionId)).FirstOrDefault()?.VersionId ?? -1;
+        var latestVersionId = (await _versionRepository.FirstOrDefaultResultAsync(_ => _.VersionId, builder => builder.WithPredict(_ => _.UserId == userId)));
         if (latestVersionId > 0 && latestVersionId > syncData.Version)
         {
             return BadRequest(new { Error = "请先同步数据" });
