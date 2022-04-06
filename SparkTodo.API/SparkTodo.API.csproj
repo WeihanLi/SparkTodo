@@ -21,7 +21,7 @@
     <Using Include="Microsoft.AspNetCore.Identity" />
     <Using Include="Microsoft.AspNetCore.Mvc" />
     <Using Include="SparkTodo.API.Extensions" />
-    <PackageReference Include="KubernetesClient" Version="7.1.9" />
+    <PackageReference Include="KubernetesClient" Version="7.2.10" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.3" />
