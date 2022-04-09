@@ -11,7 +11,7 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
    
-  <Target Name="husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0 and '$(IsCrossTargetingBuild)' == 'true'">
+  <Target Name="husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != '0'">
     <Exec Command="dotnet tool restore" StandardOutputImportance="low" StandardErrorImportance="High" WorkingDirectory="../" />
     <Exec Command="dotnet husky install" StandardOutputImportance="low" StandardErrorImportance="High" WorkingDirectory="../" />
   </Target>
