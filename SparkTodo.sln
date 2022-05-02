@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SparkTodo.API", "SparkTodo.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SparkTodo.Shared", "SparkTodo.Shared\SparkTodo.Shared.csproj", "{985FAC1E-5802-4223-875A-971D3B00769C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SparkTodo.WebExtension", "SparkTodo.WebExtension\SparkTodo.WebExtension.csproj", "{C35D8C7D-4A25-4421-83D4-10B5C109D15E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{985FAC1E-5802-4223-875A-971D3B00769C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{985FAC1E-5802-4223-875A-971D3B00769C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{985FAC1E-5802-4223-875A-971D3B00769C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C35D8C7D-4A25-4421-83D4-10B5C109D15E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C35D8C7D-4A25-4421-83D4-10B5C109D15E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C35D8C7D-4A25-4421-83D4-10B5C109D15E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C35D8C7D-4A25-4421-83D4-10B5C109D15E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
