@@ -46,10 +46,10 @@ jobs:
         branch: update-nuget-dependencies
         delete-branch: true
         base: ${{ github.ref }}
-    - name: Enable Pull Request Automerge
-      if: steps.cpr.outputs.pull-request-operation == 'created' || steps.cpr.outputs.pull-request-operation == 'updated'
-      uses: peter-evans/enable-pull-request-automerge@v2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-        merge-method: squash
+#     - name: Enable Pull Request Automerge
+#       if: steps.cpr.outputs.pull-request-operation == 'created' || steps.cpr.outputs.pull-request-operation == 'updated'
+#       uses: peter-evans/enable-pull-request-automerge@v2
+#       with:
+#         token: ${{ secrets.GITHUB_TOKEN }}
+#         pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+#         merge-method: squash
