@@ -50,6 +50,6 @@ jobs:
       if: steps.cpr.outputs.pull-request-operation == 'created' || steps.cpr.outputs.pull-request-operation == 'updated'
       uses: peter-evans/enable-pull-request-automerge@v2
       with:
-        token: ${{ secrets.PAT }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
         merge-method: squash
