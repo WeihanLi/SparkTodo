@@ -33,14 +33,27 @@ jobs:
       if: ${{ env.has_changes == 'true' }}
       run: dotnet build
     - name: Create Pull Request
+      id: cpr
       if: ${{ env.has_changes == 'true' }}
-      uses: peter-evans/create-pull-request@v3
+      uses: peter-evans/create-pull-request@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         commit-message: "Update NuGet Packages"
         title: 'Update NuGet Packages'
         body: >
           This PR updates the outdated NuGet packages.
-        labels: automated pr
+        labels: automated-pr
         branch: update-nuget-dependencies
-        base: ${{ github.ref }}
+        delete-branch: true
+    - name: Auto approve
+      if: steps.cpr.outputs.pull-request-operation == 'created'
+      uses: juliangruber/approve-pull-request-action@v1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        number: ${{ steps.cpr.outputs.pull-request-number }}
+    - name: Enable Pull Request Automerge
+      if: steps.cpr.outputs.pull-request-operation == 'created'
+      uses: peter-evans/enable-pull-request-automerge@v2
+      with:
+        pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+        merge-method: squash
