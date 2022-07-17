@@ -45,6 +45,7 @@ jobs:
         labels: automated-pr
         branch: update-nuget-dependencies
         delete-branch: true
+        base: ${{ github.ref }}
     - name: Auto approve
       if: steps.cpr.outputs.pull-request-operation == 'created'
       uses: juliangruber/approve-pull-request-action@v1
