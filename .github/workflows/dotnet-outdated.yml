@@ -47,8 +47,9 @@ jobs:
         delete-branch: true
         base: ${{ github.ref }}
     - name: Enable Pull Request Automerge
-      if: steps.cpr.outputs.pull-request-operation == 'created'
+      if: steps.cpr.outputs.pull-request-operation == 'created' or steps.cpr.outputs.pull-request-operation == 'updated'
       uses: peter-evans/enable-pull-request-automerge@v2
       with:
+        token: ${{ secrets.PAT }}
         pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
         merge-method: squash
