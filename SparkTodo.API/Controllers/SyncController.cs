@@ -108,7 +108,7 @@ public class SyncController : ControllerBase
             return BadRequest(new { Error = "请先同步数据" });
         }
 
-        // TODO: 使用 redis 分布式锁，锁当前用户的操作，顺序同步
+        // TODO: 使用分布式锁，锁当前用户的操作，顺序同步
         // 处理 todoItem
         using var uow = _todoItemRepository.DbContext.GetUnitOfWork();
         var toAddTodoItems = syncData.SyncTodoItems.Where(_ => _.Type == OperationType.Add).Select(_ => _.TodoItem).ToArray();
