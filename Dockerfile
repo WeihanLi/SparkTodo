@@ -16,6 +16,7 @@ RUN dotnet tool install --global dotnet-trace
 
 COPY SparkTodo.Shared/SparkTodo.Shared.csproj SparkTodo.Shared/
 COPY SparkTodo.API/SparkTodo.API.csproj SparkTodo.API/
+COPY Directory.Build.props ./
 RUN dotnet restore SparkTodo.API/SparkTodo.API.csproj
 
 # copy everything and build
