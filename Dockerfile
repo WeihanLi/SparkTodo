@@ -1,10 +1,9 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 # use forward headers
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 LABEL Maintainer="WeihanLi"
-EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
 
 # install dotnet tool
@@ -13,6 +12,9 @@ RUN dotnet tool install --global dotnet-gcdump
 RUN dotnet tool install --global dotnet-counters
 RUN dotnet tool install --global dotnet-stack
 RUN dotnet tool install --global dotnet-trace
+RUN dotnet tool install --global dotnet-execute
+RUN dotnet tool install --global dotnet-httpie
+RUN dotnet tool install --global dotnet-runtimeinfo
 
 COPY SparkTodo.Shared/SparkTodo.Shared.csproj SparkTodo.Shared/
 COPY SparkTodo.API/SparkTodo.API.csproj SparkTodo.API/
