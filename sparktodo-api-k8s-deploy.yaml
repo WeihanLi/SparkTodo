@@ -91,3 +91,19 @@ spec:
         emptyDir: {}
       - name: dumpsvol
         emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: "sparktodo-api"
+    labels:
+        app: "sparktodo-api"
+spec:
+    type: ClusterIP
+    ports:
+    - port: 31256
+      targetPort: 80
+      protocol: TCP
+      name: http
+    selector:
+        app: "sparktodo-api"
