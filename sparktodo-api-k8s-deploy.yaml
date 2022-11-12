@@ -101,7 +101,8 @@ metadata:
 spec:
     type: ClusterIP
     ports:
-    - port: 31256
+    - port: 80
+      nodePort: 31256
       targetPort: 80
       protocol: TCP
       name: http
