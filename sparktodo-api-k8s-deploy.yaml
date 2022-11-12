@@ -66,7 +66,7 @@ spec:
           args: [ "collect", "--urls", "http://+:52323", "--no-auth"]
           imagePullPolicy: Always
           ports:
-            - containerPort: 52323
+            - metrics: 52323
           env:
           - name: DOTNETMONITOR_DiagnosticPort__ConnectionMode
             value: Listen
@@ -99,7 +99,7 @@ metadata:
     labels:
         app: "sparktodo-api"
 spec:
-    type: ClusterIP
+    type: NodePort
     ports:
     - port: 80
       nodePort: 31256
