@@ -62,8 +62,8 @@ spec:
           - mountPath: /dumps
             name: dumpsvol
         - name: monitor
-          image: mcr.microsoft.com/dotnet/monitor
-          args: [ "--no-auth" ]
+          image: mcr.microsoft.com/dotnet/monitor:6.0
+          args: [ "collect", "--urls", "https://+:52323", "--metricUrls", "http://+:52325" ]
           imagePullPolicy: Always
           ports:
             - containerPort: 52323
