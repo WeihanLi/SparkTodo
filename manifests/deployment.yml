@@ -59,7 +59,7 @@ spec:
             name: tmpvol
         - name: monitor
           image: mcr.microsoft.com/dotnet/monitor
-          args: [ "collect", "--urls", "http://+:52323" ]
+          args: [ "collect", "--urls", "http://+:52323", "--no-auth" ]
           imagePullPolicy: Always
           ports:
             - containerPort: 52323
