@@ -63,7 +63,7 @@ spec:
             name: dumpsvol
         - name: monitor
           image: mcr.microsoft.com/dotnet/monitor:6.0
-          args: [ "collect", "--urls", "https://+:52323"]
+          args: [ "collect", "--urls", "http://+:52323"]
           imagePullPolicy: Always
           ports:
             - containerPort: 52323
