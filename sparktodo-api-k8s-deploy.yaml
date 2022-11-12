@@ -106,5 +106,6 @@ spec:
       nodePort: 31256
       targetPort: 80
       protocol: TCP
+      name: http
     selector:
         app: "sparktodo-api"
