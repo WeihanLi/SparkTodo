@@ -24,7 +24,7 @@ builder.Logging.AddJsonConsole(options =>
 });
 
 // Add framework services.
-builder.Services.AddDbContextPool<SparkTodoDbContext>(options => options.UseInMemoryDatabase("SparkTodo"));
+builder.Services.AddDbContextPool<SparkTodoDbContext>(options => options.UseSqlite("Data Source=SparkTodo.db"));
 //
 builder.Services.AddIdentity<UserAccount, UserRole>(options =>
 {

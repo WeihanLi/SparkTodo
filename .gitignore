@@ -289,3 +289,8 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+
+# ignore sqlite db files
+*.db
+*.db-wal
+*.db-shm
