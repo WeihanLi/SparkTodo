@@ -20,7 +20,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-    <PackageReference Include="WeihanLi.Web.Extensions" Version="1.5.0" />
+    <PackageReference Include="WeihanLi.Web.Extensions" Version="1.6.0" />
     <PackageReference Include="prometheus-net.AspNetCore" Version="7.0.0" />
   </ItemGroup>
 

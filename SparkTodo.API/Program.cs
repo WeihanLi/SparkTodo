@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using WeihanLi.Web.Authorization.Jwt;
+using WeihanLi.Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddJsonConsole(options =>
@@ -161,6 +162,7 @@ app.UseAuthorization();
 
 app.MapHealthChecks("/health");
 app.MapMetrics();
+app.MapRuntimeInfo();
 app.Map("/kube-env", (IKubernetesService kubernetesService) => kubernetesService.GetKubernetesEnvironment());
 app.MapControllers();
 
