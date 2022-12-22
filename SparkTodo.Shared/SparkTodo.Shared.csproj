@@ -8,6 +8,6 @@
     <Using Include="System.ComponentModel.DataAnnotations" />
     <PackageReference Include="WeihanLi.Common" Version="1.0.58" />
     <PackageReference Include="WeihanLi.EntityFramework" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.0" />  
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.1" />  
   </ItemGroup>
 </Project>
