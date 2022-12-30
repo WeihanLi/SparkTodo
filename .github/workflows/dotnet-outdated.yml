@@ -48,7 +48,7 @@ jobs:
         labels: automated-pr
         branch: update-nuget-dependencies
         delete-branch: true
-        base: ${{ github.ref }}
+        base: master
     - name: Create pull request outputs
       if: ${{ steps.cpr.outputs.pull-request-number }}
       run: |
