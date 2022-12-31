@@ -1,12 +1,20 @@
 ﻿// Copyright (c) Weihan Li. All rights reserved.
 // Licensed under the MIT license.
 
+using Azure.Monitor.OpenTelemetry.Exporter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Prometheus;
 using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
+using SparkTodo.Models.Configs;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text.Encodings.Web;
@@ -23,7 +31,45 @@ builder.Logging.AddJsonConsole(options =>
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 });
+var openTelemetryConfiguration = builder.Configuration.GetSection("OpenTelemetry");
+var openTelemetryConfig = openTelemetryConfiguration.Get<OpenTelemetryConfig>();
+var resourceBuilder = ResourceBuilder.CreateDefault()
+    .AddService(openTelemetryConfig.ServiceName, openTelemetryConfig.ServiceVersion);
+var activitySource = new ActivitySource(openTelemetryConfig.ServiceName, openTelemetryConfig.ServiceVersion);
+var meter = new Meter(openTelemetryConfig.ServiceName, openTelemetryConfig.ServiceVersion);
 
+var azureMonitorConnString = builder.Configuration.GetConnectionString("AzureMonitor");
+builder.Services.AddOpenTelemetry()
+    .WithMetrics(meterProviderBuilder =>
+    {
+        meterProviderBuilder
+            .SetResourceBuilder(resourceBuilder)
+            .AddHttpClientInstrumentation()
+            .AddAspNetCoreInstrumentation()
+            .AddPrometheusExporter()
+            .AddConsoleExporter()
+            .AddAzureMonitorMetricExporter(_ =>
+            {
+                _.ConnectionString = azureMonitorConnString;
+            })
+            ;
+    })
+    .WithTracing(tracerProviderBuilder =>
+    {
+        tracerProviderBuilder            
+            .SetResourceBuilder(resourceBuilder)
+            .AddSource(openTelemetryConfig.ServiceName)
+            .AddHttpClientInstrumentation()
+            .AddAspNetCoreInstrumentation()
+            .AddSqlClientInstrumentation()
+            .AddConsoleExporter()
+            .AddAzureMonitorTraceExporter(_ =>
+            {
+                _.ConnectionString = azureMonitorConnString;
+            })
+            ;
+    })
+    .StartWithHost();
 // Add framework services.
 builder.Services.AddDbContextPool<SparkTodoDbContext>(options => options.UseSqlite("Data Source=SparkTodo.db"));
 //
@@ -136,6 +182,22 @@ app.Use(async (context, next) =>
     context.Response.Headers["DotNetVersion"] = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
     await next();
 });
+// OpenTelemetry test
+app.Use(async (_, next) =>
+{
+    var counter = meter.CreateCounter<int>("request_counter", "count", "request count");
+    counter.Add(1);
+
+    using var activity = activitySource.CreateActivity("test", ActivityKind.Internal);
+    if (activity is not null)
+    {
+        activity.AddBaggage("date", DateTimeOffset.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+        activity.SetTag("hello", "world");
+
+        activity.SetStatus(ActivityStatusCode.Ok);
+    }
+    await next();
+});
 
 //Enable middleware to serve generated Swagger as a JSON endpoint.
 app.UseSwagger();
@@ -154,8 +216,6 @@ app.UseCors(b =>
 {
     b.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(_ => true);
 });
-
-app.UseHttpMetrics();
 
 app.UseAuthentication();
 app.UseAuthorization();
