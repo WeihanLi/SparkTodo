@@ -56,7 +56,7 @@ builder.Services.AddOpenTelemetry()
     })
     .WithTracing(tracerProviderBuilder =>
     {
-        tracerProviderBuilder            
+        tracerProviderBuilder
             .SetResourceBuilder(resourceBuilder)
             .AddSource(openTelemetryConfig.ServiceName)
             .AddHttpClientInstrumentation()
