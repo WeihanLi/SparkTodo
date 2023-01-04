@@ -11,7 +11,7 @@ metadata:
   name: sparktodo-api-ingress
 spec:
   rules:
-  - host: "sparktodo-api.lemonsharp.top"
+  - host: "sparktodo-api.weihanli.top"
     http:
       paths:
       - pathType: Prefix
