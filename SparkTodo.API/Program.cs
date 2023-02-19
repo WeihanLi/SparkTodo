@@ -68,8 +68,7 @@ builder.Services.AddOpenTelemetry()
                 _.ConnectionString = azureMonitorConnString;
             })
             ;
-    })
-    .StartWithHost();
+    });
 // Add framework services.
 builder.Services.AddDbContextPool<SparkTodoDbContext>(options => options.UseSqlite("Data Source=SparkTodo.db"));
 //
