@@ -26,6 +26,8 @@ steps:
 
 - script: dotnet build -c Release
   displayName: 'dotnet build'
+  env:
+    HUSKY: '0'
 
 - script: docker build -f Dockerfile -t $(imageName) -t $(latestImageName) .
   displayName: 'Docker build Script'
