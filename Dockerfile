@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 # use forward headers
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+ENV HUSKY=0
 LABEL Maintainer="WeihanLi"
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
