@@ -1,10 +1,10 @@
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-preview AS base
 # use forward headers
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 ENV HUSKY=0
 LABEL Maintainer="WeihanLi"
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build-env
 WORKDIR /app
 
 # install dotnet tool
@@ -26,12 +26,12 @@ RUN dotnet restore SparkTodo.API/SparkTodo.API.csproj
 COPY . .
 
 WORKDIR /app/SparkTodo.API
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -o out
 
 # build runtime image
 FROM base AS final
-COPY --from=build-env /root/.dotnet/tools /root/.dotnet/tools
-ENV PATH="/root/.dotnet/tools:${PATH}"
+COPY --from=build-env /root/.dotnet/tools /dev/.dotnet/tools
+ENV PATH="/dev/.dotnet/tools:${PATH}"
 WORKDIR /app
 COPY --from=build-env /app/SparkTodo.API/out .
 ENTRYPOINT ["dotnet", "SparkTodo.API.dll"]

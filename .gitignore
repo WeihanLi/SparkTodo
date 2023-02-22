@@ -5,6 +5,7 @@
 
 # Cutom files
 localBuild/
+out/
 
 # User-specific files
 *.suo
