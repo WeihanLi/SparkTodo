@@ -1,11 +1,12 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-preview AS base
 # use forward headers
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
-ENV HUSKY=0
 LABEL Maintainer="WeihanLi"
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build-env
 WORKDIR /app
+
+ENV HUSKY=0
 
 # install dotnet tool
 RUN dotnet tool install --global dotnet-dump
