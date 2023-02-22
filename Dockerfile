@@ -1,11 +1,24 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-preview AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-preview-alpine AS base
 LABEL Maintainer="WeihanLi"
 # use forward headers
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 # specific http port
 ENV ASPNETCORE_HTTP_PORTS=80
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build-env
+# enable globalization
+# https://github.com/dotnet/dotnet-docker/blob/main/samples/enable-globalization.md
+ENV \
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
+    LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8
+
+RUN apk add --no-cache \
+    icu-data-full \
+    icu-libs \
+    # timezone info
+    tzdata    
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0-preview-alpine AS build-env
 WORKDIR /app
 
 ENV HUSKY=0
