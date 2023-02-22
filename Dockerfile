@@ -1,7 +1,9 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-preview AS base
+LABEL Maintainer="WeihanLi"
 # use forward headers
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
-LABEL Maintainer="WeihanLi"
+# specific http port
+ENV ASPNETCORE_HTTP_PORTS=80
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build-env
 WORKDIR /app
@@ -34,5 +36,6 @@ FROM base AS final
 COPY --from=build-env /root/.dotnet/tools /dev/.dotnet/tools
 ENV PATH="/dev/.dotnet/tools:${PATH}"
 WORKDIR /app
+# USER app
 COPY --from=build-env /app/SparkTodo.API/out .
 ENTRYPOINT ["dotnet", "SparkTodo.API.dll"]
