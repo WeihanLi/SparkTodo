@@ -20,7 +20,7 @@ jobs:
       with:
         dotnet-version: |
           8.0.x
-        include-prerelease: true
+        dotnet-quality: 'preview'
     - name: dotnet info
       run: dotnet --info
     - name: build
