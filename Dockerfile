@@ -12,9 +12,8 @@ ENV \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8
 
-RUN apk add --no-cache \
-    icu-data-full \
-    icu-libs \
+RUN apk add --no-cache icu-data-full \
+    icu-libs
     # timezone info
     # tzdata
 
