@@ -3,6 +3,8 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Prometheus;
 using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
@@ -30,6 +32,10 @@ var openTelemetryConfiguration = builder.Configuration.GetSection("OpenTelemetry
 var openTelemetryConfig = openTelemetryConfiguration.Get<OpenTelemetryConfig>();
 var activitySource = new ActivitySource(openTelemetryConfig.ServiceName, openTelemetryConfig.ServiceVersion);
 var meter = new Meter(openTelemetryConfig.ServiceName, openTelemetryConfig.ServiceVersion);
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(_ => _.AddService(openTelemetryConfig.ServiceName, openTelemetryConfig.ServiceVersion))
+    .WithTracing(_ => _.AddSource(openTelemetryConfig.ServiceName).SetSampler<AlwaysOnSampler>().AddConsoleExporter())
+    ;
 
 // Add framework services.
 builder.Services.AddDbContextPool<SparkTodoDbContext>(options => options.UseSqlite("Data Source=SparkTodo.db"));
@@ -149,7 +155,7 @@ app.Use(async (_, next) =>
     var counter = meter.CreateCounter<int>("request_counter", "count", "request count");
     counter.Add(1);
 
-    using var activity = activitySource.CreateActivity("test", ActivityKind.Internal);
+    using var activity = activitySource.StartActivity("test", ActivityKind.Internal);
     if (activity is not null)
     {
         activity.AddBaggage("date", DateTimeOffset.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
