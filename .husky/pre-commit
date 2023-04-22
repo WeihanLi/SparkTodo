@@ -5,16 +5,16 @@
 ## Note : for local installation use 'dotnet' prefix. e.g. 'dotnet husky'
 
 ## run all tasks
-husky run
+dotnet husky run
 
 ### run all tasks with group: 'group-name'
-#husky run --group group-name
+# dotnet husky run --group group-name
 
 ## run task with name: 'task-name'
-#husky run --name task-name
+# dotnet husky run --name task-name
 
 ## pass hook arguments to task
-#husky run --args "$1" "$2"
+# dotnet husky run --args "$1" "$2"
 
 ## or put your custom commands -------------------
 # dotnet build
