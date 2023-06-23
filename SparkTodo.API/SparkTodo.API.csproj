@@ -18,9 +18,9 @@
     <Using Include="Microsoft.AspNetCore.Mvc" />
     <Using Include="SparkTodo.API.Extensions" />
     <PackageReference Include="KubernetesClient" Version="11.0.21" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="WeihanLi.Web.Extensions" Version="1.6.0" />
     <PackageReference Include="prometheus-net.AspNetCore" Version="8.0.0" />
