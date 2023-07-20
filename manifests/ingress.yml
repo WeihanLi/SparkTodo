@@ -3,7 +3,6 @@ kind: Ingress
 metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-origin: '*'
@@ -30,4 +29,4 @@ spec:
               number: 52323
   tls:
   - hosts:
-    - sparktodo-api.lemonsharp.top
+    - sparktodo-api.weihanli.top
