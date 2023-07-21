@@ -3,10 +3,7 @@ kind: Ingress
 metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/cors-allow-origin: '*'
-    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS, DELETE, PATCH"
   name: sparktodo-api-ingress
 spec:
   rules:
@@ -14,19 +11,12 @@ spec:
     http:
       paths:
       - pathType: Prefix
-        path: "/?(.*)"
+        path: "/"
         backend:
           service:
             name: sparktodo-api
             port:
               number: 80
-      - pathType: Prefix
-        path: "/monitor/?(.*)"
-        backend:
-          service:
-            name: sparktodo-api
-            port:
-              number: 52323
   tls:
   - hosts:
     - sparktodo-api.weihanli.top
