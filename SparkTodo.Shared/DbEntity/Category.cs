@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Weihan Li. All rights reserved.
 // Licensed under the MIT license.
 
+using WeihanLi.Common.Models;
+
 namespace SparkTodo.Models;
 
 /// <summary>
 /// Category
 /// </summary>
-public class Category
+public class Category : ISoftDeleteEntityWithDeleted
 {
     public int CategoryId { get; set; }
 

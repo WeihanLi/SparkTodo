@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.AspNetCore.Identity;
+using WeihanLi.Common.Models;
 
 namespace SparkTodo.Models;
 
@@ -20,8 +21,6 @@ public class UserAccount : IdentityUser<int>
     }
 
     public DateTime CreatedTime { get; set; }
-
-    public bool IsDisabled { get; set; }
 }
 
 public class UserRole : IdentityRole<int>

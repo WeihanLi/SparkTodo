@@ -16,6 +16,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using WeihanLi.EntityFramework.Interceptors;
 using WeihanLi.Web.Authorization.Jwt;
 using WeihanLi.Web.Extensions;
 
@@ -38,7 +39,11 @@ builder.Services.AddOpenTelemetry()
     ;
 
 // Add framework services.
-builder.Services.AddDbContextPool<SparkTodoDbContext>(options => options.UseSqlite("Data Source=SparkTodo.db"));
+builder.Services.AddDbContext<SparkTodoDbContext>(options => 
+{
+    options.UseSqlite("Data Source=SparkTodo.db");
+    options.AddInterceptors(new SoftDeleteInterceptor());
+});
 //
 builder.Services.AddIdentity<UserAccount, UserRole>(options =>
 {

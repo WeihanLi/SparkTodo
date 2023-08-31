@@ -100,8 +100,8 @@ public class TodoController : ControllerBase
         {
             return NotFound();
         }
-        var todo = new TodoItem() { TodoId = todoId, IsDeleted = true };
-        var result = await _todoItemRepository.UpdateAsync(todo, t => t.IsDeleted);
+        var todo = new TodoItem() { TodoId = todoId };
+        var result = await _todoItemRepository.DeleteAsync(todo);
         if (result > 0)
         {
             return Ok();

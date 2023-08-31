@@ -113,7 +113,7 @@ public class CategoryController : ControllerBase
             CategoryId = categoryId,
             IsDeleted = true
         };
-        var result = await _categoryRepository.UpdateAsync(category, t => t.IsDeleted);
+        var result = await _categoryRepository.DeleteAsync(category);
         if (result > 0)
         {
             await _todoItemRepository.UpdateAsync((x) => x.SetProperty(_ => _.CategoryId, _ => -1), _ => _.WithPredict(t => t.CategoryId == categoryId));

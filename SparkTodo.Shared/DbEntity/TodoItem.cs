@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Weihan Li. All rights reserved.
 // Licensed under the MIT license.
 
+using WeihanLi.Common.Models;
+
 namespace SparkTodo.Models;
 
 /// <summary>
 /// TodoItem
 /// </summary>
-public class TodoItem
+public class TodoItem : ISoftDeleteEntityWithDeleted
 {
     public int TodoId { get; set; }
 
