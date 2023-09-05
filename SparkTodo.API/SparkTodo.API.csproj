@@ -8,15 +8,16 @@
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
-  </PropertyGroup>   
-
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.5.1" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.5.1" />
     <Using Include="Microsoft.AspNetCore.Authorization" />
     <Using Include="Microsoft.AspNetCore.Identity" />
     <Using Include="Microsoft.AspNetCore.Mvc" />
     <Using Include="SparkTodo.API.Extensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.5.1" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.5.1" />
     <PackageReference Include="KubernetesClient" Version="12.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
