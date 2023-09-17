@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-preview-alpine AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
 LABEL Maintainer="WeihanLi"
 # use forward headers
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
@@ -17,7 +17,7 @@ RUN apk add --no-cache icu-data-full \
     # timezone info
     # tzdata
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-preview-alpine AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build-env
 WORKDIR /app
 
 ENV HUSKY=0
