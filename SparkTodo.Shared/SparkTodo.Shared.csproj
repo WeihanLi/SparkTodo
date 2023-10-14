@@ -8,8 +8,4 @@
     <PackageReference Include="WeihanLi.EntityFramework" Version="8.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0-*" />
   </ItemGroup>
-  <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0 AND '$(CI)' != 'true' AND '$(ContinuousIntegrationBuild)' != 'true'">
-    <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />
-    <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory=".." />
-  </Target>
 </Project>

@@ -9,6 +9,7 @@
     <Using Include="SparkTodo.Models"/>
     <Using Include="System.Linq.Expressions"/>
     <Using Include="WeihanLi.Common"/>
+    <Using Include="WeihanLi.Common.Helpers"/>
     <Using Include="WeihanLi.EntityFramework"/>
     <Using Include="WeihanLi.Extensions"/>
   </ItemGroup>
