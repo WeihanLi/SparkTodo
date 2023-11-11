@@ -10,11 +10,10 @@ public sealed class MyWebhookEventProcessor(ILogger<MyWebhookEventProcessor> log
 {
     protected override Task ProcessPushWebhookAsync(WebhookHeaders headers, PushEvent pushEvent)
     {
-        var (repoName, repoHomepage, commitId) = (pushEvent.Repository?.Name, pushEvent.Repository?.Homepage,
-            pushEvent.HeadCommit?.Id);
+        var (repoName, commitId) = (pushEvent.Repository?.FullName, pushEvent.HeadCommit?.Id);
         var (name, email) = (pushEvent.Pusher.Name, pushEvent.Pusher.Email);
-        logger.LogInformation("Push event received {RepoName} {RepoHomepage} {CommitId} {PushByName} {PushByEmail}",
-            repoName, repoHomepage, commitId, name, email);
+        logger.LogInformation("Push event received {RepoName} {CommitId} {PushByName} {PushByEmail}",
+            repoName, commitId, name, email);
         return base.ProcessPushWebhookAsync(headers, pushEvent);
     }
 }

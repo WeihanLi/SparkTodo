@@ -146,6 +146,12 @@ app.Use(async (context, next) =>
     await next();
 });
 
+app.UseRouting();
+app.UseCors(b =>
+{
+    b.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(_ => true);
+});
+
 //Enable middleware to serve generated Swagger as a JSON endpoint.
 app.UseSwagger();
 //Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint
@@ -158,20 +164,16 @@ app.UseSwaggerUI(option =>
     option.DocumentTitle = "SparkTodo API";
 });
 
-app.UseRouting();
-app.UseCors(b =>
-{
-    b.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(_ => true);
-});
+app.MapHealthChecks("/health").ShortCircuit();
+app.MapMetrics().ShortCircuit();
+app.MapRuntimeInfo();
+
+app.Map("/kube-env", (IKubernetesService kubernetesService) => kubernetesService.GetKubernetesEnvironment()).ShortCircuit();
+app.MapGitHubWebhooks();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapHealthChecks("/health").ShortCircuit();
-app.MapMetrics().ShortCircuit();
-app.MapRuntimeInfo();
-app.Map("/kube-env", (IKubernetesService kubernetesService) => kubernetesService.GetKubernetesEnvironment()).ShortCircuit();
-app.MapGitHubWebhooks();
 app.MapControllers();
 
 using (var serviceScope = app.Services.CreateScope())
