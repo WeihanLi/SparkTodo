@@ -16,6 +16,7 @@
     <Using Include="SparkTodo.API.Extensions" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Octokit.Webhooks.AspNetCore" Version="2.0.5" />
     <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.6.0" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.6.0" />
     <PackageReference Include="KubernetesClient" Version="12.0.16" />

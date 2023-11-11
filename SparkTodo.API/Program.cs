@@ -3,6 +3,8 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using Octokit.Webhooks;
+using Octokit.Webhooks.AspNetCore;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Prometheus;
@@ -142,6 +144,8 @@ builder.Services.AddSingleton<IKubernetesService, KubernetesService>();
 builder.Services.RegisterAssemblyTypesAsImplementedInterfaces(t => t.Name.EndsWith("Repository"),
     ServiceLifetime.Scoped, typeof(IUserAccountRepository).Assembly);
 
+builder.Services.AddSingleton<WebhookEventProcessor, MyWebhookEventProcessor>();
+
 var app = builder.Build();
 
 // Disable claimType transform, see details here https://stackoverflow.com/questions/39141310/jwttoken-claim-name-jwttokentypes-subject-resolved-to-claimtypes-nameidentifie
@@ -196,6 +200,7 @@ app.MapHealthChecks("/health");
 app.MapMetrics();
 app.MapRuntimeInfo();
 app.Map("/kube-env", (IKubernetesService kubernetesService) => kubernetesService.GetKubernetesEnvironment());
+app.MapGitHubWebhooks();
 app.MapControllers();
 
 using (var serviceScope = app.Services.CreateScope())
