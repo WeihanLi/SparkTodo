@@ -23,7 +23,7 @@ public interface IKubernetesService
     Task<KubernetesEnvironment> GetKubernetesEnvironment();
 }
 
-public class KubernetesService : IKubernetesService
+public sealed class KubernetesService : IKubernetesService
 {
     private readonly ILogger<KubernetesService> _logger;
     private static readonly bool IsInK8SCluster = KubernetesClientConfiguration.IsInCluster();
