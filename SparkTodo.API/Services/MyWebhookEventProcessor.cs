@@ -10,10 +10,21 @@ public sealed class MyWebhookEventProcessor(ILogger<MyWebhookEventProcessor> log
 {
     protected override Task ProcessPushWebhookAsync(WebhookHeaders headers, PushEvent pushEvent)
     {
-        var (repoName, commitId) = (pushEvent.Repository?.FullName, pushEvent.HeadCommit?.Id);
+        var (repoName, commitId, commitMsg) = (pushEvent.Repository?.FullName, pushEvent.HeadCommit?.Id, pushEvent.HeadCommit?.Message);
         var (name, email) = (pushEvent.Pusher.Name, pushEvent.Pusher.Email);
-        logger.LogInformation("Push event received {RepoName} {CommitId} {PushByName} {PushByEmail}",
-            repoName, commitId, name, email);
+        if (string.IsNullOrEmpty(commitMsg)
+            || commitMsg.IndexOf("skip-ci", StringComparison.OrdinalIgnoreCase) > -1
+            || commitMsg.IndexOf("skip-cd", StringComparison.OrdinalIgnoreCase) > -1
+            || commitMsg.IndexOf("cd-skip", StringComparison.OrdinalIgnoreCase) > -1
+           )
+        {
+            return Task.CompletedTask;
+        }
+        
+        logger.LogInformation("Push event received {RepoName} {CommitId} {CommitMsg} {PushByName} {PushByEmail}",
+            repoName, commitId, commitMsg, name, email);
+        // process push event
+        
         return base.ProcessPushWebhookAsync(headers, pushEvent);
     }
 }
