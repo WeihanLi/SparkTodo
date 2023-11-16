@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0-preview
+FROM mcr.microsoft.com/dotnet/sdk:8.0
 # install dependencies
 
 # install dotnet tool

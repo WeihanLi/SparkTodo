@@ -16,7 +16,6 @@ jobs:
       with:
         dotnet-version: |
           8.0.x
-        dotnet-quality: 'preview'
     - name: dotnet info
       run: dotnet --info
     - name: build
@@ -52,11 +51,4 @@ jobs:
       if: ${{ steps.cpr.outputs.pull-request-number }}
       run: |
         echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-        echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"        
-#     - name: Enable Pull Request Automerge
-#       if: steps.cpr.outputs.pull-request-operation == 'created' || steps.cpr.outputs.pull-request-operation == 'updated'
-#       uses: peter-evans/enable-pull-request-automerge@v2
-#       with:
-#         token: ${{ secrets.GITHUB_TOKEN }}
-#         pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-#         merge-method: squash
+        echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
