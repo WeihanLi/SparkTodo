@@ -16,7 +16,7 @@
     <Using Include="SparkTodo.API.Extensions" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Octokit.Webhooks.AspNetCore" Version="2.0.6" />
+    <PackageReference Include="Octokit.Webhooks.AspNetCore" Version="2.1.0" />
     <PackageReference Include="KubernetesClient" Version="12.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
