@@ -18,9 +18,9 @@
   <ItemGroup>
     <PackageReference Include="Octokit.Webhooks.AspNetCore" Version="2.1.1" />
     <PackageReference Include="KubernetesClient" Version="13.0.26" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="WeihanLi.Web.Extensions" Version="1.8.0" />
     <PackageReference Include="prometheus-net.AspNetCore" Version="8.2.1" />
