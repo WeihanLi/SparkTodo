@@ -34,21 +34,25 @@ jobs:
     - name: Build again
       if: ${{ env.has_changes == 'true' }}
       run: dotnet build
-    - name: Create Pull Request
-      id: cpr
-      if: ${{ env.has_changes == 'true' }}
-      uses: peter-evans/create-pull-request@v4
-      with:
-        commit-message: "Update NuGet Packages"
-        title: 'Update NuGet Packages'
-        body: >
-          This PR updates the outdated NuGet packages.
-        labels: automated-pr
-        branch: update-nuget-dependencies
-        delete-branch: true
-        base: master
-    - name: Create pull request outputs
-      if: ${{ steps.cpr.outputs.pull-request-number }}
+    - name: push updates
       run: |
-        echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-        echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+        git commit -am "chore: upgrade packages"
+        git push
+    # - name: Create Pull Request
+    #   id: cpr
+    #   if: ${{ env.has_changes == 'true' }}
+    #   uses: peter-evans/create-pull-request@v4
+    #   with:
+    #     commit-message: "Update NuGet Packages"
+    #     title: 'Update NuGet Packages'
+    #     body: >
+    #       This PR updates the outdated NuGet packages.
+    #     labels: automated-pr
+    #     branch: update-nuget-dependencies
+    #     delete-branch: true
+    #     base: master
+    # - name: Create pull request outputs
+    #   if: ${{ steps.cpr.outputs.pull-request-number }}
+    #   run: |
+    #     echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+    #     echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
