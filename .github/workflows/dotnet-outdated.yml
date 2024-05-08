@@ -31,11 +31,12 @@ jobs:
         else
           echo "has_changes=true" >> $GITHUB_ENV
         fi
-    - name: Build again
+    - name: Build again and push changes
       if: ${{ env.has_changes == 'true' }}
-      run: dotnet build
-    - name: push updates
       run: |
+        dotnet build
+        git config --global user.name "Weihan Li"
+        git config --global user.email "weihanli@outlook.com"
         git commit -am "chore: upgrade packages"
         git push
     # - name: Create Pull Request
