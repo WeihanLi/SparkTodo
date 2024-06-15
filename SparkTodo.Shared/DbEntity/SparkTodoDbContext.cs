@@ -8,12 +8,9 @@ namespace SparkTodo.Models;
 /// <summary>
 /// SparkTodoEntity
 /// </summary>
-public class SparkTodoDbContext : IdentityDbContext<UserAccount, UserRole, int>
+public class SparkTodoDbContext(DbContextOptions<SparkTodoDbContext> options)
+    : IdentityDbContext<UserAccount, UserRole, int>(options)
 {
-    public SparkTodoDbContext(DbContextOptions<SparkTodoDbContext> options) : base(options)
-    {
-    }
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Category>().HasKey(c => c.CategoryId);
