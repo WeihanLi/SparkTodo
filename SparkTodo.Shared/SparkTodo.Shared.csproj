@@ -4,8 +4,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Using Include="System.ComponentModel.DataAnnotations" />
-    <PackageReference Include="WeihanLi.Common" Version="1.0.65" />
-    <PackageReference Include="WeihanLi.EntityFramework" Version="8.0.5" />
+    <PackageReference Include="WeihanLi.Common" Version="1.0.66" />
+    <PackageReference Include="WeihanLi.EntityFramework" Version="8.0.6.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
   </ItemGroup>
 </Project>
