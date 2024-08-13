@@ -17,7 +17,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Octokit.Webhooks.AspNetCore" Version="2.2.3" />
-    <PackageReference Include="KubernetesClient" Version="14.0.2" />
+    <PackageReference Include="KubernetesClient" Version="14.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.7" />
