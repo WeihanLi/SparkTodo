@@ -103,7 +103,7 @@ builder.Services.AddSwaggerGen(option =>
     option.DocumentFilter<SetVersionInPathDocumentFilter>();
 
     // include document file
-    option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"), true);
+    option.IncludeXmlComments(Assembly.GetExecutingAssembly(), true);
 
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
