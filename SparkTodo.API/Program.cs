@@ -58,7 +58,7 @@ var secretKey = builder.Configuration.GetAppSetting("SecretKey");
 ArgumentNullException.ThrowIfNull(secretKey);
 var tokenAudience = builder.Configuration.GetAppSetting("TokenAudience");
 var tokenIssuer = builder.Configuration.GetAppSetting("TokenIssuer");
-builder.Services.AddJwtTokenServiceWithJwtBearerAuth(options =>
+builder.Services.AddJwtServiceWithJwtBearerAuth(options =>
 {
     options.Audience = tokenAudience;
     options.Issuer = tokenIssuer;

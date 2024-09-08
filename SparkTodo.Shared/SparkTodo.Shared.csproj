@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>SparkTodo</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Using Include="System.ComponentModel.DataAnnotations" />
-    <PackageReference Include="WeihanLi.Common" Version="1.0.69" />
-    <PackageReference Include="WeihanLi.EntityFramework" Version="8.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
+    <PackageReference Include="WeihanLi.Common" />
+    <PackageReference Include="WeihanLi.EntityFramework" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
   </ItemGroup>
 </Project>
