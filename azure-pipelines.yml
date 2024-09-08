@@ -22,7 +22,12 @@ steps:
   inputs:
     packageType: sdk
     version: 8.0.x
-    includePreviewVersions: true
+    # includePreviewVersions: true
+
+- script: |
+    dotnet tool install -g dotnet-execute
+    dotnet-exec info
+  displayName: 'dotnet-exec'
 
 - script: dotnet build -c Release
   displayName: 'dotnet build'
