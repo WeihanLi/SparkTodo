@@ -28,7 +28,7 @@ builder.Logging.AddJsonConsole(options =>
 });
 
 // Add framework services.
-builder.Services.AddDbContext<SparkTodoDbContext>(options => 
+builder.Services.AddDbContext<SparkTodoDbContext>(options =>
 {
     options.UseSqlite("Data Source=SparkTodo.db");
     options.AddInterceptors(new SoftDeleteInterceptor());

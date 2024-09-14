@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using Microsoft.AspNetCore.Identity;
-using WeihanLi.Common.Models;
 
 namespace SparkTodo.Models;
 

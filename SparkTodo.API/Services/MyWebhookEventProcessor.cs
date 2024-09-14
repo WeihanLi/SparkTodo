@@ -20,11 +20,11 @@ public sealed class MyWebhookEventProcessor(ILogger<MyWebhookEventProcessor> log
         {
             return Task.CompletedTask;
         }
-        
+
         logger.LogInformation("Push event received {RepoName} {CommitId} {CommitMsg} {PushByName} {PushByEmail}",
             repoName, commitId, commitMsg, name, email);
         // process push event
-        
+
         return base.ProcessPushWebhookAsync(headers, pushEvent);
     }
 }

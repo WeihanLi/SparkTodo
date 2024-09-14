@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Weihan Li. All rights reserved.
 // Licensed under the MIT license.
 
-using WeihanLi.Common.Helpers;
 using WeihanLi.Common.Models;
 
 namespace SparkTodo.API.Controllers;
