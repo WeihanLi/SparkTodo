@@ -12,8 +12,11 @@ ENV \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8
 
-RUN apk add --no-cache icu-data-full \
-    icu-libs
+
+RUN apk add --no-cache \ 
+    curl
+    # icu for i18n
+    # icu-data-full icu-libs
     # timezone info
     # tzdata
 
@@ -23,14 +26,9 @@ WORKDIR /app
 ENV HUSKY=0
 
 # install dotnet tool
-RUN dotnet tool install --global dotnet-dump
-RUN dotnet tool install --global dotnet-gcdump
 RUN dotnet tool install --global dotnet-counters
-RUN dotnet tool install --global dotnet-stack
-RUN dotnet tool install --global dotnet-trace
 RUN dotnet tool install --global dotnet-execute
 RUN dotnet tool install --global dotnet-httpie
-RUN dotnet tool install --global dotnet-runtimeinfo
 
 COPY SparkTodo.Shared/SparkTodo.Shared.csproj SparkTodo.Shared/
 COPY SparkTodo.API/SparkTodo.API.csproj SparkTodo.API/
