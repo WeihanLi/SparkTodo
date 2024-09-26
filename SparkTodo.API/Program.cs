@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Octokit.Webhooks;
 using Octokit.Webhooks.AspNetCore;
+using OpenTelemetry;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Prometheus;
 using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
@@ -54,10 +58,9 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer();
 
-var secretKey = builder.Configuration.GetAppSetting("SecretKey");
-ArgumentNullException.ThrowIfNull(secretKey);
-var tokenAudience = builder.Configuration.GetAppSetting("TokenAudience");
-var tokenIssuer = builder.Configuration.GetAppSetting("TokenIssuer");
+var secretKey = builder.Configuration.GetRequiredAppSetting("SecretKey");
+var tokenAudience = builder.Configuration.GetRequiredAppSetting("TokenAudience");
+var tokenIssuer = builder.Configuration.GetRequiredAppSetting("TokenIssuer");
 builder.Services.AddJwtServiceWithJwtBearerAuth(options =>
 {
     options.Audience = tokenAudience;
@@ -133,6 +136,34 @@ builder.Services.RegisterAssemblyTypesAsImplementedInterfaces(t => t.Name.EndsWi
 
 builder.Services.AddSingleton<WebhookEventProcessor, MyWebhookEventProcessor>();
 
+builder.Logging.AddOpenTelemetry(x =>
+{
+    x.IncludeFormattedMessage = true;
+    x.IncludeScopes = true;
+});
+if (!double.TryParse(builder.Configuration["OpenTelemetry:SamplingRatio"], out var samplingRatio))
+{
+    samplingRatio = 1.0;
+}
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resBuilder =>
+    {
+        resBuilder.AddService(builder.Configuration["OpenTelemetry:ServiceId"] ?? "SparkTodo-api");
+    })
+    .WithTracing(traceBuilder =>
+    {
+        traceBuilder.AddAspNetCoreInstrumentation()
+            .AddEntityFrameworkCoreInstrumentation()
+            .SetSampler(new TraceIdRatioBasedSampler(samplingRatio))
+            ;
+    })
+    .WithMetrics(metricBuilder =>
+    {
+        metricBuilder.AddAspNetCoreInstrumentation();
+    })
+    .UseOtlpExporter()
+    ;
+
 var app = builder.Build();
 
 // Disable claimType transform, see details here https://stackoverflow.com/questions/39141310/jwttoken-claim-name-jwttokentypes-subject-resolved-to-claimtypes-nameidentifie
@@ -193,4 +224,5 @@ using (var serviceScope = app.Services.CreateScope())
         }, "Test1234");
     }
 }
+
 await app.RunAsync();
