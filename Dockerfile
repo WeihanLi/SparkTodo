@@ -33,6 +33,7 @@ RUN dotnet tool install --global dotnet-httpie
 COPY SparkTodo.Shared/SparkTodo.Shared.csproj SparkTodo.Shared/
 COPY SparkTodo.API/SparkTodo.API.csproj SparkTodo.API/
 COPY Directory.Build.props ./
+COPY Directory.Packages.props ./
 RUN dotnet restore SparkTodo.API/SparkTodo.API.csproj
 
 # copy everything and build
