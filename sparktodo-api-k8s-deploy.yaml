@@ -37,9 +37,6 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "50m"
-          env:
-          - name: DOTNET_DiagnosticPorts
-            value: /diag/port
           ports:
             - name: http
               containerPort: 80
@@ -50,48 +47,6 @@ spec:
               port: 80
             initialDelaySeconds: 60
             periodSeconds: 30
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 80
-            initialDelaySeconds: 60
-            periodSeconds: 30
-          volumeMounts:
-          - mountPath: /diag
-            name: diagvol
-          - mountPath: /dumps
-            name: dumpsvol
-        - name: monitor
-          image: mcr.microsoft.com/dotnet/monitor:8.0
-          args: [ "collect", "--urls", "http://+:52323", "--no-auth"]
-          imagePullPolicy: Always
-          ports:
-            - name: monitor-metrics
-              containerPort: 52323
-          env:
-          - name: DOTNETMONITOR_DiagnosticPort__ConnectionMode
-            value: Listen
-          - name: DOTNETMONITOR_DiagnosticPort__EndpointName
-            value: /diag/port
-          - name: DOTNETMONITOR_Storage__DumpTempFolder
-            value: /dumps
-          volumeMounts:
-          - mountPath: /diag
-            name: diagvol
-          - mountPath: /dumps
-            name: dumpsvol
-          resources:
-            requests:
-              cpu: 20m
-              memory: 32Mi
-            limits:
-              cpu: 50m
-              memory: 256Mi
-      volumes:
-      - name: diagvol
-        emptyDir: {}
-      - name: dumpsvol
-        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
