@@ -1,9 +1,12 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
 LABEL Maintainer="WeihanLi"
+
 # use forward headers
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 # specific http port
 ENV ASPNETCORE_HTTP_PORTS=80
+
+EXPOSE 80
 
 # enable globalization support
 # https://github.com/dotnet/dotnet-docker/blob/main/samples/enable-globalization.md
@@ -12,12 +15,11 @@ ENV \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8
 
-
 RUN apk update && apk add --no-cache curl \
     # icu for i18n
-    icu-data-full icu-libs \
+    icu-data-full icu-libs
     # timezone info
-    tzdata
+    # tzdata
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build-env
 WORKDIR /app
