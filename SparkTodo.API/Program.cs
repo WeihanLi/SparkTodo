@@ -91,8 +91,10 @@ builder.Services.AddSwaggerGen(option =>
         Description = "API for SparkTodo",
         Contact = new OpenApiContact() { Name = "WeihanLi", Email = "weihanli@outlook.com" }
     });
+
     option.SwaggerDoc("v1", new OpenApiInfo { Version = "v1", Title = "API V1" });
     option.SwaggerDoc("v2", new OpenApiInfo { Version = "v2", Title = "API V2" });
+
     option.DocInclusionPredicate((docName, apiDesc) =>
     {
         var versions = apiDesc.CustomAttributes()
@@ -127,6 +129,8 @@ builder.Services.AddSwaggerGen(option =>
                     }, Array.Empty<string>() }
                 });
 });
+builder.Services.AddOpenApi();
+
 builder.Services.AddHealthChecks();
 // Add application services.
 builder.Services.AddSingleton<IKubernetesService, KubernetesService>();
@@ -183,6 +187,7 @@ app.UseCors(b =>
     b.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(_ => true);
 });
 
+
 //Enable middleware to serve generated Swagger as a JSON endpoint.
 app.UseSwagger();
 //Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint
@@ -190,6 +195,7 @@ app.UseSwaggerUI(option =>
 {
     option.SwaggerEndpoint("/swagger/v2/swagger.json", "V2 Docs");
     option.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
+    option.SwaggerEndpoint("/openapi/v1.json", "OpenAPI V1 Docs");
 
     option.RoutePrefix = string.Empty;
     option.DocumentTitle = "SparkTodo API";
@@ -197,9 +203,10 @@ app.UseSwaggerUI(option =>
 
 app.MapHealthChecks("/health").ShortCircuit();
 app.MapMetrics().ShortCircuit();
-app.MapRuntimeInfo();
-
+app.MapRuntimeInfo().ShortCircuit();
+app.MapOpenApi();
 app.Map("/kube-env", (IKubernetesService kubernetesService) => kubernetesService.GetKubernetesEnvironment()).ShortCircuit();
+
 app.MapGitHubWebhooks();
 
 app.UseAuthentication();
