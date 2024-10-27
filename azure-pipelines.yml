@@ -8,12 +8,20 @@ pool:
 
 
 variables:
-  tagName: '$(Build.BuildNumber)'
-  repoName: 'sparktodo-api'
-  stableImageName: '$(dockerId)/$(repoName):stable'
-  latestImageName: '$(dockerId)/$(repoName):latest'
-  branchImageName: '$(dockerId)/$(repoName):$(Build.SourceBranchName)'
-  imageName: '$(dockerId)/$(repoName):$(tagName)'
+- name: tagName
+  value: '$(Build.BuildNumber)'
+- name: repoName  
+  value: 'sparktodo-api'
+- name: serviceName
+  value: 'sparktodo-api'
+- name: stableImageName
+  value: '$(dockerId)/$(repoName):stable'
+- name: latestImageName
+  value: '$(dockerId)/$(repoName):latest'
+- name: branchImageName
+  value: '$(dockerId)/$(repoName):$(Build.SourceBranchName)'
+- name: imageName
+  value: '$(dockerId)/$(repoName):$(tagName)'
 - group: "docker"
 - group: "notification"
 
