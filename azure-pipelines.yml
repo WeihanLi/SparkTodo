@@ -14,6 +14,8 @@ variables:
   latestImageName: '$(dockerId)/$(repoName):latest'
   branchImageName: '$(dockerId)/$(repoName):$(Build.SourceBranchName)'
   imageName: '$(dockerId)/$(repoName):$(tagName)'
+- group: "docker"
+- group: "notification"
 
 steps:
 
@@ -23,11 +25,6 @@ steps:
     packageType: sdk
     version: 9.0.x
     includePreviewVersions: true
-
-- script: |
-    dotnet tool install -g dotnet-execute --prerelease
-    dotnet-exec info
-  displayName: 'dotnet-exec'
 
 - script: dotnet build -c Release
   displayName: 'dotnet build'
@@ -42,3 +39,20 @@ steps:
     docker push $(imageName)
     docker push $(latestImageName)
   displayName: 'Push docker image'
+
+- task: Kubernetes@1
+  displayName: 'kubectl set image'
+  inputs:
+    kubernetesServiceEndpoint: 'aks-hk-01'
+    command: 'set'
+    arguments: 'image deployment/$(serviceName) $(serviceName)=$(imageName)'
+
+- script: |
+    dotnet tool update -g dotnet-execute --prerelease
+    export PATH="$PATH:$HOME/.dotnet/tools"
+    dotnet-exec "https://github.com/OpenReservation/scripts/blob/main/deploy/azure-pipelines-notification.cs"
+  displayName: 'Push notification'  
+  env:
+    # https://learn.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#secret-variables
+    # can not directly reference a secret value
+    DingBotWebhookUrl: $(DingBotWebhookUrl)
