@@ -214,8 +214,8 @@ using (var serviceScope = app.Services.CreateScope())
 
     //init Database,you can add your init data here
     var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserAccount>>();
-    var email = "weihanli@outlook.com";
-    if (await userManager.FindByEmailAsync(email) == null)
+    const string email = "weihanli@outlook.com";
+    if (await userManager.FindByEmailAsync(email) is null)
     {
         await userManager.CreateAsync(new UserAccount
         {

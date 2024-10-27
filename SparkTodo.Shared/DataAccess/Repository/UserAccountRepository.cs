@@ -14,6 +14,6 @@ public partial class UserAccountRepository
     public async Task<bool> LoginAsync(UserAccount userInfo)
     {
         var user = await FetchAsync(u => u.Email == userInfo.Email && u.PasswordHash == userInfo.PasswordHash);
-        return user != null;
+        return user is not null;
     }
 }
