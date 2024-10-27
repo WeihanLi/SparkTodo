@@ -21,11 +21,11 @@ steps:
   displayName: 'Use .NET sdk'
   inputs:
     packageType: sdk
-    version: 8.0.x
-    # includePreviewVersions: true
+    version: 9.0.x
+    includePreviewVersions: true
 
 - script: |
-    dotnet tool install -g dotnet-execute
+    dotnet tool install -g dotnet-execute --prerelease
     dotnet-exec info
   displayName: 'dotnet-exec'
 
