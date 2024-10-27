@@ -157,10 +157,10 @@ builder.Services.AddOpenTelemetry()
             .SetSampler(new TraceIdRatioBasedSampler(samplingRatio))
             ;
     })
-    .WithMetrics(metricBuilder =>
-    {
-        metricBuilder.AddAspNetCoreInstrumentation();
-    })
+    .WithMetrics(metricBuilder => metricBuilder
+        .AddRuntimeInstrumentation()
+        .AddAspNetCoreInstrumentation()
+    )
     .UseOtlpExporter()
     ;
 
