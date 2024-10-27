@@ -45,12 +45,14 @@ steps:
     docker push $(latestImageName)
   displayName: 'Push docker image'
 
-- task: Kubernetes@1
-  displayName: 'kubectl set image'
+- task: SSH@0
+  displayName: 'Run shell inline on remote machine'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   inputs:
-    kubernetesServiceEndpoint: 'aks-hk-01'
-    command: 'set'
-    arguments: 'image deployment/$(serviceName) $(serviceName)=$(imageName)'
+    sshEndpoint: 'weihanli-vm'
+    runOptions: inline
+    inline: |
+      kubectl set image deployment/$(serviceName) $(serviceName)=$(imageName)
 
 - script: |
     dotnet tool update -g dotnet-execute --prerelease
