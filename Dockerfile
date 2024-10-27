@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS base
 LABEL Maintainer="WeihanLi"
 
 # use forward headers
@@ -21,7 +21,7 @@ RUN apk update && apk add --no-cache curl \
     # timezone info
     # tzdata
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build-env
 WORKDIR /app
 
 ENV HUSKY=0
