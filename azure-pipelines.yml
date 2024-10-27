@@ -6,7 +6,6 @@
 pool:
   vmImage: 'ubuntu-latest'
 
-
 variables:
 - name: tagName
   value: '$(Build.BuildNumber)'
