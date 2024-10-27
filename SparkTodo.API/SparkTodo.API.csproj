@@ -16,9 +16,9 @@
     <Using Include="SparkTodo.API.Extensions" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Octokit.Webhooks.AspNetCore" />
     <PackageReference Include="KubernetesClient" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
