@@ -38,13 +38,13 @@ spec:
             memory: "128Mi"
             cpu: "50m"
         ports:
-          - name: http
-            containerPort: 80
-            protocol: TCP
+        - name: http
+          containerPort: 8080
+          protocol: TCP
         livenessProbe:
           httpGet:
             path: /health
-            port: 80
+            port: 8080
           initialDelaySeconds: 60
           periodSeconds: 30
         env:
@@ -94,21 +94,21 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-    name: "sparktodo-api"
-    labels:
-        app: "sparktodo-api"
+  name: "sparktodo-api"
+  labels:
+    app: "sparktodo-api"
 spec:
-    # type: NodePort
-    type: ClusterIP
-    ports:
-    - port: 8080
-      # nodePort: 31256
-      targetPort: 8080
-      protocol: TCP
-      name: http
-    - port: 52323
-      targetPort: 52323
-      protocol: TCP
-      name: monitor
-    selector:
-        app: "sparktodo-api"
+  # type: NodePort
+  type: ClusterIP
+  ports:
+  - port: 8080
+    # nodePort: 31256
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  - port: 52323
+    targetPort: 52323
+    protocol: TCP
+    name: monitor
+  selector:
+    app: "sparktodo-api"
