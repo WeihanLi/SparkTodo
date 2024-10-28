@@ -27,26 +27,63 @@ spec:
     
     spec:
       containers:
-        - name: sparktodo-api
-          image: weihanli/sparktodo-api:latest
-          imagePullPolicy: Always
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "20m"
-            limits:
-              memory: "128Mi"
-              cpu: "50m"
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 80
-            initialDelaySeconds: 60
-            periodSeconds: 30
+      - name: sparktodo-api
+        image: weihanli/sparktodo-api:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "20m"
+          limits:
+            memory: "128Mi"
+            cpu: "50m"
+        ports:
+          - name: http
+            containerPort: 80
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        env:
+        - name: DOTNET_DiagnosticPorts
+          value: /diag/dotnet-monitor.sock
+        volumeMounts:
+        - mountPath: /diag
+          name: diagvol
+      - name: monitor
+        image: mcr.microsoft.com/dotnet/monitor:8
+        # DO NOT use the --no-auth argument for deployments in production; this argument is used for demonstration
+        # purposes only in this example. Please continue reading after this example for further details.
+        args: [ "collect", "--no-auth" ]
+        imagePullPolicy: Always
+        env:
+        - name: DOTNETMONITOR_DiagnosticPort__ConnectionMode
+          value: Listen
+        - name: DOTNETMONITOR_Storage__DefaultSharedPath
+          value: /diag
+        # ALWAYS use the HTTPS form of the URL for deployments in production; the removal of HTTPS is done for
+        # demonstration purposes only in this example. Please continue reading after this example for further details.
+        - name: DOTNETMONITOR_Urls
+          value: http://localhost:52323
+        # The metrics URL is set in the CMD instruction of the image by default. However, this deployment overrides that with the args setting; manually set the URL to the same value using configuration.
+        - name: DOTNETMONITOR_Metrics__Endpoints
+          value: http://+:52325
+        volumeMounts:
+        - mountPath: /diag
+          name: diagvol
+        resources:
+          requests:
+            cpu: 50m
+            memory: 32Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+      volumes:
+      - name: diagvol
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
