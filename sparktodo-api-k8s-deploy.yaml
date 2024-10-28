@@ -54,7 +54,7 @@ spec:
         - mountPath: /diag
           name: diagvol
       - name: monitor
-        image: mcr.microsoft.com/dotnet/monitor:8
+        image: mcr.microsoft.com/dotnet/monitor:9.0
         # DO NOT use the --no-auth argument for deployments in production; this argument is used for demonstration
         # purposes only in this example. Please continue reading after this example for further details.
         args: [ "collect", "--no-auth" ]
@@ -64,6 +64,12 @@ spec:
           value: Listen
         - name: DOTNETMONITOR_Storage__DefaultSharedPath
           value: /diag
+        - name: DotnetMonitor_InProcessFeatures__Enabled
+          value: "true"
+        # - name: DotnetMonitor_InProcessFeatures__CallStacks__Enabled
+        #   value: "true"
+        # - name: DotnetMonitor_InProcessFeatures__Exceptions__Enabled
+        #   value: "true"
         # ALWAYS use the HTTPS form of the URL for deployments in production; the removal of HTTPS is done for
         # demonstration purposes only in this example. Please continue reading after this example for further details.
         - name: DOTNETMONITOR_Urls
@@ -92,12 +98,17 @@ metadata:
     labels:
         app: "sparktodo-api"
 spec:
-    type: NodePort
+    # type: NodePort
+    type: ClusterIP
     ports:
-    - port: 80
-      nodePort: 31256
-      targetPort: 80
+    - port: 8080
+      # nodePort: 31256
+      targetPort: 8080
       protocol: TCP
       name: http
+    - port: 52323
+      targetPort: 52323
+      protocol: TCP
+      name: monitor
     selector:
         app: "sparktodo-api"

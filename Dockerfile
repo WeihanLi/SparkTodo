@@ -3,10 +3,8 @@ LABEL Maintainer="WeihanLi"
 
 # use forward headers
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
-# specific http port
-ENV ASPNETCORE_HTTP_PORTS=80
 
-EXPOSE 80
+EXPOSE 8080
 
 # enable globalization support
 # https://github.com/dotnet/dotnet-docker/blob/main/samples/enable-globalization.md
@@ -48,6 +46,6 @@ FROM base AS final
 COPY --from=build-env /root/.dotnet/tools /dev/.dotnet/tools
 ENV PATH="/dev/.dotnet/tools:${PATH}"
 WORKDIR /app
-# USER app
 COPY --from=build-env /app/SparkTodo.API/out .
+USER app
 ENTRYPOINT ["dotnet", "SparkTodo.API.dll"]
