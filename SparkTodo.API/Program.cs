@@ -38,14 +38,15 @@ builder.Services.AddDbContext<SparkTodoDbContext>(options =>
     options.AddInterceptors(new SoftDeleteInterceptor());
 });
 //
-builder.Services.AddIdentity<UserAccount, UserRole>(options =>
-{
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredUniqueChars = 0;
-    options.User.RequireUniqueEmail = true;
-})
+builder.Services.AddIdentityApiEndpoints<UserAccount>(options =>
+    {
+        options.Password.RequireLowercase = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredUniqueChars = 0;
+        options.User.RequireUniqueEmail = true;
+    })
+    .AddRoles<UserRole>()
     .AddEntityFrameworkStores<SparkTodoDbContext>()
     .AddDefaultTokenProviders();
 
@@ -205,6 +206,7 @@ app.MapHealthChecks("/health").ShortCircuit();
 app.MapMetrics().ShortCircuit();
 app.MapRuntimeInfo().ShortCircuit();
 app.MapOpenApi();
+app.MapGroup("/account").MapIdentityApi<UserAccount>();
 app.Map("/kube-env", (IKubernetesService kubernetesService) => kubernetesService.GetKubernetesEnvironment()).ShortCircuit();
 
 app.MapGitHubWebhooks();
