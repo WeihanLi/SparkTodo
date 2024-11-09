@@ -9,7 +9,6 @@ using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Prometheus;
 using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -165,6 +164,7 @@ builder.Services.AddOpenTelemetry()
     .WithMetrics(metricBuilder => metricBuilder
         .AddRuntimeInstrumentation()
         .AddAspNetCoreInstrumentation()
+        .AddPrometheusExporter()
     )
     .UseOtlpExporter()
     ;
@@ -203,11 +203,11 @@ app.UseSwaggerUI(option =>
 });
 
 app.MapHealthChecks("/health").ShortCircuit();
-app.MapMetrics().ShortCircuit();
 app.MapRuntimeInfo().ShortCircuit();
-app.MapOpenApi();
+app.MapOpenApi().ShortCircuit();
 app.MapGroup("/account").MapIdentityApi<UserAccount>();
 app.Map("/kube-env", (IKubernetesService kubernetesService) => kubernetesService.GetKubernetesEnvironment()).ShortCircuit();
+app.MapPrometheusScrapingEndpoint().ShortCircuit();
 
 app.MapGitHubWebhooks();
 
