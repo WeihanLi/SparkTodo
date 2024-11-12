@@ -31,7 +31,7 @@ public class TestController : ControllerBase
             var counter = meter.CreateCounter<int>("counter");
             counter.Add(1);
         }
-        
+
         var responseText = await HttpHelper.HttpClient.GetStringAsync("https://reservation.weihanli.xyz/health");
         return Ok(Result.Success(responseText));
     }
