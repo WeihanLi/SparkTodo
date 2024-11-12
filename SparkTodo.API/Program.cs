@@ -9,6 +9,7 @@ using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Scalar.AspNetCore;
 using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -162,6 +163,7 @@ builder.Services.AddOpenTelemetry()
             ;
     })
     .WithMetrics(metricBuilder => metricBuilder
+        .AddMeter("test", "test1")
         .AddRuntimeInstrumentation()
         .AddAspNetCoreInstrumentation()
         .AddPrometheusExporter()
@@ -201,6 +203,7 @@ app.UseSwaggerUI(option =>
     option.RoutePrefix = string.Empty;
     option.DocumentTitle = "SparkTodo API";
 });
+app.MapScalarApiReference();
 
 app.MapHealthChecks("/health").ShortCircuit();
 app.MapRuntimeInfo().ShortCircuit();
