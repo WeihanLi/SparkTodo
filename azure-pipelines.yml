@@ -52,6 +52,7 @@ steps:
     sshEndpoint: 'weihanli-vm'
     runOptions: inline
     inline: |
+      # kubectl set image deployment/sparktodo-api sparktodo-api=weihanli/sparktodo-api:latest
       kubectl set image deployment/$(serviceName) $(serviceName)=$(imageName)
 
 - script: |
