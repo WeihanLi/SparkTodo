@@ -65,7 +65,7 @@ public class AccountController : ControllerBase
             ArgumentNullException.ThrowIfNull(userInfo);
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email!),
+                new Claim(JwtRegisteredClaimNames.Sub, loginModel.Email),
                 new Claim(JwtRegisteredClaimNames.NameId, userInfo.Id.ToString()),
             };
             var token = (TokenEntityWithRefreshToken)await _tokenService.GenerateToken(claims);
@@ -118,7 +118,7 @@ public class AccountController : ControllerBase
             ArgumentNullException.ThrowIfNull(userInfo);
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, regModel.Email),
                 new Claim(JwtRegisteredClaimNames.NameId, userInfo.Id.ToString()),
             };
             var token = (TokenEntityWithRefreshToken)await _tokenService.GenerateToken(claims);
