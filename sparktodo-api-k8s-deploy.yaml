@@ -57,7 +57,7 @@ metadata:
     app: "sparktodo-api"
 spec:
   type: NodePort
-  type: ClusterIP
+  # type: ClusterIP
   ports:
   - port: 8080
     nodePort: 31256
