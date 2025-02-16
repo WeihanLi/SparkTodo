@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SparkTodo.API/SparkTodo.API.csproj" />
+  <Project Path="SparkTodo.Shared/SparkTodo.Shared.csproj" />
+</Solution>
