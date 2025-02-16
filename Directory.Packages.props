@@ -23,7 +23,7 @@
     <PackageVersion Include="Scalar.AspNetCore" Version="2.0.14" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.2.0" />
     <PackageVersion Include="WeihanLi.Common" Version="1.0.74" />
-    <PackageVersion Include="WeihanLi.EntityFramework" Version="9.1.0" />
+    <PackageVersion Include="WeihanLi.EntityFramework" Version="9.2.0" />
     <PackageVersion Include="WeihanLi.Web.Extensions" Version="2.1.0" />
   </ItemGroup>
 </Project>
