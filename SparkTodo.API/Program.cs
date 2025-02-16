@@ -21,7 +21,7 @@ using WeihanLi.EntityFramework.Interceptors;
 using WeihanLi.Web.Authorization.Jwt;
 using WeihanLi.Web.Extensions;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateSlimBuilder(args);
 builder.Logging.AddJsonConsole(options =>
 {
     options.JsonWriterOptions = new JsonWriterOptions
@@ -130,7 +130,9 @@ builder.Services.AddSwaggerGen(option =>
                     }, Array.Empty<string>() }
                 });
 });
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+});
 
 builder.Services.AddHealthChecks();
 // Add application services.
