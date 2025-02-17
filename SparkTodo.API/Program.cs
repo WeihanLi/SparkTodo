@@ -1,4 +1,4 @@
-﻿// Copyright (c) Weihan Li. All rights reserved.
+// Copyright (c) Weihan Li. All rights reserved.
 // Licensed under the MIT license.
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,6 +22,8 @@ using WeihanLi.Web.Authorization.Jwt;
 using WeihanLi.Web.Extensions;
 
 var builder = WebApplication.CreateSlimBuilder(args);
+
+builder.AddServiceDefaults();
 builder.Logging.AddJsonConsole(options =>
 {
     options.JsonWriterOptions = new JsonWriterOptions
@@ -174,6 +176,8 @@ builder.Services.AddOpenTelemetry()
     ;
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 // Disable claimType transform, see details here https://stackoverflow.com/questions/39141310/jwttoken-claim-name-jwttokentypes-subject-resolved-to-claimtypes-nameidentifie
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();

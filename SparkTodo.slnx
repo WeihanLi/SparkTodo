@@ -1,4 +1,6 @@
 <Solution>
   <Project Path="SparkTodo.API/SparkTodo.API.csproj" />
+  <Project Path="SparkTodo.AppHost/SparkTodo.AppHost.csproj" Id="2bb3e906-de8d-485f-a799-89139760be9b" />
+  <Project Path="SparkTodo.ServiceDefaults/SparkTodo.ServiceDefaults.csproj" />
   <Project Path="SparkTodo.Shared/SparkTodo.Shared.csproj" />
 </Solution>
