@@ -146,10 +146,15 @@ var app = builder.Build();
 app.MapDefaultEndpoints();
 
 // Emit dotnet runtime version to response header
-app.Use(async (context, next) =>
+app.Use((context, next) =>
 {
-    context.Response.Headers["DotNetVersion"] = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
-    await next();
+    context.Response.OnStarting(() =>
+    {
+        context.Response.Headers["DotNet-Version"] = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+        return Task.CompletedTask;
+    });
+
+    return next(context);
 });
 
 app.UseRouting();
