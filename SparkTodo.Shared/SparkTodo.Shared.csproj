@@ -4,8 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Using Include="System.ComponentModel.DataAnnotations" />
-    <PackageReference Include="WeihanLi.Common" />
-    <PackageReference Include="WeihanLi.EntityFramework" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
   </ItemGroup>
 </Project>
