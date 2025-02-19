@@ -52,7 +52,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SparkTodo.ServiceDefaults\SparkTodo.ServiceDefaults.csproj" />
     <ProjectReference Include="..\SparkTodo.Shared\SparkTodo.Shared.csproj" />
   </ItemGroup>
 </Project>
