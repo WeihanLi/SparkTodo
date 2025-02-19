@@ -1,0 +1,11 @@
+<Project>
+  <ItemGroup>
+    <Using Remove="Microsoft.EntityFrameworkCore"/>
+    <Using Remove="SparkTodo.DataAccess"/>
+    <Using Remove="SparkTodo.Models"/>
+    <Using Remove="WeihanLi.Common"/>
+    <Using Remove="WeihanLi.Common.Helpers"/>
+    <Using Remove="WeihanLi.EntityFramework"/>
+    <Using Remove="WeihanLi.Extensions"/>
+  </ItemGroup>
+</Project>
