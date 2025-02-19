@@ -48,8 +48,8 @@ public class AccountController : ControllerBase
     /// <remarks>
     /// POST /api/v1/Account/SignIn
     /// {
-    ///     "Email":"test0001@test.com",
-    ///     "Password":"test001.com"
+    ///     "email":"test@test.com",
+    ///     "password":"Test1234"
     /// }
     /// </remarks>
     [Route("SignIn")]
@@ -65,8 +65,8 @@ public class AccountController : ControllerBase
             ArgumentNullException.ThrowIfNull(userInfo);
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, loginModel.Email),
-                new Claim(JwtRegisteredClaimNames.NameId, userInfo.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, loginModel.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Id.ToString()),
             };
             var token = (TokenEntityWithRefreshToken)await _tokenService.GenerateToken(claims);
             var userToken = new UserTokenEntity

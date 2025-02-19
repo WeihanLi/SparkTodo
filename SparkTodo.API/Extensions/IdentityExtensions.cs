@@ -8,8 +8,5 @@ namespace SparkTodo.API.Extensions;
 
 public static class IdentityExtensions
 {
-    public static int GetUserId(this ClaimsPrincipal principal, string userIdClaimType = "nameid")
-    {
-        return principal.GetUserId<int>(userIdClaimType);
-    }
+    public static int GetUserId(this ClaimsPrincipal principal) => principal.GetUserId<int>();
 }

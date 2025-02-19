@@ -5,15 +5,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Octokit.Webhooks;
 using Octokit.Webhooks.AspNetCore;
-using OpenTelemetry;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Scalar.AspNetCore;
 using SparkTodo.API.Services;
 using SparkTodo.API.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -24,6 +19,7 @@ using WeihanLi.Web.Extensions;
 var builder = WebApplication.CreateSlimBuilder(args);
 
 builder.AddServiceDefaults();
+
 builder.Logging.AddJsonConsole(options =>
 {
     options.JsonWriterOptions = new JsonWriterOptions
@@ -36,7 +32,7 @@ builder.Logging.AddJsonConsole(options =>
 // Add framework services.
 builder.Services.AddDbContext<SparkTodoDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetRequiredConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetRequiredConnectionString("TodoApp"));
     options.AddInterceptors(new SoftDeleteInterceptor());
 });
 //
@@ -145,43 +141,9 @@ builder.Services.RegisterAssemblyTypesAsImplementedInterfaces(t => t.Name.EndsWi
 
 builder.Services.AddSingleton<WebhookEventProcessor, MyWebhookEventProcessor>();
 
-builder.Logging.AddOpenTelemetry(x =>
-{
-    x.IncludeFormattedMessage = true;
-    x.IncludeScopes = true;
-});
-if (!double.TryParse(builder.Configuration["OpenTelemetry:SamplingRatio"], out var samplingRatio))
-{
-    samplingRatio = 1.0;
-}
-builder.Services.AddOpenTelemetry()
-    .ConfigureResource(resBuilder =>
-    {
-        resBuilder.AddService(builder.Configuration["OpenTelemetry:ServiceId"] ?? "SparkTodo-api");
-    })
-    .WithTracing(traceBuilder =>
-    {
-        traceBuilder.AddAspNetCoreInstrumentation()
-            .AddEntityFrameworkCoreInstrumentation()
-            .SetSampler(new TraceIdRatioBasedSampler(samplingRatio))
-            ;
-    })
-    .WithMetrics(metricBuilder => metricBuilder
-        .AddMeter("test", "test1")
-        .AddRuntimeInstrumentation()
-        .AddAspNetCoreInstrumentation()
-        .AddPrometheusExporter()
-    )
-    .UseOtlpExporter()
-    ;
-
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
-
-// Disable claimType transform, see details here https://stackoverflow.com/questions/39141310/jwttoken-claim-name-jwttokentypes-subject-resolved-to-claimtypes-nameidentifie
-JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
 // Emit dotnet runtime version to response header
 app.Use(async (context, next) =>
@@ -216,7 +178,6 @@ app.MapRuntimeInfo().ShortCircuit();
 app.MapOpenApi().ShortCircuit();
 app.MapGroup("/account").MapIdentityApi<UserAccount>();
 app.Map("/kube-env", (IKubernetesService kubernetesService) => kubernetesService.GetKubernetesEnvironment()).ShortCircuit();
-app.MapPrometheusScrapingEndpoint().ShortCircuit();
 
 app.MapGitHubWebhooks();
 
@@ -232,7 +193,7 @@ using (var serviceScope = app.Services.CreateScope())
 
     //init Database,you can add your init data here
     var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserAccount>>();
-    const string email = "weihanli@outlook.com";
+    const string email = "test@test.com";
     if (await userManager.FindByEmailAsync(email) is null)
     {
         await userManager.CreateAsync(new UserAccount

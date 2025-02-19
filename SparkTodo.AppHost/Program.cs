@@ -3,6 +3,14 @@
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddProject<Projects.SparkTodo_API>("sparktodo-api");
+var db = builder.AddSqlServer("db")
+    .WithLifetime(ContainerLifetime.Persistent)
+    .AddDatabase("TodoApp")
+    ;
+
+builder.AddProject<Projects.SparkTodo_API>("sparktodo-api")
+    .WithReference(db)
+    .WaitFor(db)
+    ;
 
 builder.Build().Run();
