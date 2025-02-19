@@ -28,7 +28,7 @@ spec:
         image: weihanli/sparktodo-api:latest
         imagePullPolicy: Always
         env:
-          - name: ConnectionStrings__DefaultConnection
+          - name: ConnectionStrings__TodoApp
             valueFrom:
               secretKeyRef:
                 name: my-secrets
