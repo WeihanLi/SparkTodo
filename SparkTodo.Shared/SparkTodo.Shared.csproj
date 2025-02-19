@@ -5,8 +5,7 @@
   <ItemGroup>
     <Using Include="System.ComponentModel.DataAnnotations" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SparkTodo.ServiceDefaults\SparkTodo.ServiceDefaults.csproj" />
+    <PackageReference Include="WeihanLi.Common" />
+    <PackageReference Include="WeihanLi.EntityFramework" />
   </ItemGroup>
 </Project>
