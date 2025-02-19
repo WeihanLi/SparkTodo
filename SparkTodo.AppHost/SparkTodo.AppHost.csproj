@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
-  <Import Projec="../AspireProject.props"/>
+  <Import Project="../AspireProject.props"/>
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
