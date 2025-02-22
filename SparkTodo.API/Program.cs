@@ -178,7 +178,6 @@ app.UseSwaggerUI(option =>
 });
 app.MapScalarApiReference();
 
-app.MapHealthChecks("/health").ShortCircuit();
 app.MapRuntimeInfo().ShortCircuit();
 app.MapOpenApi().ShortCircuit();
 app.MapGroup("/account").MapIdentityApi<UserAccount>();
