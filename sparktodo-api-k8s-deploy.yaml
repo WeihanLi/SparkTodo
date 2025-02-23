@@ -33,6 +33,8 @@ spec:
               secretKeyRef:
                 name: my-secrets
                 key: ConnectionStrings__Playground
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: "http://aspire-dashboard:4317"
         resources:
           limits:
             memory: "128Mi"
