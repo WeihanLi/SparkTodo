@@ -16,5 +16,5 @@ SparkTodo 是一个基于 ASP.NET Core 的一个 TodoList WebApi 项目，使用
 run aspire-dashboard container with docker:
 
 ```sh
-docker run -p 18888:18888 -p 4317:18889 -d --name aspire-dashboard -e DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS="true" mcr.microsoft.com/dotnet/aspire-dashboard:9.1
+docker run -p 18888:18888 -p 4317:18889 -d --name aspire-dashboard -e DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS="true" mcr.microsoft.com/dotnet/nightly/aspire-dashboard:latest
 ```
