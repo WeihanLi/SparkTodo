@@ -18,13 +18,13 @@
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.11.2" />
     <PackageVersion Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.11.0-beta.1" />
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.11.2" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.11.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.11.0-beta.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.11.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.11.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.11.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.11.0-beta.2" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.11.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.11.1" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.0.23" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.3.1" />
-    <PackageVersion Include="WeihanLi.Common" Version="1.0.74" />
+    <PackageVersion Include="WeihanLi.Common" Version="1.0.75" />
     <PackageVersion Include="WeihanLi.EntityFramework" Version="9.2.0" />
     <PackageVersion Include="WeihanLi.Web.Extensions" Version="2.1.0" />
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.1.0" />
