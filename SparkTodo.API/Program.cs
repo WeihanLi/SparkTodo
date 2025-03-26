@@ -128,8 +128,23 @@ builder.Services.AddSwaggerGen(option =>
                     }, Array.Empty<string>() }
                 });
 });
-builder.Services.AddOpenApi(options =>
+builder.Services.AddOpenApi("v1", options =>
 {
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {
+        return Task.CompletedTask;
+    });
+});
+builder.Services.AddOpenApi("v2", options =>
+{
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {
+        return Task.CompletedTask;
+    });
+});
+builder.Services.Configure<ScalarOptions>(options =>
+{
+    options.AddDocuments("v1", "v2");
 });
 
 builder.Services.AddHealthChecks();
