@@ -4,7 +4,8 @@
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Aspire.Hosting.SqlServer" Version="9.1.0" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.2.0" />
+    <PackageVersion Include="Aspire.Hosting.SqlServer" Version="9.2.0" />
     <PackageVersion Include="Blazor.BrowserExtension" Version="0.10.3" />
     <PackageVersion Include="KubernetesClient" Version="16.0.2" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" />
@@ -27,7 +28,6 @@
     <PackageVersion Include="WeihanLi.Common" Version="1.0.77" />
     <PackageVersion Include="WeihanLi.EntityFramework" Version="9.3.0" />
     <PackageVersion Include="WeihanLi.Web.Extensions" Version="2.1.0" />
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.1.0" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.4.0" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.2.0" />
   </ItemGroup>
