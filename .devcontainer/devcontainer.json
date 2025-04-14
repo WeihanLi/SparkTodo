@@ -1,11 +1,9 @@
 {
-    "name": "Codespace",
-    "dockerFile": "Dockerfile",
-    // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-    // "image": "mcr.microsoft.com/devcontainers/base:bullseye",
+    "name": "SparkTodo-Codespace",
+    "image": "mcr.microsoft.com/devcontainers/base:bullseye",
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-        "ghcr.io/rocker-org/devcontainer-features/miniforge:1": {},
+        "ghcr.io/rocker-org/devcontainer-features/miniforge:2.0.0": {},
         "ghcr.io/devcontainers/features/dotnet:2": {}
     },
     "customizations": {
