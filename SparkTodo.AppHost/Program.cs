@@ -3,6 +3,8 @@
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+builder.AddDockerComposePublisher();
+
 var db = builder.AddSqlServer("db")
     .WithLifetime(ContainerLifetime.Persistent)
     .AddDatabase("TodoApp")
