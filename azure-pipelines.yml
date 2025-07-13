@@ -58,6 +58,7 @@ steps:
 - script: |
     dotnet tool update -g dotnet-execute --prerelease
     export PATH="$PATH:$HOME/.dotnet/tools"
+    dotnet-exec info
     dotnet-exec "https://github.com/OpenReservation/scripts/blob/main/deploy/azure-pipelines-notification.cs"
   displayName: 'Push notification'  
   env:
