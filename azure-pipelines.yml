@@ -59,7 +59,7 @@ steps:
     dotnet tool update -g dotnet-execute --prerelease
     export PATH="$PATH:$HOME/.dotnet/tools"
     dotnet-exec info
-    dotnet-exec "https://github.com/OpenReservation/scripts/blob/main/deploy/azure-pipelines-notification.cs"
+    dotnet-exec "https://github.com/OpenReservation/scripts/blob/main/deploy/azure-pipelines-notification.cs" --debug
   displayName: 'Push notification'  
   env:
     # https://learn.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#secret-variables
