@@ -1,0 +1,213 @@
+{
+  "mcpTools": {
+    "description": "MCP tool definitions for SparkTodo API",
+    "version": "1.0.0",
+    "tools": [
+      {
+        "name": "list_todos",
+        "description": "List todo items for the authenticated user with optional filtering",
+        "category": "todo",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "pageIndex": {
+              "type": "integer",
+              "description": "Page index (default: 1)",
+              "minimum": 1,
+              "default": 1
+            },
+            "pageSize": {
+              "type": "integer", 
+              "description": "Page size (default: 50)",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "isOnlyNotDone": {
+              "type": "boolean",
+              "description": "Filter only incomplete todos (default: false)",
+              "default": false
+            },
+            "categoryId": {
+              "type": "integer",
+              "description": "Filter by category ID (default: -1 for all)",
+              "default": -1
+            }
+          }
+        }
+      },
+      {
+        "name": "get_todo",
+        "description": "Get a specific todo item by ID",
+        "category": "todo",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "todoId": {
+              "type": "integer",
+              "description": "The ID of the todo item",
+              "minimum": 1
+            }
+          },
+          "required": ["todoId"]
+        }
+      },
+      {
+        "name": "create_todo",
+        "description": "Create a new todo item",
+        "category": "todo",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "The title of the todo item",
+              "minLength": 1
+            },
+            "content": {
+              "type": "string",
+              "description": "The content/description of the todo item"
+            },
+            "categoryId": {
+              "type": "integer",
+              "description": "The category ID for the todo item",
+              "minimum": 1
+            },
+            "scheduledTime": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Optional scheduled time for the todo"
+            }
+          },
+          "required": ["title", "categoryId"]
+        }
+      },
+      {
+        "name": "update_todo",
+        "description": "Update an existing todo item",
+        "category": "todo",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "todoId": {
+              "type": "integer",
+              "description": "The ID of the todo item to update",
+              "minimum": 1
+            },
+            "title": {
+              "type": "string",
+              "description": "The title of the todo item"
+            },
+            "content": {
+              "type": "string",
+              "description": "The content/description of the todo item"
+            },
+            "isCompleted": {
+              "type": "boolean",
+              "description": "Whether the todo is completed"
+            },
+            "categoryId": {
+              "type": "integer",
+              "description": "The category ID for the todo item",
+              "minimum": 1
+            },
+            "scheduledTime": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Scheduled time for the todo"
+            }
+          },
+          "required": ["todoId"]
+        }
+      },
+      {
+        "name": "delete_todo",
+        "description": "Delete a todo item",
+        "category": "todo",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "todoId": {
+              "type": "integer",
+              "description": "The ID of the todo item to delete",
+              "minimum": 1
+            }
+          },
+          "required": ["todoId"]
+        }
+      },
+      {
+        "name": "list_categories",
+        "description": "List all categories for the authenticated user",
+        "category": "category",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "create_category",
+        "description": "Create a new category",
+        "category": "category",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the category",
+              "minLength": 1
+            },
+            "parentId": {
+              "type": "integer",
+              "description": "The parent category ID (default: 0)",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          "required": ["name"]
+        }
+      },
+      {
+        "name": "update_category",
+        "description": "Update an existing category",
+        "category": "category",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "categoryId": {
+              "type": "integer",
+              "description": "The ID of the category to update",
+              "minimum": 1
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the category"
+            },
+            "parentId": {
+              "type": "integer",
+              "description": "The parent category ID",
+              "minimum": 0
+            }
+          },
+          "required": ["categoryId"]
+        }
+      },
+      {
+        "name": "delete_category",
+        "description": "Delete a category",
+        "category": "category",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "categoryId": {
+              "type": "integer",
+              "description": "The ID of the category to delete",
+              "minimum": 1
+            }
+          },
+          "required": ["categoryId"]
+        }
+      }
+    ]
+  }
+}
