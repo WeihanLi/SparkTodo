@@ -42,7 +42,7 @@ jobs:
       run: |
         dotnet build
         git config --global user.name "Weihan Li"
-        git config --global user.email "weihanli@outlook.com"
+        git config --global user.email "7604648+WeihanLi@users.noreply.github.com"
         git commit -am "chore: upgrade packages"
         git push
     # - name: Create Pull Request
