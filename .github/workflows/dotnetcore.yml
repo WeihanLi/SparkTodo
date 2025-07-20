@@ -24,3 +24,7 @@ jobs:
       run: dotnet --info
     - name: build
       run: dotnet build
+    - name: dotnet-exec
+      run: |
+        dotnet tool install -g dotnet-execute --prerelease
+        dotnet-exec 'Console.WriteLine("Hello .NET!");'
