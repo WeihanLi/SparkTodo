@@ -24,6 +24,7 @@ jobs:
         dotnet tool update -g dotnet-execute --prerelease
         export PATH="$PATH:$HOME/.dotnet/tools"
         dotnet-exec info
+        dotnet-exec "https://github.com/OpenReservation/scripts/blob/main/deploy/azure-pipelines-notification.cs" --debug
     - name: build
       run: dotnet build
     - name: install dotnet-outdated
