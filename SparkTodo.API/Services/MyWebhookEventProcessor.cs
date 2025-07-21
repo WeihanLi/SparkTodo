@@ -8,7 +8,7 @@ namespace SparkTodo.API.Services;
 
 public sealed class MyWebhookEventProcessor(ILogger<MyWebhookEventProcessor> logger) : WebhookEventProcessor
 {
-    protected override Task ProcessPushWebhookAsync(WebhookHeaders headers, PushEvent pushEvent)
+    protected override ValueTask ProcessPushWebhookAsync(WebhookHeaders headers, PushEvent pushEvent, CancellationToken cancellationToken = default)
     {
         var (repoName, commitId, commitMsg) = (pushEvent.Repository?.FullName, pushEvent.HeadCommit?.Id, pushEvent.HeadCommit?.Message);
         var (name, email) = (pushEvent.Pusher.Name, pushEvent.Pusher.Email);
