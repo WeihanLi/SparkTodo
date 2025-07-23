@@ -18,7 +18,7 @@ public sealed class MyWebhookEventProcessor(ILogger<MyWebhookEventProcessor> log
             || commitMsg.IndexOf("cd-skip", StringComparison.OrdinalIgnoreCase) > -1
            )
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         logger.LogInformation("Push event received {RepoName} {CommitId} {CommitMsg} {PushByName} {PushByEmail}",
