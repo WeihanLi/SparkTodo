@@ -20,6 +20,8 @@ jobs:
     - name: dotnet info
       run: dotnet --info
     - name: dotnet-exec info
+      env:
+        DingBotWebhookUrl: "https://reservation.weihanli.xyz/health"
       run: |
         dotnet tool update -g dotnet-execute --prerelease
         export PATH="$PATH:$HOME/.dotnet/tools"
