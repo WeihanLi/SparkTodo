@@ -9,7 +9,7 @@
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="$(AspireVersion)" />
     <PackageVersion Include="Aspire.Hosting.SqlServer" Version="$(AspireVersion)" />
     <PackageVersion Include="Blazor.BrowserExtension" Version="0.10.3" />
-    <PackageVersion Include="KubernetesClient" Version="17.0.4" />
+    <PackageVersion Include="KubernetesClient" Version="17.0.14" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.8" />
@@ -26,7 +26,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.12.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.12.0" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.7.2" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.3" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.4" />
     <PackageVersion Include="WeihanLi.Common" Version="1.0.81" />
     <PackageVersion Include="WeihanLi.EntityFramework" Version="9.3.0" />
     <PackageVersion Include="WeihanLi.Web.Extensions" Version="2.1.0" />
