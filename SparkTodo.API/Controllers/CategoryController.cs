@@ -111,6 +111,7 @@ public class CategoryController : ControllerBase
         var category = new Category()
         {
             CategoryId = categoryId,
+            CategoryName = string.Empty,
             IsDeleted = true
         };
         var result = await _categoryRepository.DeleteAsync(category);

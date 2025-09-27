@@ -15,7 +15,7 @@ public class SyncTodoModel
     public long Version { get; set; }
 
     [Required]
-    public SyncTodoItemModel[] SyncTodoItems { get; set; }
+    public required SyncTodoItemModel[] SyncTodoItems { get; set; }
 }
 
 public class SyncTodoItemModel
@@ -23,11 +23,11 @@ public class SyncTodoItemModel
     /// <summary>
     /// 操作类型
     /// </summary>
-    public OperationType Type { get; set; }
+    public required OperationType Type { get; set; }
 
     /// <summary>
     /// todoItem
     /// </summary>
-    public TodoItem TodoItem { get; set; }
+    public required TodoItem TodoItem { get; set; }
 }
 

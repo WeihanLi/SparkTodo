@@ -9,7 +9,7 @@ public class SyncVersion
 
     public DateTime SyncTime { get; set; }
 
-    public string SyncData { get; set; }
+    public required string SyncData { get; set; }
 
     public int UserId { get; set; }
 }

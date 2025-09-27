@@ -100,7 +100,7 @@ public class TodoController : ControllerBase
         {
             return NotFound();
         }
-        var todo = new TodoItem() { TodoId = todoId };
+        var todo = new TodoItem() { TodoId = todoId, TodoTitle = string.Empty };
         var result = await _todoItemRepository.DeleteAsync(todo);
         if (result > 0)
         {

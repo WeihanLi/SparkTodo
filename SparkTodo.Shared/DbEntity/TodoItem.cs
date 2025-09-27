@@ -13,9 +13,9 @@ public class TodoItem : ISoftDeleteEntityWithDeleted
     public int TodoId { get; set; }
 
     [Required]
-    public string TodoTitle { get; set; }
+    public required string TodoTitle { get; set; }
 
-    public string TodoContent { get; set; }
+    public string? TodoContent { get; set; }
 
     public bool IsCompleted { get; set; }
 
