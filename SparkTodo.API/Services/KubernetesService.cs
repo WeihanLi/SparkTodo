@@ -8,14 +8,14 @@ namespace SparkTodo.API.Services;
 
 public class KubernetesEnvironment
 {
-    public string Namespace { get; set; }
-    public string PodName { get; set; }
-    public V1Pod PodInfo { get; set; }
-    public PodMetricsList PodMetrics { get; set; }
-    public string DeploymentName { get; set; }
-    public V1Deployment DeploymentInfo { get; set; }
-    public string ServiceName { get; set; }
-    public V1Service ServiceInfo { get; set; }
+    public string? Namespace { get; set; }
+    public string? PodName { get; set; }
+    public V1Pod? PodInfo { get; set; }
+    public PodMetricsList? PodMetrics { get; set; }
+    public string? DeploymentName { get; set; }
+    public V1Deployment? DeploymentInfo { get; set; }
+    public string? ServiceName { get; set; }
+    public V1Service? ServiceInfo { get; set; }
 }
 
 public interface IKubernetesService
@@ -27,7 +27,7 @@ public sealed class KubernetesService : IKubernetesService
 {
     private readonly ILogger<KubernetesService> _logger;
     private static readonly bool IsInK8SCluster = KubernetesClientConfiguration.IsInCluster();
-    private volatile KubernetesEnvironment _environment;
+    private volatile KubernetesEnvironment? _environment;
     private readonly AsyncLock _lock = new();
 
     public KubernetesService(ILogger<KubernetesService> logger)

@@ -74,9 +74,9 @@ public class AccountController : ControllerBase
                 AccessToken = token.AccessToken,
                 RefreshToken = token.RefreshToken,
                 ExpiresIn = token.ExpiresIn,
-                UserEmail = userInfo.Email,
+                UserEmail = userInfo.Email ?? string.Empty,
                 UserId = userInfo.Id,
-                UserName = userInfo.UserName
+                UserName = userInfo.UserName ?? string.Empty
             };
             result = Result.Success(userToken);
         }
@@ -127,9 +127,9 @@ public class AccountController : ControllerBase
                 AccessToken = token.AccessToken,
                 ExpiresIn = token.ExpiresIn,
                 RefreshToken = token.RefreshToken,
-                UserEmail = userInfo.Email,
+                UserEmail = userInfo.Email ?? string.Empty,
                 UserId = userInfo.Id,
-                UserName = userInfo.UserName
+                UserName = userInfo.UserName ?? string.Empty
             };
             result = Result.Success(userToken);
         }

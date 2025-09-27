@@ -18,10 +18,10 @@ public class UserTokenEntity : TokenEntityWithRefreshToken
     /// <summary>
     /// 用户名
     /// </summary>
-    public string UserName { get; set; }
+    public required string UserName { get; set; }
 
     /// <summary>
     /// 用户邮箱
     /// </summary>
-    public string UserEmail { get; set; }
+    public required string UserEmail { get; set; }
 }
