@@ -60,10 +60,7 @@ public static class Extensions
                 tracing.AddSource(builder.Environment.ApplicationName)
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddEntityFrameworkCoreInstrumentation(options =>
-                    {
-                        options.SetDbStatementForText = true;
-                    })
+                    .AddEntityFrameworkCoreInstrumentation()
                     .SetSampler<AlwaysOnSampler>()
                     ;
             })
