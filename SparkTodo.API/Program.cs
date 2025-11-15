@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
 using Octokit.Webhooks;
 using Octokit.Webhooks.AspNetCore;
