@@ -2,7 +2,8 @@
 // Licensed under the MIT license.
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi;
 using Octokit.Webhooks;
 using Octokit.Webhooks.AspNetCore;
 using Scalar.AspNetCore;
@@ -111,22 +112,17 @@ builder.Services.AddSwaggerGen(option =>
 
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
-        Description = "Please enter into field the word 'Bearer' followed by a space and the JWT value",
         Name = "Authorization",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Description = "JWT Authorization header using the Bearer scheme."
     });
-    option.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    { new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference()
-                        {
-                            Id = "Bearer",
-                            Type = ReferenceType.SecurityScheme
-                        }
-                    }, Array.Empty<string>() }
-                });
+    option.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+    });
 });
 builder.Services.AddOpenApi("v1", options =>
 {

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Working OpenTelemetry Browser Export</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            text-align: center;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid rgba(255, 193, 7, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .config-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .config-row {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        label {
+            min-width: 140px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        input, select {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            flex: 1;
+            min-width: 200px;
+        }
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+        button {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        button:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            cursor: not-allowed;
+            transform: none;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+        .status.success { background: rgba(46, 204, 113, 0.3); border: 1px solid rgba(46, 204, 113, 0.5); }
+        .status.error { background: rgba(231, 76, 60, 0.3); border: 1px solid rgba(231, 76, 60, 0.5); }
+        .status.info { background: rgba(52, 152, 219, 0.3); border: 1px solid rgba(52, 152, 219, 0.5); }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .metric-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #FFD700;
+        }
+        .metric-label {
+            font-size: 0.85em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        .logs {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 2px 0;
+        }
+        .log-success { color: #2ecc71; }
+        .log-error { color: #e74c3c; }
+        .log-info { color: #3498db; }
+        .collector-config {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Working OpenTelemetry Browser Export</h1>
+        <div class="subtitle">Complete solution with CORS handling and collector configuration</div>
+        
+        <div class="warning">
+            <strong>⚠️ Common Issues Fixed:</strong><br>
+            • CORS configuration for collector<br>
+            • Proper OTLP HTTP endpoint setup<br>
+            • Content-Type and authentication headers<br>
+            • Browser-compatible data format
+        </div>
+
+        <div class="config-section">
+            <h3>🔧 OpenTelemetry Configuration</h3>
+            
+            <div class="config-row">
+                <label>Collector Endpoint:</label>
+                <input type="text" id="collectorEndpoint" 
+                       value="http://localhost:4318/v1/traces"
+                       placeholder="http://your-collector:4318/v1/traces">
+            </div>
+            
+            <div class="config-row">
+                <label>Service Name:</label>
+                <input type="text" id="serviceName" value="browser-performance-app">
+            </div>
+            
+            <div class="config-row">
+                <label>Environment:</label>
+                <select id="environment">
+                    <option value="development">Development</option>
+                    <option value="staging">Staging</option>
+                    <option value="production">Production</option>
+                </select>
+            </div>
+            
+            <div class="config-row">
+                <label>Auth Header:</label>
+                <input type="text" id="authHeader" placeholder="Bearer your-token (optional)">
+            </div>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-value" id="pageLoad">-</div>
+                <div class="metric-label">Page Load (ms)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="domReady">-</div>
+                <div class="metric-label">DOM Ready (ms)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="firstPaint">-</div>
+                <div class="metric-label">First Paint (ms)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="resourceCount">-</div>
+                <div class="metric-label">Resources</div>
+            </div>
+        </div>
+
+        <div class="button-grid">
+            <button onclick="testCollectorConnection()">🔍 Test Collector</button>
+            <button onclick="initializeOTel()">⚡ Initialize OTel</button>
+            <button onclick="sendPerformanceData()">📊 Send Performance</button>
+            <button onclick="sendCustomTrace()">🎯 Send Custom Trace</button>
+            <button onclick="clearLogs()">🧹 Clear Logs</button>
+        </div>
+
+        <div class="status" id="status">
+            Ready to test OpenTelemetry export - Click "Test Collector" first
+        </div>
+
+        <div>
+            <h4>📝 Export Logs:</h4>
+            <div class="logs" id="logs"></div>
+        </div>
+
+        <details style="margin-top: 20px;">
+            <summary style="cursor: pointer; font-weight: bold;">📋 Required Collector Configuration (otel-config.yaml)</summary>
+            <div class="collector-config">receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - "http://localhost:3000"
+            - "http://localhost:8080" 
+            - "http://127.0.0.1:3000"
+            - "*"  # Only for development
+          allowed_headers:
+            - "*"
+          allowed_methods:
+            - "POST"
+            - "OPTIONS"
+
+processors:
+  batch:
+    timeout: 1s
+    send_batch_size: 50
+
+exporters:
+  # Console exporter for debugging
+  logging:
+    loglevel: debug
+  
+  # Jaeger exporter example
+  jaeger:
+    endpoint: jaeger:14250
+    tls:
+      insecure: true
+  
+  # OTLP exporter to another collector/backend
+  otlp:
+    endpoint: "your-backend:4317"
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging, jaeger]  # Add your exporters here</div>
+        </details>
+    </div>
+
+    <script type="module">
+        let isInitialized = false;
+        let performanceMetrics = {};
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            
+            const logsContainer = document.getElementById('logs');
+            logsContainer.appendChild(logEntry);
+            logsContainer.scrollTop = logsContainer.scrollHeight;
+            
+            console.log(`[OTel] ${message}`);
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+
+        function generateTraceId() {
+            return Array.from({length: 32}, () => 
+                Math.floor(Math.random() * 16).toString(16)
+            ).join('');
+        }
+
+        function generateSpanId() {
+            return Array.from({length: 16}, () => 
+                Math.floor(Math.random() * 16).toString(16)
+            ).join('');
+        }
+
+        function createOTLPSpan(name, startTime, endTime, attributes = {}) {
+            const traceId = generateTraceId();
+            const spanId = generateSpanId();
+            
+            return {
+                traceId: traceId,
+                spanId: spanId,
+                name: name,
+                kind: 1, // SPAN_KIND_INTERNAL
+                startTimeUnixNano: (startTime * 1000000).toString(),
+                endTimeUnixNano: (endTime * 1000000).toString(),
+                attributes: Object.entries(attributes).map(([key, value]) => ({
+                    key: key,
+                    value: { stringValue: String(value) }
+                })),
+                status: { code: 1 }, // STATUS_CODE_OK
+            };
+        }
+
+        async function testCollectorConnection() {
+            const endpoint = document.getElementById('collectorEndpoint').value;
+            
+            log('Testing collector connection...', 'info');
+            updateStatus('Testing collector connection...', 'info');
+            
+            try {
+                // Test with a simple OPTIONS request first
+                const optionsResponse = await fetch(endpoint, {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Access-Control-Request-Method': 'POST',
+                        'Access-Control-Request-Headers': 'Content-Type',
+                    },
+                });
+                
+                log(`OPTIONS request: ${optionsResponse.status}`, 'info');
+                
+                // Now test with a minimal trace payload
+                const testSpan = createOTLPSpan(
+                    'connection_test', 
+                    Date.now(), 
+                    Date.now() + 10,
+                    { 'test.connection': 'true' }
+                );
+
+                const testPayload = {
+                    resourceSpans: [{
+                        resource: {
+                            attributes: [{
+                                key: 'service.name',
+                                value: { stringValue: 'connection-test' }
+                            }]
+                        },
+                        scopeSpans: [{
+                            spans: [testSpan]
+                        }]
+                    }]
+                };
+
+                const headers = {
+                    'Content-Type': 'application/json',
+                };
+
+                const authHeader = document.getElementById('authHeader').value;
+                if (authHeader.trim()) {
+                    headers['Authorization'] = authHeader;
+                }
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(testPayload)
+                });
+
+                if (response.ok) {
+                    log(`✅ Collector connection successful! Status: ${response.status}`, 'success');
+                    updateStatus('✅ Collector connection successful!', 'success');
+                } else {
+                    const errorText = await response.text();
+                    log(`❌ Collector returned ${response.status}: ${errorText}`, 'error');
+                    updateStatus(`❌ Connection failed: ${response.status}`, 'error');
+                }
+
+            } catch (error) {
+                log(`❌ Connection failed: ${error.message}`, 'error');
+                updateStatus(`❌ Connection failed: ${error.message}`, 'error');
+                
+                // Provide specific troubleshooting
+                if (error.message.includes('CORS')) {
+                    log('💡 CORS issue detected. Check collector CORS configuration.', 'info');
+                } else if (error.message.includes('Failed to fetch')) {
+                    log('💡 Network error. Check if collector is running and accessible.', 'info');
+                }
+            }
+        }
+
+        function collectPerformanceMetrics() {
+            // Navigation timing
+            const navigation = performance.getEntriesByType('navigation')[0];
+            if (navigation) {
+                performanceMetrics.pageLoadTime = Math.round(
+                    navigation.loadEventEnd - navigation.loadEventStart
+                );
+                performanceMetrics.domContentLoadedTime = Math.round(
+                    navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart
+                );
+                
+                document.getElementById('pageLoad').textContent = performanceMetrics.pageLoadTime || '0';
+                document.getElementById('domReady').textContent = performanceMetrics.domContentLoadedTime || '0';
+            }
+
+            // Paint timing
+            const paintEntries = performance.getEntriesByType('paint');
+            paintEntries.forEach(entry => {
+                if (entry.name === 'first-paint') {
+                    performanceMetrics.firstPaint = Math.round(entry.startTime);
+                    document.getElementById('firstPaint').textContent = performanceMetrics.firstPaint;
+                }
+            });
+
+            // Resource count
+            const resources = performance.getEntriesByType('resource');
+            performanceMetrics.resourceCount = resources.length;
+            document.getElementById('resourceCount').textContent = performanceMetrics.resourceCount;
+
+            log(`Collected metrics: ${JSON.stringify(performanceMetrics)}`, 'info');
+        }
+
+        function initializeOTel() {
+            try {
+                log('Initializing OpenTelemetry...', 'info');
+                
+                // Collect initial metrics
+                collectPerformanceMetrics();
+                
+                isInitialized = true;
+                log('✅ OpenTelemetry initialized successfully', 'success');
+                updateStatus('✅ OpenTelemetry initialized - Ready to send data', 'success');
+                
+            } catch (error) {
+                log(`❌ Initialization failed: ${error.message}`, 'error');
+                updateStatus(`❌ Initialization failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function sendPerformanceData() {
+            if (!isInitialized) {
+                updateStatus('❌ Please initialize OpenTelemetry first!', 'error');
+                return;
+            }
+
+            try {
+                log('Preparing performance data for export...', 'info');
+                
+                // Refresh metrics
+                collectPerformanceMetrics();
+                
+                const spans = [];
+                const now = Date.now();
+                const serviceName = document.getElementById('serviceName').value;
+                const environment = document.getElementById('environment').value;
+
+                // Create spans for each metric
+                if (performanceMetrics.pageLoadTime > 0) {
+                    spans.push(createOTLPSpan(
+                        'page_load',
+                        now - performanceMetrics.pageLoadTime,
+                        now,
+                        {
+                            'service.name': serviceName,
+                            'service.version': '1.0.0',
+                            'deployment.environment': environment,
+                            'page.url': window.location.href,
+                            'page.title': document.title,
+                            'performance.metric.name': 'page_load_time',
+                            'performance.metric.value': performanceMetrics.pageLoadTime,
+                            'performance.metric.unit': 'milliseconds',
+                            'browser.user_agent': navigator.userAgent
+                        }
+                    ));
+                }
+
+                if (performanceMetrics.domContentLoadedTime > 0) {
+                    spans.push(createOTLPSpan(
+                        'dom_content_loaded',
+                        now - performanceMetrics.domContentLoadedTime,
+                        now,
+                        {
+                            'service.name': serviceName,
+                            'deployment.environment': environment,
+                            'performance.metric.name': 'dom_content_loaded',
+                            'performance.metric.value': performanceMetrics.domContentLoadedTime,
+                            'performance.metric.unit': 'milliseconds'
+                        }
+                    ));
+                }
+
+                if (performanceMetrics.firstPaint > 0) {
+                    spans.push(createOTLPSpan(
+                        'first_paint',
+                        now - performanceMetrics.firstPaint,
+                        now,
+                        {
+                            'service.name': serviceName,
+                            'deployment.environment': environment,
+                            'performance.metric.name': 'first_paint',
+                            'performance.metric.value': performanceMetrics.firstPaint,
+                            'performance.metric.unit': 'milliseconds'
+                        }
+                    ));
+                }
+
+                const payload = {
+                    resourceSpans: [{
+                        resource: {
+                            attributes: [
+                                { key: 'service.name', value: { stringValue: serviceName } },
+                                { key: 'service.version', value: { stringValue: '1.0.0' } },
+                                { key: 'deployment.environment', value: { stringValue: environment } }
+                            ]
+                        },
+                        scopeSpans: [{
+                            scope: {
+                                name: 'browser-performance-instrumentation',
+                                version: '1.0.0'
+                            },
+                            spans: spans
+                        }]
+                    }]
+                };
+
+                await sendToCollector(payload, 'performance data');
+                
+            } catch (error) {
+                log(`❌ Failed to send performance data: ${error.message}`, 'error');
+                updateStatus(`❌ Export failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function sendCustomTrace() {
+            if (!isInitialized) {
+                updateStatus('❌ Please initialize OpenTelemetry first!', 'error');
+                return;
+            }
+
+            try {
+                log('Creating custom trace...', 'info');
+                
+                const now = Date.now();
+                const duration = Math.random() * 500 + 100; // Random duration
+                
+                const customSpan = createOTLPSpan(
+                    'user_interaction',
+                    now,
+                    now + duration,
+                    {
+                        'service.name': document.getElementById('serviceName').value,
+                        'user.action': 'button_click',
+                        'component.name': 'custom_trace_button',
+                        'trace.custom': 'true',
+                        'event.name': 'custom_user_event',
+                        'duration.ms': Math.round(duration)
+                    }
+                );
+
+                const payload = {
+                    resourceSpans: [{
+                        resource: {
+                            attributes: [
+                                { key: 'service.name', value: { stringValue: document.getElementById('serviceName').value } }
+                            ]
+                        },
+                        scopeSpans: [{
+                            spans: [customSpan]
+                        }]
+                    }]
+                };
+
+                await sendToCollector(payload, 'custom trace');
+                
+            } catch (error) {
+                log(`❌ Failed to send custom trace: ${error.message}`, 'error');
+                updateStatus(`❌ Custom trace failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function sendToCollector(payload, dataType) {
+            const endpoint = document.getElementById('collectorEndpoint').value;
+            const authHeader = document.getElementById('authHeader').value;
+
+            const headers = {
+                'Content-Type': 'application/json',
+            };
+
+            if (authHeader.trim()) {
+                headers['Authorization'] = authHeader;
+            }
+
+            log(`Sending ${dataType} to collector...`, 'info');
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                log(`✅ Successfully sent ${dataType}! Status: ${response.status}`, 'success');
+                updateStatus(`✅ ${dataType} exported successfully!`, 'success');
+            } else {
+                const errorText = await response.text();
+                throw new Error(`HTTP ${response.status}: ${errorText}`);
+            }
+        }
+
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+            log('Logs cleared', 'info');
+        }
+
+        // Make functions global so they can be called from onclick handlers
+        window.testCollectorConnection = testCollectorConnection;
+        window.initializeOTel = initializeOTel;
+        window.sendPerformanceData = sendPerformanceData;
+        window.sendCustomTrace = sendCustomTrace;
+        window.clearLogs = clearLogs;
+
+        // Auto-collect metrics when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                collectPerformanceMetrics();
+                log('Page loaded - metrics collected automatically', 'info');
+            }, 1000);
+        });
+
+        // Log initial status
+        log('OpenTelemetry browser export demo ready', 'info');
+    </script>
+</body>
+</html>

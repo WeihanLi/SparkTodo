@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Weihan Li. All rights reserved.
 // Licensed under the MIT license.
 
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SparkTodo.API.Swagger;
@@ -28,7 +28,9 @@ public class RemoveVersionParameterOperationFilter : IOperationFilter
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
         // Remove version parameter from all Operations
-        var versionParameter = operation.Parameters.Single(p => p.Name == "version");
-        operation.Parameters.Remove(versionParameter);
+        var versionParameter = operation.Parameters?.SingleOrDefault(p => p.Name == "version");
+        if (versionParameter is null) return;
+
+        operation.Parameters!.Remove(versionParameter);
     }
 }
