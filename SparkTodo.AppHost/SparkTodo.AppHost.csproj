@@ -1,6 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <Sdk Name="Aspire.AppHost.Sdk" Version="$(AspireVersion)" />
+<Project Name="Aspire.AppHost.Sdk" Version="$(AspireVersion)" />
   <Import Project="../AspireProject.props" />
 
   <PropertyGroup>
