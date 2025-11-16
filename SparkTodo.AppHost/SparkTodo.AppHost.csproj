@@ -1,4 +1,4 @@
-<Project Sdk="Aspire.AppHost.Sdk/$(AspireVersion)" />
+<Project Sdk="Aspire.AppHost.Sdk/13.0.0" />
   <Import Project="../AspireProject.props" />
 
   <PropertyGroup>
