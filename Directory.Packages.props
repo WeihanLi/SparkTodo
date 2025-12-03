@@ -9,7 +9,7 @@
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="$(AspireVersion)" />
     <PackageVersion Include="Aspire.Hosting.SqlServer" Version="$(AspireVersion)" />
     <PackageVersion Include="Blazor.BrowserExtension" Version="0.10.3" />
-    <PackageVersion Include="KubernetesClient" Version="18.0.5" />
+    <PackageVersion Include="KubernetesClient" Version="18.0.13" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.0" />
