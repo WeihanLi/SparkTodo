@@ -25,7 +25,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.18.0-beta.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.18.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.18.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.17.3" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.17.4" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.2.3" />
     <PackageVersion Include="WeihanLi.Common" Version="1.0.93" />
     <PackageVersion Include="WeihanLi.EntityFramework" Version="10.1.0" />
